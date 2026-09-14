@@ -1,0 +1,85 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/RobotModel
+      Name: Robot1 Model
+      Topic:
+        Value: /robot1/robot_description
+      Enabled: true
+    - Class: rviz_default_plugins/LaserScan
+      Name: Robot1 Scan
+      Topic:
+        Value: /robot1/scan
+      Color: 255; 0; 0
+      Enabled: true
+    - Class: rviz_default_plugins/Map
+      Name: Robot1 Map
+      Topic:
+        Value: /robot1/map
+      Enabled: true
+    - Class: rviz_default_plugins/RobotModel
+      Name: Robot2 Model
+      Topic:
+        Value: /robot2/robot_description
+      Enabled: true
+    - Class: rviz_default_plugins/LaserScan
+      Name: Robot2 Scan
+      Topic:
+        Value: /robot2/scan
+      Color: 0; 255; 0
+      Enabled: true
+    - Class: rviz_default_plugins/Map
+      Name: Robot2 Map
+      Topic:
+        Value: /robot2/map
+      Enabled: true
+    - Class: rviz_default_plugins/RobotModel
+      Name: Robot3 Model
+      Topic:
+        Value: /robot3/robot_description
+      Enabled: true
+    - Class: rviz_default_plugins/LaserScan
+      Name: Robot3 Scan
+      Topic:
+        Value: /robot3/scan
+      Color: 0; 0; 255
+      Enabled: true
+    - Class: rviz_default_plugins/Map
+      Name: Robot3 Map
+      Topic:
+        Value: /robot3/map
+      Enabled: true
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: true
+      Show Names: true
+      Show Arrows: false
+      Marker Scale: 0.5
+  Global Options:
+    Fixed Frame: map
+    Frame Rate: 30
+  Tools:
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/SetInitialPose
+      Topic:
+        Value: /robot1/initialpose
+    - Class: rviz_default_plugins/SetGoal
+      Topic:
+        Value: /robot1/goal_pose
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 15
+      Name: Current View
+      Pitch: 0.5
+      Yaw: 0.5
+Window Geometry:
+  Height: 1000
+  Width: 1800
+
