@@ -1,0 +1,20 @@
+/**:
+  ros__parameters:
+    robot_base_frame: base_link
+    return_to_init: false
+    costmap_topic: /map
+    costmap_updates_topic: map_updates
+    visualize: true
+    planner_frequency: 0.15
+    progress_timeout: 30.0
+    potential_scale: 3.0
+    orientation_scale: 0.0
+    gain_scale: 1.0
+    transform_tolerance: 0.3
+    min_frontier_size: 0.75
+    # Skip frontier centroids closer than this to the robot before picking a
+    # goal — Nav2's xy_goal_tolerance (0.25m) makes a too-close goal "succeed"
+    # instantly with zero real motion, which re-triggers planning in a tight
+    # zero-progress loop on a cold-started map. Keep above xy_goal_tolerance.
+    min_goal_distance: 0.4
+    use_sim_time: true
