@@ -90,12 +90,16 @@ def offline_main(argv=None):
     parser.add_argument('--out', default='rfid_offline_experiment')
     args = parser.parse_args(argv)
 
-    results = {}
+    results, per_seed = {}, []
+    half = args.minutes // 2
     for strategy in STRATEGIES:
         runs = [run_once(strategy, seed, args.minutes, args.robots,
                          args.drift_per_minute, args.scans_per_visit, args.demand_skew)
                 for seed in range(args.seeds)]
         results[strategy] = [statistics.mean(r[m] for r in runs) for m in range(args.minutes)]
+        for seed, r in enumerate(runs):
+            per_seed.append([strategy, seed, round(r[-1], 4),
+                             round(statistics.mean(r[half:]), 4)])
 
     csv_path = f'{args.out}.csv'
     with open(csv_path, 'w', newline='') as f:
@@ -111,7 +115,12 @@ def offline_main(argv=None):
     for s in STRATEGIES:
         print(f'  {s:14s} fin = {results[s][-1]:.3f}   moyenne 2e moitie = '
               f'{statistics.mean(results[s][last]):.3f}')
-    print(f'CSV : {csv_path}')
+    seeds_path = f'{args.out}_graines.csv'
+    with open(seeds_path, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['strategie', 'graine', 'erreur_fin', 'erreur_moy_2e_moitie'])
+        writer.writerows(per_seed)
+    print(f'CSV : {csv_path} ; par graine : {seeds_path}')
 
     try:
         import matplotlib
