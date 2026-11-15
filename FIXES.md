@@ -937,6 +937,29 @@ than that rule, and gets scenarios where looking ahead could pay off.
   `src/warehouse_marl/README.md`, section "DRL v3".
 - Raw outputs are outside the repository, in `~/warehouse_ws/drl_v3/`.
 
+## Final session before the thesis write-up (2026-11-15)
+
+- **Benchmark fairness**: blockages now use their own RNG (rng_world) and
+  message loss uses rng_net. Before this, consensus and random consumed
+  draws from the shared RNG, so for one seed they saw different blockages
+  than fifo/greedy. Tested in `test_benchmark_fairness.py`. All
+  experiments were rerun with 9 methods.
+- **Online dynamic graph**: `/warehouse/blocked_edges` is handled in
+  `graph_publisher_node` (`dynamic_blocking.py`). `mission_executor_node`
+  blocks a target's access edge for 60 s after 2 Nav2 failures.
+- **DRL v3 in ROS**: `obs_version:=v3` in `drl_allocator_node`, hybrid or
+  direct. The launch falls back to the heuristic consensus when the model
+  is missing. The benchmark gains a `drl3_hybrid` method.
+- **Measurements**: `task_metrics_logger`, `summarize_task_metrics` and
+  `scripts/mesures_gazebo.sh`.
+  - Gazebo was NOT run: 2.0 GB of RAM free and swap full on the i3/8 GB
+    machine.
+  - Videos were NOT made: `replay_animation.py` does not exist and ffmpeg
+    is missing.
+- **Report**: `scripts/rapport_final.py` builds `VALEURS_MEMOIRE.md`
+  (every value with file and line) and the derived CSVs. The results are
+  in `~/warehouse_ws/resultats_finaux.zip`.
+
 ## Known limitations
 
 - With `explore:=false` and no saved map, SLAM initially knows only the area
