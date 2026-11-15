@@ -44,6 +44,9 @@ setup(
             # Couche RFID : inventaire probabiliste + evaluation
             'inventory_node = warehouse_marl.inventory_node:main',
             'rfid_metrics_logger = warehouse_marl.rfid_metrics_logger:main',
+            # Mesures des missions dans Gazebo (statuts de taches -> CSV, synthese)
+            'task_metrics_logger = warehouse_marl.task_metrics:logger_main',
+            'summarize_task_metrics = warehouse_marl.task_metrics:summarize_main',
             'rfid_offline_experiment = warehouse_marl.rfid_experiment:offline_main',
             'plot_rfid_metrics = warehouse_marl.rfid_experiment:plot_main',
             # Banc d'essai hors-ligne de l'allocation de taches
