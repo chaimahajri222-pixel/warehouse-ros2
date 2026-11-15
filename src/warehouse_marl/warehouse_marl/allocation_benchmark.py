@@ -63,7 +63,7 @@ from warehouse_marl.warehouse_graph import (
     WarehouseGraph, WarehouseNode, build_demo_warehouse)
 
 METHODS = ('random', 'fifo', 'consensus', 'greedy_pair', 'greedy_time', 'drl_hybrid',
-           'drl_direct', 'drl2_hybrid', 'drl2_direct', 'drl3_direct')
+           'drl_direct', 'drl2_hybrid', 'drl2_direct', 'drl3_hybrid', 'drl3_direct')
 REFERENCES = ('fifo', 'consensus', 'greedy_pair', 'greedy_time')
 LABELS = {
     'random': 'Aleatoire',
@@ -76,6 +76,7 @@ LABELS = {
     'drl2_direct': 'DRL v2 direct (Q par couple)',
     'greedy_time': 'Couple de temps de trajet min. (vitesses, sans apprentissage)',
     'drl3_direct': 'DRL v3 direct (residuel sur greedy_pair)',
+    'drl3_hybrid': 'DRL v3 hybride (consensus + biais calibre)',
 }
 
 
@@ -276,6 +277,22 @@ class Benchmark:
         scale = bias_scale_from_meta(getattr(self.agent2, 'meta', {}), self.speed)
         return dict(zip([r.rid for r in free], calibrated_bias(q, self.bias_w, scale)))
 
+    def hybrid_bias_v3(self, task: Task):
+        """Biais calibre du DRL v3 pour ``task`` (rid -> metres) : Q residuel
+        des couples (robot libre, task), calcule avec les autres taches
+        candidates pour les caracteristiques relatives ; meme formule que v2."""
+        from warehouse_marl.drl.features_v2 import bias_scale_from_meta, calibrated_bias
+        free = [r for r in self.robots if self.idle(r)]
+        if not free:
+            return {}
+        cand = self.candidate_tasks()
+        if task not in cand:
+            cand = cand + [task]
+        pairs = [(r, f) for r, k, f in self._pairs_v3(free, cand) if k is task]
+        q = self.agent3.scores([f for _, f in pairs])
+        scale = bias_scale_from_meta(getattr(self.agent3, 'meta', {}), self.speed)
+        return dict(zip([r.rid for r, _ in pairs], calibrated_bias(q, self.bias_w, scale)))
+
     def assign(self, task: Task, r: Robot):
         task.robot, task.assigned = r.rid, self.t
         if r.task is None:
@@ -376,9 +393,10 @@ class Benchmark:
                     if task.task_id not in bias:
                         bias[task.task_id] = self.q_values(task)
                     cost += self.bias_w * -float(bias[task.task_id][self.names.index(r.rid)])
-                elif self.m == 'drl2_hybrid':
+                elif self.m in ('drl2_hybrid', 'drl3_hybrid'):
                     if task.task_id not in bias:
-                        bias[task.task_id] = self.hybrid_bias_v2(task)
+                        bias[task.task_id] = (self.hybrid_bias_v2(task) if self.m == 'drl2_hybrid'
+                                              else self.hybrid_bias_v3(task))
                     cost += bias[task.task_id].get(r.rid, 0.0)
                 task.bids[r.rid], task.bid_time[r.rid] = cost, self.t
                 r.open_bid = task.task_id
@@ -551,13 +569,16 @@ class Benchmark:
     def candidate_pairs_v3(self):
         """Comme candidate_pairs, avec les caracteristiques relatives v3
         (drl/features_v3.py), calculees sur l'ensemble des couples."""
-        from warehouse_marl.drl.features_v3 import decision_features, due_in, graph_diameter
         free = [r for r in self.robots if self.idle(r)]
         if not free:
             return []
         cand = self.candidate_tasks()
         if not cand:
             return []
+        return self._pairs_v3(free, cand)
+
+    def _pairs_v3(self, free, cand):
+        from warehouse_marl.drl.features_v3 import decision_features, due_in, graph_diameter
         if getattr(self, '_diameter', None) is None:
             self._diameter = graph_diameter(self.g)
         specs, keys = [], []

@@ -213,6 +213,15 @@ class TestResidualModel(unittest.TestCase):
             b = make_benchmark('greedy_pair', sc).run()
             self.assertEqual(a, b, sc)
 
+    def test_untrained_residual_hybrid_equals_consensus(self):
+        from warehouse_marl.drl.residual_dqn import ResidualDQN
+        agent = ResidualDQN(seed=0)
+        for sc in (scenario(3, tasks=60, block_rate=1 / 60),
+                   scenario(6, dims=(8, 5), tasks=60, speeds=(0.3, 0.5, 0.7))):
+            a = make_benchmark('drl3_hybrid', sc, agent3=agent).run()
+            b = make_benchmark('consensus', sc).run()
+            self.assertEqual(a, b, sc)
+
     def test_correction_starts_at_zero_and_learns(self):
         from warehouse_marl.drl.env_v3 import AllocationEnvV3
         from warehouse_marl.drl.residual_dqn import ResidualDQN
