@@ -3,7 +3,7 @@
 # Usage : test_idle_mode_ros.sh <stay|centre|drl> [modele_idle.pt] [cible_t0]
 set +u
 MODE=${1:-stay}; MODEL=${2:-}; T0=${3:-shelf_4_2}
-PY=${PY:-$HOME/warehouse-ros2/.venv/bin/python}   # python avec torch (mode drl)
+PY=${PY:-${VENV:-$HOME/warehouse_ws/.venv}/bin/python}   # python avec torch (mode drl)
 HERE=$(cd "$(dirname "$0")/.." && pwd)
 source /opt/ros/jazzy/setup.bash
 export ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-88}

@@ -18,6 +18,9 @@ setup(
             glob(os.path.join('config', '*.yaml'))),
         (os.path.join('share', package_name, 'dashboard'),
             glob(os.path.join('dashboard', '*'))),
+        # Modeles retenus (petits, suivis par git) : voir models/README.md
+        (os.path.join('share', package_name, 'models'),
+            glob(os.path.join('models', '*.pt')) + [os.path.join('models', 'README.md')]),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

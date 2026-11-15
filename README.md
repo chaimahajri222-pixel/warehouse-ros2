@@ -1,5 +1,8 @@
 # Multi-Robot RFID Warehouse (ROS 2)
 
+> **Lancer la simulation et les expériences (branche `drl-v4`) :** voir
+> [README_SIMULATION.md](README_SIMULATION.md) (installation pas à pas, en français).
+
 A simulated warehouse in which several autonomous robots share the work.
 The robots map the building, take orders, decide among themselves who
 does each job, and keep a live inventory using RFID readers. Everything

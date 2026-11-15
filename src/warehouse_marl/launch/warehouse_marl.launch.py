@@ -23,11 +23,16 @@ Ce launch file demarre, pour N robots :
     - 1x mission_executor_node      (assignations -> actions Nav2)
     - Nx consensus_node             (heuristic/hybrid seulement)
     - 1x drl_allocator_node         (hybrid/direct seulement)
+
+Modeles par defaut : dossier models/ du package (installe dans
+share/warehouse_marl/models) : drl3_best.pt (hybrid, obs_version v3),
+selected_route.pt (route_mode:=drl), selected_idle.pt (idle_mode:=drl).
 """
 
 import ast
 import os
 
+from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, LogInfo, OpaqueFunction
 from launch.substitutions import LaunchConfiguration
@@ -44,7 +49,12 @@ def launch_setup(context, *args, **kwargs):
         robot_names = [r.strip() for r in robot_names_str.split(',') if r.strip()]
 
     drl_mode = LaunchConfiguration('drl_mode').perform(context)
-    model_path = LaunchConfiguration('model_path').perform(context)
+    model_path = os.path.expanduser(LaunchConfiguration('model_path').perform(context))
+    route_mode = LaunchConfiguration('route_mode').perform(context)
+    route_model = os.path.expanduser(LaunchConfiguration('route_model').perform(context))
+    idle_mode = LaunchConfiguration('idle_mode').perform(context)
+    idle_model = os.path.expanduser(LaunchConfiguration('idle_model').perform(context))
+    msg_loss = float(LaunchConfiguration('msg_loss').perform(context))
     obs_version = LaunchConfiguration('obs_version').perform(context)
     bias_weight = float(LaunchConfiguration('bias_weight').perform(context))
     map_origin_x = float(LaunchConfiguration('map_origin_x').perform(context))
@@ -130,7 +140,7 @@ def launch_setup(context, *args, **kwargs):
                 name=f'consensus_node_{name}',
                 namespace=name,
                 output='screen',
-                parameters=[{**common, 'robot_id': name}],
+                parameters=[{**common, 'robot_id': name, 'msg_loss': msg_loss}],
             ))
 
     nodes.append(Node(
@@ -138,13 +148,16 @@ def launch_setup(context, *args, **kwargs):
         executable='mission_executor_node',
         name='mission_executor_node',
         output='screen',
-        parameters=[{**common, 'robot_names': robot_names}],
+        parameters=[{**common, 'robot_names': robot_names,
+                     'route_mode': route_mode, 'route_model': route_model,
+                     'idle_mode': idle_mode, 'idle_model': idle_model}],
     ))
 
     return fallback + nodes
 
 
 def generate_launch_description():
+    models = os.path.join(get_package_share_directory('warehouse_marl'), 'models')
     return LaunchDescription([
         DeclareLaunchArgument(
             'robot_names', default_value="['robot1','robot2','robot3','robot4']",
@@ -155,11 +168,11 @@ def generate_launch_description():
             description="Allocation: 'heuristic', 'hybrid', ou 'direct'"
         ),
         DeclareLaunchArgument(
-            'model_path', default_value='warehouse_dqn.pt',
-            description="Chemin vers le modele DQN entraine (.pt)"
+            'model_path', default_value=os.path.join(models, 'drl3_best.pt'),
+            description="Modele DRL d'allocation (.pt) ; defaut : models/drl3_best.pt (v3)"
         ),
         DeclareLaunchArgument(
-            'obs_version', default_value='v1',
+            'obs_version', default_value='v3',
             description="'v1' : train_drl ; 'v2' : train_drl_v2 ; 'v3' : train_drl_v3 (residuel)"
         ),
         DeclareLaunchArgument(
@@ -185,6 +198,26 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'demand_skew', default_value='0.0',
             description="Exposant Zipf de la demande par rack (0 = uniforme)"
+        ),
+        DeclareLaunchArgument(
+            'route_mode', default_value='direct',
+            description="Trajets : 'direct' (Nav2 seul), 'dijkstra' ou 'drl' (drl_route)"
+        ),
+        DeclareLaunchArgument(
+            'route_model', default_value=os.path.join(models, 'selected_route.pt'),
+            description='Modele drl_route (route_mode:=drl)'
+        ),
+        DeclareLaunchArgument(
+            'idle_mode', default_value='stay',
+            description="Robot inoccupe : 'stay' (reste sur place), 'centre' ou 'drl' (drl_idle)"
+        ),
+        DeclareLaunchArgument(
+            'idle_model', default_value=os.path.join(models, 'selected_idle.pt'),
+            description='Modele drl_idle (idle_mode:=drl)'
+        ),
+        DeclareLaunchArgument(
+            'msg_loss', default_value='0.0',
+            description='Fraction des encheres recues ignoree par consensus_node (perte simulee)'
         ),
         DeclareLaunchArgument(
             'map_topic', default_value='/map_fused',

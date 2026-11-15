@@ -17,8 +17,11 @@ Usage :
     ros2 launch warehouse_marl warehouse_full.launch.py
     ros2 launch warehouse_marl warehouse_full.launch.py robot_count:=4
     ros2 launch warehouse_marl warehouse_full.launch.py explore:=false
-    ros2 launch warehouse_marl warehouse_full.launch.py \\
-        drl_mode:=hybrid model_path:=$PWD/warehouse_dqn_3robots.pt
+    ros2 launch warehouse_marl warehouse_full.launch.py drl_mode:=hybrid
+    ros2 launch warehouse_marl warehouse_full.launch.py idle_mode:=drl
+
+Modeles par defaut : models/ du package (drl3_best.pt, selected_route.pt,
+selected_idle.pt), voir warehouse_marl.launch.py.
 
 Les noms des robots (robot1..robotN) sont generes a partir de robot_count et
 transmis a la couche MARL. La couche MARL demarre apres la fusion de cartes
@@ -132,6 +135,11 @@ def launch_setup(context, *args, **kwargs):
                 'use_rfid_inventory': LaunchConfiguration('use_rfid_inventory').perform(context),
                 'rfid_drift_period': LaunchConfiguration('rfid_drift_period').perform(context),
                 'demand_skew': LaunchConfiguration('demand_skew').perform(context),
+                'route_mode': LaunchConfiguration('route_mode').perform(context),
+                'route_model': LaunchConfiguration('route_model').perform(context),
+                'idle_mode': LaunchConfiguration('idle_mode').perform(context),
+                'idle_model': LaunchConfiguration('idle_model').perform(context),
+                'msg_loss': LaunchConfiguration('msg_loss').perform(context),
             }.items())
 
         actions += [
@@ -144,6 +152,7 @@ def launch_setup(context, *args, **kwargs):
 
 
 def generate_launch_description():
+    models = os.path.join(get_package_share_directory('warehouse_marl'), 'models')
     return LaunchDescription([
         DeclareLaunchArgument(
             'robot_count', default_value='3',
@@ -169,11 +178,26 @@ def generate_launch_description():
             'drl_mode', default_value='heuristic',
             description="Allocation: 'heuristic', 'hybrid', ou 'direct'"),
         DeclareLaunchArgument(
-            'model_path', default_value='warehouse_dqn.pt',
-            description='Modele DQN (.pt), entraine avec --n-agents = robot_count'),
+            'model_path', default_value=os.path.join(models, 'drl3_best.pt'),
+            description="Modele DRL d'allocation (.pt) ; defaut : models/drl3_best.pt (v3)"),
         DeclareLaunchArgument(
-            'obs_version', default_value='v1',
-            description="'v1' : modele train_drl ; 'v2' : modele train_drl_v2 (toute flotte)"),
+            'obs_version', default_value='v3',
+            description="'v1' : train_drl ; 'v2' : train_drl_v2 ; 'v3' : train_drl_v3 (defaut)"),
+        DeclareLaunchArgument(
+            'route_mode', default_value='direct',
+            description="Trajets : 'direct' (Nav2 seul), 'dijkstra' ou 'drl' (drl_route)"),
+        DeclareLaunchArgument(
+            'route_model', default_value=os.path.join(models, 'selected_route.pt'),
+            description='Modele drl_route (route_mode:=drl)'),
+        DeclareLaunchArgument(
+            'idle_mode', default_value='stay',
+            description="Robot inoccupe : 'stay', 'centre' ou 'drl' (drl_idle)"),
+        DeclareLaunchArgument(
+            'idle_model', default_value=os.path.join(models, 'selected_idle.pt'),
+            description='Modele drl_idle (idle_mode:=drl)'),
+        DeclareLaunchArgument(
+            'msg_loss', default_value='0.0',
+            description='Fraction des encheres recues ignoree par consensus_node'),
         DeclareLaunchArgument(
             'bias_weight', default_value='1.0',
             description='v2 hybrid : poids du biais calibre'),
