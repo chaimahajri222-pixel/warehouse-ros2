@@ -26,9 +26,10 @@ Ce launch file demarre, pour N robots :
 """
 
 import ast
+import os
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, OpaqueFunction
+from launch.actions import DeclareLaunchArgument, LogInfo, OpaqueFunction
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
@@ -54,6 +55,13 @@ def launch_setup(context, *args, **kwargs):
     demand_skew = float(LaunchConfiguration('demand_skew').perform(context))
     if drl_mode not in ('heuristic', 'hybrid', 'direct'):
         raise ValueError('drl_mode must be heuristic, hybrid, or direct')
+    fallback = []
+    if (drl_mode in ('hybrid', 'direct') and obs_version in ('v2', 'v3')
+            and not os.path.isfile(model_path)):
+        # Repli : sans modele v2/v3, la coordination reste le consensus heuristique.
+        fallback.append(LogInfo(msg=f'[warehouse_marl] modele {obs_version} introuvable '
+                                    f'({model_path}) : repli sur drl_mode heuristic.'))
+        drl_mode = 'heuristic'
 
     common = {
         'use_sim_time': True,
@@ -133,7 +141,7 @@ def launch_setup(context, *args, **kwargs):
         parameters=[{**common, 'robot_names': robot_names}],
     ))
 
-    return nodes
+    return fallback + nodes
 
 
 def generate_launch_description():
@@ -152,7 +160,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             'obs_version', default_value='v1',
-            description="'v1' : modele train_drl ; 'v2' : modele train_drl_v2 (Q par couple)"
+            description="'v1' : train_drl ; 'v2' : train_drl_v2 ; 'v3' : train_drl_v3 (residuel)"
         ),
         DeclareLaunchArgument(
             'bias_weight', default_value='1.0',

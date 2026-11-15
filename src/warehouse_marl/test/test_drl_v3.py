@@ -258,5 +258,42 @@ class TestResidualModel(unittest.TestCase):
         self.assertEqual(loaded.meta['reward_center'], -0.5)
 
 
+class TestScoresForTask(unittest.TestCase):
+    """Logique du noeud ROS v3 (drl_allocator_node, obs_version='v3'), sans ROS."""
+
+    def _call(self, robots, scorer, nodes):
+        from warehouse_marl.drl.features_v3 import graph_diameter, scores_for_task
+        g = build_grid_warehouse(5, 3)
+        task = {'id': 'T9', 'target': 'shelf_2_1', 'priority': 1.0, 'created': 90.0}
+        others = [{'id': 'T1', 'target': 'shelf_0_2', 'priority': 2.0, 'created': 10.0}]
+        return scores_for_task(
+            scorer, robots, robots, task, others,
+            cost=lambda r, t: g.shortest_path(nodes[r], t)[1],
+            congestion=lambda r, t: 0.0, load={}, speeds={r: 0.5 for r in robots},
+            diameter=graph_diameter(g), max_active=3, pick_time=10.0, now=100.0,
+            queue_len=2)
+
+    def test_zero_correction_prefers_nearest_robot_and_ignores_order(self):
+        class Greedy:
+            def scores(self, feats):
+                return -np.asarray(feats)[:, 0]
+        nodes = {'a': 'shelf_2_0', 'b': 'shelf_4_2', 'c': 'station_A'}
+        q = self._call(['a', 'b', 'c'], Greedy(), nodes)
+        self.assertEqual(len(q), 3)
+        self.assertEqual(max(range(3), key=lambda i: q[i]), 0)        # a est le plus proche
+        q2 = self._call(['c', 'b', 'a'], Greedy(), nodes)
+        self.assertEqual(q2, q[::-1])
+
+    @unittest.skipUnless(HAVE_TORCH, 'PyTorch absent')
+    def test_with_residual_model(self):
+        from warehouse_marl.drl.features_v2 import calibrated_bias
+        from warehouse_marl.drl.residual_dqn import ResidualDQN
+        nodes = {'a': 'shelf_2_0', 'b': 'shelf_4_2'}
+        q = self._call(['a', 'b'], ResidualDQN(seed=0), nodes)
+        bias = calibrated_bias(q, 1.0, 30.0)
+        self.assertAlmostEqual(sum(bias), 0.0, places=6)
+        self.assertLess(bias[0], bias[1])                              # a favorise
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -26,6 +26,10 @@ chaque agent (suivie localement via les assignations de consensus).
 Parametre 'obs_version' :
   - 'v1' (defaut) : comportement historique, observation drl/env.py et
                     modele DQNAgent (taille liee au nombre de robots) ;
+  - 'v3'          : modele train_drl_v3 (Q residuel sur greedy_pair,
+                    drl/features_v3.py), meme biais calibre en hybrid,
+                    attribution par argmax en direct ; parametres
+                    robot_speeds et pick_time_sec ;
   - 'v2'          : modele train_drl_v2 (Q par couple robot/tache,
                     drl/features_v2.py), valable pour toute taille de flotte.
                     En mode hybrid, le biais publie est calibre :
@@ -61,6 +65,10 @@ class DRLAllocatorNode(Node):
         self.declare_parameter('bias_weight', 1.0)        # v2 hybrid
         self.declare_parameter('bias_scale_m', 0.0)       # v2 : 0 = depuis le modele
         self.declare_parameter('k_candidates', 5)         # v2 : taches candidates
+        # v3 : vitesse de chaque robot (m/s), dans l'ordre de robot_names ;
+        # vide = meme vitesse pour tous (seules les vitesses relatives comptent)
+        self.declare_parameter('robot_speeds', [0.0])
+        self.declare_parameter('pick_time_sec', 10.0)     # v3 : marge au delai
 
         self.robot_names = self.get_parameter('robot_names').value
         self.model_path = self.get_parameter('model_path').value
@@ -69,8 +77,13 @@ class DRLAllocatorNode(Node):
         self.obs_version = str(self.get_parameter('obs_version').value)
         self.bias_weight = float(self.get_parameter('bias_weight').value)
         self.k_candidates = int(self.get_parameter('k_candidates').value)
-        if self.obs_version not in ('v1', 'v2'):
-            raise ValueError(f"obs_version doit valoir 'v1' ou 'v2', pas {self.obs_version!r}")
+        if self.obs_version not in ('v1', 'v2', 'v3'):
+            raise ValueError(
+                f"obs_version doit valoir 'v1', 'v2' ou 'v3', pas {self.obs_version!r}")
+        speeds = [float(v) for v in self.get_parameter('robot_speeds').value if float(v) > 0]
+        self.robot_speeds = {name: (speeds[i] if i < len(speeds) else 0.5)
+                             for i, name in enumerate(self.robot_names)}
+        self.pick_time = float(self.get_parameter('pick_time_sec').value)
         self.open_tasks = {}   # v2 : task_id -> dict(id, target, priority, created)
 
         self.graph: WarehouseGraph = None
@@ -78,7 +91,18 @@ class DRLAllocatorNode(Node):
         self.agent_node = {name: None for name in self.robot_names}
 
         self.model_loaded = os.path.isfile(self.model_path)
-        if self.obs_version == 'v2':
+        if self.obs_version == 'v3':
+            self.agent = None
+            if self.model_loaded:
+                from warehouse_marl.drl.features_v2 import bias_scale_from_meta
+                from warehouse_marl.drl.residual_dqn import load_residual_model
+                self.agent = load_residual_model(self.model_path)
+                scale = float(self.get_parameter('bias_scale_m').value)
+                self.bias_scale = scale if scale > 0 else bias_scale_from_meta(self.agent.meta)
+                self.get_logger().info(
+                    f"Modele DRL v3 (residuel) charge depuis {self.model_path} "
+                    f"(echelle du biais {self.bias_scale:.1f} m, poids {self.bias_weight})")
+        elif self.obs_version == 'v2':
             self.agent = None
             if self.model_loaded:
                 from warehouse_marl.drl.features_v2 import bias_scale_from_meta
@@ -175,6 +199,9 @@ class DRLAllocatorNode(Node):
         if self.obs_version == 'v2':
             self._on_new_task_v2(task_id, target, priority)
             return
+        if self.obs_version == 'v3':
+            self._on_new_task_v3(task_id, target, priority)
+            return
 
         obs = self._build_observation(target, priority)
         q_values = self.agent.q_values(obs)
@@ -241,6 +268,39 @@ class DRLAllocatorNode(Node):
             return
         bias = calibrated_bias(q_values, self.bias_weight, self.bias_scale)
         msg = String()
+        msg.data = json.dumps({f"{task_id}:{r}": float(b) for r, b in zip(robots, bias)})
+        self.bias_pub.publish(msg)
+
+    # ------------------------------------------------------------------ #
+    # DRL v3 : Q residuel par couple, caracteristiques relatives (features_v3)
+    # ------------------------------------------------------------------ #
+    def _on_new_task_v3(self, task_id: str, target: str, priority: float):
+        from warehouse_marl.drl.features_v2 import calibrated_bias
+        from warehouse_marl.drl.features_v3 import graph_diameter, scores_for_task
+        if not self.graph.G.has_node(target):
+            return
+        task = {'id': task_id, 'target': target, 'priority': float(priority),
+                'created': self._now()}
+        self.open_tasks[task_id] = task
+        free = [n for n in self.robot_names if self.agent_load.get(n, 0) == 0]
+        robots = free or list(self.robot_names)
+        cand = sorted(self.open_tasks.values(), key=lambda k: (k['created'], k['id']))
+        q_values = scores_for_task(
+            self.agent, robots, free, task, cand[:self.k_candidates],
+            cost=self._robot_cost, congestion=self._robot_congestion, load=self.agent_load,
+            speeds=self.robot_speeds, diameter=graph_diameter(self.graph),
+            max_active=self.max_active, pick_time=self.pick_time, now=self._now(),
+            queue_len=len(self.open_tasks))
+        msg = String()
+        if self.mode == 'direct':
+            best = int(np.argmax(q_values))
+            msg.data = json.dumps({'task_id': task_id, 'robot_id': robots[best],
+                                   'target_node': target,
+                                   'q_values': {r: q for r, q in zip(robots, q_values)}})
+            self.direct_assign_pub.publish(msg)
+            self.get_logger().info(f"[DRL v3 direct] {task_id} -> {robots[best]}")
+            return
+        bias = calibrated_bias(q_values, self.bias_weight, self.bias_scale)
         msg.data = json.dumps({f"{task_id}:{r}": float(b) for r, b in zip(robots, bias)})
         self.bias_pub.publish(msg)
 

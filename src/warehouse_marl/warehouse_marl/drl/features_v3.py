@@ -155,3 +155,37 @@ def decision_features(pairs: Sequence[Dict], tasks: Dict[str, Dict], n_robots: i
 
 def due_in(due: Optional[float], now: float) -> Optional[float]:
     return None if due is None else due - now
+
+
+def scores_for_task(scorer, robots: Sequence[str], free: Sequence[str], task: Dict,
+                    tasks: Sequence[Dict], cost, congestion, load: Dict[str, int],
+                    speeds: Dict[str, float], diameter: float, max_active: int,
+                    pick_time: float, now: float, queue_len: int):
+    """Q (modele residuel v3) de ``task`` pour chaque robot de ``robots``.
+
+    Les caracteristiques relatives sont calculees sur tous les couples
+    (robots x taches candidates, ``task`` comprise), comme dans le banc
+    d'essai ; seules les lignes de ``task`` sont notees. ``tasks`` : dicts
+    {id, target, priority, created, [due]} ; ``cost(robot, cible)`` et
+    ``congestion(robot, cible)`` fournis par l'appelant (noeud ROS).
+    Retourne la liste des Q, dans l'ordre de ``robots``.
+    """
+    cand = list(tasks)
+    if all(k['id'] != task['id'] for k in cand):
+        cand.append(task)
+    specs = []
+    for k in cand:
+        for r in robots:
+            c = cost(r, k['target'])
+            specs.append({'robot': r, 'task': k['id'], 'cost': c,
+                          'speed': speeds.get(r, 0.5),
+                          'congestion': 0.0 if math.isinf(c) else congestion(r, k['target']),
+                          'load': load.get(r, 0)})
+    task_info = {k['id']: {'age': now - k['created'], 'priority': k['priority'],
+                           'due_in': due_in(k.get('due'), now)} for k in cand}
+    mean_speed = sum(speeds.get(r, 0.5) for r in robots) / max(len(robots), 1)
+    feats = decision_features(specs, task_info, n_robots=len(robots), n_free=len(free),
+                              queue_len=queue_len, diameter=diameter, mean_speed=mean_speed,
+                              max_active=max_active, pick_time=pick_time)
+    rows = [f for s, f in zip(specs, feats) if s['task'] == task['id']]
+    return [float(q) for q in scorer.scores(rows)]
