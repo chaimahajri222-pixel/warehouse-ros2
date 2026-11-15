@@ -281,4 +281,35 @@ Le dossier `~/warehouse_ws/resultats_v4`, compressé en `resultats_v4.zip`, cont
 
 ## Écarts
 
-(aucun à la date de rédaction)
+Tous les écarts ci-dessous ont été décidés le 15/11/2026, **avant tout entraînement
+complet et avant tout essai de test**. Ils viennent des équivalences et d'un essai
+d'entraînement de 4 minutes, rejeté ensuite.
+
+1. **Attente et départage des égalités (§3.1).** L'action « attendre » (un candidat
+   de plus, en plus des arêtes ; choisir une arête bloquée revient aussi à attendre)
+   dure 1 s. Elle s'interrompt dès que l'ensemble des arêtes bloquées change.
+   Le terme a priori de l'attente vaut −(d(u, but) + 0,01 m) / D. Un bonus de 10⁻³
+   (en unités de Q) est ajouté à l'action que choisirait `dijkstra_dynamique` (le
+   voisin suivant, ou l'attente s'il n'y a pas de chemin). Le départage par le nom
+   du voisin n'est donc pas utilisé.
+   *Raison :* sans cela, f_θ = 0 ne reproduisait pas exactement `dijkstra_dynamique`
+   dans les égalités de la grille et quand il n'existe aucun chemin libre.
+   L'équivalence exacte est vérifiée par `test/test_v4.py`, pour `drl_route` comme
+   pour `drl_idle`.
+2. **γ = 1 pour `drl_route` (au lieu de 0,99).** *Raison :* avec un escompte par
+   décision, 60 s d'attente découpées en décisions courtes coûtaient presque rien
+   (0,99^n). L'épisode d'une route est fini : il se termine à l'arrivée, à l'échec
+   après 90 s d'attente, ou au repli après 3|V| déplacements. Le retour non escompté
+   est donc défini, et il correspond à l'objectif (le temps total).
+3. **Compression du terme a priori.** Le coût de l'arête plus la distance au but,
+   avec P = 1000 m pour une arête bloquée, passe par la fonction strictement
+   croissante g(x) = x si x ≤ 3 × diamètre, et 3 × diamètre + 0,001 (x − 3 × diamètre)
+   sinon. Les caractéristiques de distance sont compressées de la même façon.
+   *Raison :* dans l'essai de 4 minutes, des valeurs a priori de −33 faisaient
+   diverger la correction. Comme g est strictement croissante, l'argmax ne change
+   pas et l'équivalence du point 1 tient toujours.
+4. **Durée maximale d'un épisode d'entraînement :** 1 800 s simulées après la
+   dernière arrivée (au lieu de 3 600 s). Cela évite qu'un épisode dégradé par
+   l'exploration consomme le budget. Ne s'applique ni à la validation ni au test.
+5. **Budget :** 115 min d'entraînement par graine, plus la dernière validation,
+   pour rester sous 2 h par graine.
