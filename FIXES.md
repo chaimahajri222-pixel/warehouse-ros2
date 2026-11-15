@@ -897,6 +897,46 @@ slightly below, consensus. The gain comes from choosing the task, not from
 learning. Full table and tuning ideas: `src/warehouse_marl/README.md`,
 section "DRL v2 : evaluation".
 
+## DRL v3: residual learning on greedy_pair (2026-11-15)
+
+### Goal
+
+DRL v2 never beat the untrained `greedy_pair` rule. v3 cannot start worse
+than that rule, and gets scenarios where looking ahead could pay off.
+
+### Changes
+
+- `drl/residual_dqn.py`: `Q = -cost/diameter + correction`, with the last
+  correction layer set to zero. An untrained model reproduces
+  `greedy_pair` exactly (tested on 3, 6 and 20 robots).
+- `drl/features_v3.py`: 18 relative features. Costs are divided by the
+  graph diameter. Ties get the average rank, so no feature depends on
+  robot order.
+- `drl/env_v3.py`: the reward uses the measured service time and a
+  frozen reference computed from `greedy_pair` rollouts.
+- `allocation_benchmark.py`:
+  - options `--demand-skew`, `--speeds`, `--deadline-base`, `--block-min`
+    and `--block-max`;
+  - a late-task metric and `--exp structured`;
+  - `greedy_time`, a control without learning that minimises travel time;
+  - `drl3_direct` with `--model3`.
+  With the default options, results are identical to before on 9
+  reference configurations.
+- `drl/train_drl_v3.py`: 5 seeds x 1000 episodes, with seeds trained in
+  parallel. Validation runs at episode 0 and then every 50 episodes. The
+  best model is kept.
+
+### Verification and result
+
+- 30 v3 tests and all earlier tests pass.
+- Training took 40 min 35 s.
+- Q is stable for only 2 of 5 seeds. In the other three it still drifts
+  upward at episode 1000.
+- In the benchmark, `drl3_direct` shows no significant difference from
+  `greedy_pair` in any of the 18 conditions (all p > 0.05). Full table:
+  `src/warehouse_marl/README.md`, section "DRL v3".
+- Raw outputs are outside the repository, in `~/warehouse_ws/drl_v3/`.
+
 ## Known limitations
 
 - With `explore:=false` and no saved map, SLAM initially knows only the area

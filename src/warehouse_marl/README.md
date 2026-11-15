@@ -344,6 +344,81 @@ et normaliser les couts par le diametre de l'entrepot, inclure 80-150 racks
 et 10-20 robots a l'entrainement, entrainer 1000+ episodes avec 5 graines,
 et en hybride laisser le DRL orienter le CHOIX DE LA TACHE de chaque robot.
 
+## DRL v3 : apprentissage residuel
+
+### Ce qui change par rapport a la v2
+
+| Element | Fichier |
+|---|---|
+| Q residuel : `Q = -cout/diametre + correction`, correction initialisee a 0 | `drl/residual_dqn.py` |
+| 18 caracteristiques relatives (rangs, ecarts au minimum, vitesse, marge au delai, couts / diametre du graphe) | `drl/features_v3.py` |
+| Recompense sur le temps de service MESURE, reference de centrage FIGEE | `drl/env_v3.py` |
+| Entrainement 1 000 episodes x 5 graines, 15 a 150 racks, 3 a 20 robots | `drl/train_drl_v3.py` (`train_drl_v3`) |
+| Scenarios ou anticiper peut payer : `--demand-skew`, `--speeds`, `--deadline-base`, `--block-min/max`, `--exp structured` | `allocation_benchmark.py` |
+| Methode `drl3_direct` (`--model3`) et temoin `greedy_time` (couple de temps de trajet minimal) | `allocation_benchmark.py` |
+
+- **Ne peut pas faire pire que greedy_pair a l'initialisation.** Avec une
+  correction nulle, l'argmax est exactement le couple de `greedy_pair`
+  (verifie par un test : resultats identiques sur 3, 6 et 20 robots). Le
+  meilleur modele est choisi en validation, episode 0 compris. Ce n'est une
+  garantie que sur les scenarios de validation, pas sur d'autres.
+- **Recompense** : la transition d'une decision n'est livree qu'a la fin de
+  sa tache ; `r = -(attente des taches en file jusqu'a la decision suivante
+  + temps attribution -> fin mesure + 120 s si echec) / 60 s - reference`.
+  La reference (-0,544) est calculee une fois, avec `greedy_pair`, sur 40
+  episodes avant l'entrainement.
+- **`greedy_time`** : temoin sans apprentissage ajoute parce qu'avec des
+  robots de vitesses differentes, la regle evidente est de minimiser le
+  temps de trajet, pas la distance. Un DRL qui ne fait que ca n'apprend
+  rien d'autre.
+- **Critere de stabilite de Q**, fixe avant les resultats : Q lissee sur 20
+  episodes ; stable si l'ecart entre la moyenne des 20 % derniers episodes
+  et celle des 20 % precedents est <= 0,05 + 10 % de l'amplitude de Q.
+
+### Resultats (2026-11-15)
+
+Entrainement : 5 graines x 1 000 episodes, 3 graines en parallele, 40 min 35 s
+sur un Intel i3-7020U. Validation (12 scenarios fixes) : FIFO 33,89 s,
+consensus 39,20 s, `greedy_pair` 32,54 s, `greedy_time` 31,82 s ; DRL v3 a
+l'episode 0 : 32,54 s (= `greedy_pair`).
+
+| Graine | Meilleure val. (episode) | vs greedy_pair | vs greedy_time | Val. finale vs greedy_pair | Perte debut -> fin | Q stable |
+|---|---|---|---|---|---|---|
+| 0 | 31,10 s (950) | +3,6 % | +0,2 % | +2,8 % | 0,284 -> 0,328 | non (derive 0,31) |
+| 1 | 31,32 s (300) | +3,5 % | +0,5 % | +0,4 % | 0,376 -> 0,335 | non (0,33) |
+| 2 | 30,81 s (900) | +5,4 % | +2,6 % | +2,0 % | 0,519 -> 0,325 | non (0,32) |
+| 3 | 30,97 s (250) | +4,6 % | +1,5 % | -2,8 % | 0,379 -> 0,344 | oui (0,23) |
+| 4 | 32,54 s (0) | 0,0 % | -3,5 % | -4,5 % | 0,365 -> 0,324 | oui (0,22) |
+
+**Q n'est pas stable pour toutes les graines (2 sur 5).** Q baisse pendant
+la phase d'exploration forte (epsilon 0,5), puis remonte regulierement de
+-2,3 a -1,0 entre les episodes 250 et 1 000 sans atteindre de plateau : la
+valeur suit la politique qui s'ameliore quand epsilon decroit (jusqu'a
+l'episode 600), lentement (gamma 0,95, mise a jour douce tau 0,005). La
+courbe de validation moyenne reste collee a `greedy_pair` ; les meilleurs
+modeles (+3,4 % en moyenne) profitent en partie de la selection du meilleur
+point parmi 21 validations bruitees (+/- 1 s).
+
+Banc d'essai (10 graines, 150 taches), `drl3_direct` (meilleur modele,
+graine 2) contre `greedy_pair` : **aucune difference significative** sur
+les 18 conditions (toutes p > 0,05, Wilcoxon apparie). Ecarts les plus
+grands : `structured` difficile +4,2 % (6/10, p=0,49) et facile +2,4 %
+(7/10, p=0,16) ; `structured` moyen -3,1 % (p=0,19) ; 6 robots / 40 racks
+-1,8 % (p=0,065). Contre `greedy_time`, l'ecart en `structured` difficile
+s'inverse (-4,0 %). Taux de retard : seul `structured` facile est
+nominalement meilleur (-10,9 % de retards, p=0,046, sans correction pour
+comparaisons multiples).
+
+**Conclusion.** L'apprentissage residuel tient sa promesse de ne pas
+degrader `greedy_pair` en moyenne, mais il ne le bat pas. Le seul gain
+visible apparait quand les vitesses des robots different, et il n'est pas
+superieur a celui de la regle `greedy_time`. Pistes : garder epsilon constant
+plus longtemps et entrainer jusqu'a ce que Q se stabilise (2 000+
+episodes) ; gamma plus faible (0,9) ; plus de scenarios de validation
+(bruit) ; residu sur `greedy_time` plutot que `greedy_pair` ; actions de
+repositionnement des robots libres, sans lesquelles la demande de Zipf ne
+laisse rien a anticiper.
+
 ## Donnees
 
 ### Source et licence
