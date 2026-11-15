@@ -283,6 +283,16 @@ class Benchmark:
                 r = min(free, key=lambda x: (self.path_cost(x.node, task.target), x.rid))
                 self.open.remove(task); self.assign(task, r)
                 self.msgs += len(self.robots) + 1      # interrogation des etats + ordre
+        elif self.m == 'drl3_direct':
+            # DRL v3 residuel : Q = -cout/diametre + correction apprise, couple
+            # de Q maximale (correction nulle -> meme choix que greedy_pair).
+            while True:
+                pairs = self.candidate_pairs_v3()
+                if not pairs:
+                    break
+                q = self.agent3.scores([f for _, _, f in pairs])
+                r, task, _ = pairs[int(max(range(len(q)), key=lambda j: q[j]))]
+                self.assign_pair(r, task)
         elif self.m == 'greedy_time':
             # Temoin sans apprentissage tenant compte de la vitesse de chaque
             # robot : couple de temps de trajet estime minimal.

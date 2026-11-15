@@ -4,6 +4,8 @@ apprentissage residuel. Sans ROS 2 ; tests PyTorch ignores si absent."""
 import math
 import unittest
 
+import numpy as np
+
 from warehouse_marl.allocation_benchmark import Task, build_grid_warehouse
 from warehouse_marl.drl.env_v2 import make_benchmark
 from warehouse_marl.drl.features_v3 import N_FEATURES_V3, graph_diameter
@@ -116,6 +118,135 @@ class TestStructuredScenarios(unittest.TestCase):
             counts[k.target] = counts.get(k.target, 0) + 1
         top = max(counts.values())
         self.assertGreater(top / len(b.arrivals), 0.15)    # uniforme : 1/40 = 2.5 %
+
+
+class TestEnvV3Reward(unittest.TestCase):
+    def _single_task(self, chosen_node, other_node, center=None):
+        from warehouse_marl.drl.env_v3 import AllocationEnvV3
+        env = AllocationEnvV3(seed=0, reward_center=center)
+        env.reset(scenario=scenario(2, tasks=1, rho=0.5))
+        b = env.bench
+        b.robots[0].node, b.robots[1].node = chosen_node, other_node
+        b._invalidate()
+        env.pairs = b.candidate_pairs_v3()
+        a = next(i for i, (r, _, _) in enumerate(env.pairs) if r is b.robots[0])
+        task = env.pairs[a][1]
+        _, done, info = env.step(a)
+        self.assertTrue(done)
+        self.assertEqual(len(info['transitions']), 1)
+        return info['transitions'][0], task
+
+    def test_reward_is_measured_service_time(self):
+        (feat, reward, nxt, terminal, raw), task = self._single_task('shelf_0_0', 'station_B')
+        self.assertTrue(terminal)
+        self.assertEqual(len(nxt), 0)
+        measured = task.done - task.assigned
+        self.assertAlmostEqual(raw, -measured / 60.0, places=9)
+        self.assertAlmostEqual(reward, raw, places=12)       # pas de centrage
+        # le service mesure inclut le prelevement (10 s) et le trajet reel
+        self.assertGreaterEqual(measured, 10.0)
+
+    def test_frozen_center_is_subtracted_and_never_updated(self):
+        from warehouse_marl.drl.env_v3 import AllocationEnvV3
+        (_, reward, _, _, raw), _ = self._single_task('shelf_0_0', 'station_B', center=-0.7)
+        self.assertAlmostEqual(reward, raw + 0.7, places=9)
+        env = AllocationEnvV3(seed=1, n_tasks=30, reward_center=-0.7)
+        for _ in range(2):
+            obs, info = env.reset()
+            done = info['done']
+            while not done:
+                obs, done, _ = env.step(0)
+        self.assertEqual(env.reward_center, -0.7)
+
+    def test_reward_independent_of_whether_chosen_robot_is_cheapest(self):
+        b = make_benchmark('greedy_pair', scenario(2, tasks=1, rho=0.5))
+        target = b.arrivals[0].target
+        nodes = sorted(b.g.G.nodes, key=lambda n: b.path_cost(n, target))
+        mid = nodes[len(nodes) // 2]
+        (_, _, _, _, raw_close), _ = self._single_task(mid, nodes[0])
+        (_, _, _, _, raw_far), _ = self._single_task(mid, nodes[-1])
+        self.assertAlmostEqual(raw_close, raw_far, places=9)
+
+    def test_all_transitions_delivered_once(self):
+        from warehouse_marl.drl.env_v3 import AllocationEnvV3
+        env = AllocationEnvV3(seed=4, n_tasks=50)
+        obs, info = env.reset(scenario=scenario(4, dims=(8, 5), tasks=50, block_rate=2 / 60,
+                                                speeds=(0.3, 0.5, 0.7), skew=1.0))
+        done, n_dec, n_tr, terminals = info['done'], 0, 0, 0
+        while not done:
+            obs, done, inf = env.step(0)
+            n_dec += 1
+            n_tr += len(inf['transitions'])
+            terminals += sum(t[3] for t in inf['transitions'])
+        self.assertEqual(n_dec, n_tr)
+        self.assertEqual(terminals, 1)
+        self.assertEqual(n_dec, 50)
+
+    def test_env_v3_is_deterministic(self):
+        from warehouse_marl.drl.env_v3 import AllocationEnvV3
+
+        def run(seed):
+            env = AllocationEnvV3(seed=seed, n_tasks=30)
+            trace = []
+            for _ in range(2):
+                obs, info = env.reset()
+                done = info['done']
+                while not done:
+                    obs, done, inf = env.step(len(obs) // 2)
+                    trace += [(round(t[1], 12), t[0].tobytes()) for t in inf['transitions']]
+            return trace
+        self.assertEqual(run(3), run(3))
+        self.assertNotEqual(run(3), run(4))
+
+
+@unittest.skipUnless(HAVE_TORCH, 'PyTorch absent')
+class TestResidualModel(unittest.TestCase):
+    def test_untrained_residual_model_equals_greedy_pair(self):
+        from warehouse_marl.drl.residual_dqn import ResidualDQN
+        agent = ResidualDQN(seed=0)
+        cases = [scenario(3, tasks=60),
+                 scenario(6, dims=(8, 5), tasks=60, block_rate=2 / 60, block_min=60.0,
+                          block_max=300.0, speeds=(0.3, 0.5, 0.7), skew=1.5),
+                 scenario(20, dims=(15, 10), tasks=60, rho=0.7)]
+        for sc in cases:
+            a = make_benchmark('drl3_direct', sc, agent3=agent).run()
+            b = make_benchmark('greedy_pair', sc).run()
+            self.assertEqual(a, b, sc)
+
+    def test_correction_starts_at_zero_and_learns(self):
+        from warehouse_marl.drl.env_v3 import AllocationEnvV3
+        from warehouse_marl.drl.residual_dqn import ResidualDQN
+        agent = ResidualDQN(seed=0, warmup=32, batch_size=32)
+        env = AllocationEnvV3(seed=0, n_tasks=40, reward_center=-0.8)
+        obs, _ = env.reset()
+        self.assertTrue(np.all(agent.correction(obs) == 0.0))
+        done, steps = False, []
+        while not done:
+            a = agent.act(obs, epsilon=0.5)
+            obs, done, inf = env.step(a)
+            for f, r, nxt, term, _ in inf['transitions']:
+                agent.remember(f, r, nxt, term)
+                st = agent.train_step()
+                if st:
+                    steps.append(st)
+        self.assertTrue(steps)
+        self.assertTrue(all(math.isfinite(st['loss']) for st in steps))
+        self.assertGreater(steps[-1]['correction'], 0.0)
+
+    def test_save_and_load_roundtrip(self):
+        import os
+        import tempfile
+        from warehouse_marl.drl.residual_dqn import ResidualDQN, load_residual_model
+        agent = ResidualDQN(seed=1)
+        with torch.no_grad():
+            agent.q.correction[-1].bias.fill_(0.25)
+        x = np.random.default_rng(0).random((7, N_FEATURES_V3)).astype(np.float32)
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, 'm.pt')
+            agent.save(path, reward_center=-0.5)
+            loaded = load_residual_model(path)
+        self.assertTrue(np.allclose(agent.scores(x), loaded.scores(x)))
+        self.assertEqual(loaded.meta['reward_center'], -0.5)
 
 
 if __name__ == '__main__':
