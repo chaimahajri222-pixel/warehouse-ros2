@@ -10,7 +10,11 @@ Noeud ROS2 qui :
      noeud precis du graphe (RFID = verite terrain, l'odometrie derive) ;
   4) publie periodiquement l'etat complet du graphe (JSON) sur
      /warehouse/graph_state, consomme par consensus_node.py et
-     drl_allocator_node.py.
+     drl_allocator_node.py ;
+  5) applique les blocages d'aretes annonces sur /warehouse/blocked_edges
+     (JSON {u, v, blocked, duration_s}, voir dynamic_blocking.py) : l'arete
+     est bloquee dans les deux sens, debloquee a l'echeance, et le graphe est
+     republie aussitot.
 
 Ce noeud fait le pont entre la simulation Gazebo/Nav2 (rosnav) et la
 couche de coordination multi-agents (consensus + DRL).
@@ -25,6 +29,7 @@ from rclpy.node import Node
 from std_msgs.msg import String
 import tf2_ros
 
+from warehouse_marl.dynamic_blocking import EdgeBlockManager, parse_block_message
 from warehouse_marl.warehouse_graph import build_demo_warehouse
 
 
@@ -62,8 +67,15 @@ class GraphPublisherNode(Node):
             String, '/rfid/detections', self._on_rfid, 10
         )
 
+        # Blocages d'aretes en ligne (graphe dynamique)
+        self.blocks = EdgeBlockManager(self.graph)
+        self.create_subscription(
+            String, '/warehouse/blocked_edges', self._on_blocked_edge, 10
+        )
+
         # Publication de l'etat du graphe
         self.graph_pub = self.create_publisher(String, '/warehouse/graph_state', 10)
+        self.create_timer(0.5, self._expire_blocks)
         self.create_timer(
             float(self.get_parameter('pose_update_period_sec').value),
             self._update_robot_poses)
@@ -145,10 +157,35 @@ class GraphPublisherNode(Node):
                 f"[RFID] Recalage {robot_name} -> {node_id} (tag {tag})"
             )
 
-    def _publish_graph(self):
+    def _now(self) -> float:
+        return self.get_clock().now().nanoseconds / 1e9
+
+    def _on_blocked_edge(self, msg: String):
+        try:
+            data = parse_block_message(msg.data)
+        except ValueError as exc:
+            self.get_logger().warn(f'Blocage d arete ignore ({exc}).')
+            return
+        if self.blocks.apply(data, self._now()):
+            etat = (f"bloquee {data['duration_s']:.0f} s" if data['blocked']
+                    else 'debloquee')
+            self.get_logger().info(
+                f"Arete {data['u']} <-> {data['v']} {etat} "
+                f"(source : {data['source'] or '?'}).")
+            self._publish_graph(decay=False)
+
+    def _expire_blocks(self):
+        done = self.blocks.expire(self._now())
+        for u, v in done:
+            self.get_logger().info(f'Arete {u} <-> {v} debloquee (echeance).')
+        if done:
+            self._publish_graph(decay=False)
+
+    def _publish_graph(self, decay: bool = True):
         # Congestion is recent-use memory, so let it decay over time.
-        for u, v in self.graph.G.edges:
-            self.graph.update_congestion(u, v, delta=-0.1)
+        if decay:
+            for u, v in self.graph.G.edges:
+                self.graph.update_congestion(u, v, delta=-0.1)
         msg = String()
         msg.data = self.graph.to_json()
         self.graph_pub.publish(msg)

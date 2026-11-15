@@ -22,6 +22,7 @@ from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy
 from std_msgs.msg import Bool, String
 
+from warehouse_marl.dynamic_blocking import FailureTracker, access_edge, block_message
 from warehouse_marl.warehouse_graph import build_demo_warehouse
 
 
@@ -48,6 +49,12 @@ class MissionExecutorNode(Node):
         # Claims for one task are collected this long before dispatching the
         # best one (cost, then robot_id), the same rule consensus_node uses.
         self.declare_parameter('claim_window_sec', 0.5)
+        # Graphe dynamique : apres N echecs Nav2 sur la meme cible, l'arete
+        # d'acces a cette cible est annoncee bloquee pendant block_duration_sec
+        # sur /warehouse/blocked_edges (0 = desactive).
+        self.declare_parameter('block_after_failures', 2)
+        self.declare_parameter('block_duration_sec', 60.0)
+        self.declare_parameter('failure_window_sec', 300.0)
 
         self.robot_names = list(self.get_parameter('robot_names').value)
         self.max_retries = int(self.get_parameter('max_retries').value)
@@ -104,6 +111,11 @@ class MissionExecutorNode(Node):
             String, '/warehouse/tasks/direct_assignment', self._on_assignment, 10)
         self.status_pub = self.create_publisher(
             String, '/warehouse/tasks/status', 10)
+        self.block_after = int(self.get_parameter('block_after_failures').value)
+        self.block_duration = float(self.get_parameter('block_duration_sec').value)
+        self.failures = FailureTracker(
+            self.block_after, float(self.get_parameter('failure_window_sec').value))
+        self.block_pub = self.create_publisher(String, '/warehouse/blocked_edges', 10)
 
         state_qos = QoSProfile(depth=1)
         state_qos.reliability = ReliabilityPolicy.RELIABLE
@@ -274,9 +286,32 @@ class MissionExecutorNode(Node):
         if status == GoalStatus.STATUS_SUCCEEDED:
             self.get_logger().info(
                 f'{mission.robot_id} a termine {mission.task_id}.')
+            self.failures.record_success(mission.target_node)
             self._finish(mission, 'succeeded', status)
         else:
+            if status != GoalStatus.STATUS_CANCELED:
+                self._note_failure(mission)
             self._finish_or_retry(mission, status)
+
+    def _note_failure(self, mission: Mission):
+        """Echecs repetes sur une cible -> blocage temporaire de son arete
+        d'acces dans le graphe dynamique (graph_publisher_node)."""
+        if self.block_after <= 0 or self.block_duration <= 0:
+            return
+        if not self.failures.record_failure(mission.target_node, self._now()):
+            return
+        edge = access_edge(self.graph, mission.target_node)
+        if edge is None:
+            return
+        msg = String()
+        msg.data = block_message(
+            edge[0], edge[1], self.block_duration, 'mission_executor',
+            f'{self.block_after} echecs Nav2 vers {mission.target_node}')
+        self.block_pub.publish(msg)
+        self.get_logger().warn(
+            f'Arete d acces {edge[0]} <-> {edge[1]} annoncee bloquee '
+            f'{self.block_duration:.0f} s ({self.block_after} echecs vers '
+            f'{mission.target_node}).')
 
     def _finish_or_retry(self, mission: Mission, nav_status: int):
         if mission.retries < self.max_retries:
