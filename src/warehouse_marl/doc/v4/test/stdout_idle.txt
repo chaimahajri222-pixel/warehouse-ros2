@@ -1,0 +1,19 @@
+1120 essais de test (idle), modele /home/chchch/warehouse_ws/drl_v4/idle/selected_idle.pt
+/home/chchch/warehouse_ws/test_v4/essais_idle.csv (217 s)
+dataset   15 racks, 3 r., rho=0.7      greedy_pair  DRL   27.85 vs centre_de_demande    30.11  ecart  -2.258 [-2.851;-1.698]  20/20  p=2e-06 holm=2.7e-05  DRL meilleur (significatif)
+dataset   15 racks, 3 r., rho=0.7      greedy_time  DRL   27.85 vs centre_de_demande    30.11  ecart  -2.258 [-2.851;-1.698]  20/20  p=2e-06 holm=2.7e-05  DRL meilleur (significatif)
+dataset   15 racks, 3 r., rho=0.9      greedy_pair  DRL   41.97 vs centre_de_demande    42.97  ecart  -1.000 [-1.552;-0.504]  15/20  p=0.001209 holm=0.01088  DRL meilleur (significatif)
+dataset   15 racks, 3 r., rho=0.9      greedy_time  DRL   41.97 vs centre_de_demande    42.97  ecart  -1.000 [-1.552;-0.504]  15/20  p=0.001209 holm=0.01088  DRL meilleur (significatif)
+dataset   40 racks, 6 r., vit. var.    greedy_pair  DRL   47.15 vs centre_de_demande    51.88  ecart  -4.738 [-5.601;-3.915]  20/20  p=2e-06 holm=2.7e-05  DRL meilleur (significatif)
+dataset   40 racks, 6 r., vit. var.    greedy_time  DRL   48.48 vs centre_de_demande    50.00  ecart  -1.517 [-3.049;+0.354]  16/20  p=0.01718 holm=0.1203  pas de difference significative
+dataset   150 racks, 20 r., rho=0.7    greedy_pair  DRL   67.91 vs rester_sur_place     61.37  ecart  +6.538 [+4.922;+8.197]   1/20  p=6e-06 holm=6.3e-05  heuristique meilleure (significatif)
+dataset   150 racks, 20 r., rho=0.7    greedy_time  DRL   67.91 vs rester_sur_place     61.37  ecart  +6.538 [+4.922;+8.197]   1/20  p=6e-06 holm=6.3e-05  heuristique meilleure (significatif)
+zipf      facile (s=0.5)               greedy_pair  DRL   27.36 vs rester_sur_place     27.47  ecart  -0.110 [-0.919;+0.721]  12/20  p=0.7841 holm=1  pas de difference significative
+zipf      facile (s=0.5)               greedy_time  DRL   27.06 vs rester_sur_place     27.11  ecart  -0.050 [-0.820;+0.652]   9/20  p=1 holm=1  pas de difference significative
+zipf      moyen (s=1.0)                greedy_pair  DRL   29.09 vs rester_sur_place     27.87  ecart  +1.215 [+0.345;+2.078]   7/20  p=0.02664 holm=0.1599  pas de difference significative
+zipf      moyen (s=1.0)                greedy_time  DRL   28.50 vs rester_sur_place     28.16  ecart  +0.330 [-0.461;+1.117]   8/20  p=0.4091 holm=1  pas de difference significative
+zipf      difficile (s=1.5)            greedy_pair  DRL   29.96 vs rester_sur_place     28.71  ecart  +1.248 [-0.325;+2.911]   5/20  p=0.1231 holm=0.6155  pas de difference significative
+zipf      difficile (s=1.5)            greedy_time  DRL   28.56 vs rester_sur_place     27.61  ecart  +0.950 [-0.315;+2.142]   7/20  p=0.1536 holm=0.6155  pas de difference significative
+Figure : /home/chchch/warehouse_ws/test_v4/fig_idle_dataset.png
+Figure : /home/chchch/warehouse_ws/test_v4/fig_idle_zipf.png
+Figure : /home/chchch/warehouse_ws/test_v4/fig_idle_ecarts.png

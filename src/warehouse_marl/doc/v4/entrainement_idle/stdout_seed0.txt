@@ -1,0 +1,37 @@
+[idle graine 0] t=   0.0 min ep=    0 val=36.595 s (meilleur 36.595) (7 s de validation)
+[idle graine 0] t=  10.0 min ep=  939 val=36.103 s (meilleur 36.103) (8 s de validation)
+[idle graine 0] t=  20.0 min ep= 1805 val=35.523 s (meilleur 35.523) (10 s de validation)
+[idle graine 0] t=  30.0 min ep= 2792 val=35.683 s (meilleur 35.523) (10 s de validation)
+[idle graine 0] t=  40.0 min ep= 3629 val=35.981 s (meilleur 35.523) (11 s de validation)
+[idle graine 0] t=  50.0 min ep= 4788 val=35.505 s (meilleur 35.505) (6 s de validation)
+[idle graine 0] t=  60.0 min ep= 5650 val=35.525 s (meilleur 35.505) (10 s de validation)
+[idle graine 0] t=  70.0 min ep= 6485 val=35.658 s (meilleur 35.505) (10 s de validation)
+[idle graine 0] t=  80.0 min ep= 7315 val=35.559 s (meilleur 35.505) (10 s de validation)
+[idle graine 0] t=  90.0 min ep= 8329 val=35.868 s (meilleur 35.505) (10 s de validation)
+[idle graine 0] t= 100.0 min ep= 9148 val=35.135 s (meilleur 35.135) (10 s de validation)
+[idle graine 0] t= 110.0 min ep=10479 val=35.871 s (meilleur 35.135) (15 s de validation)
+[idle graine 0] t= 115.0 min ep=10942 val=35.762 s (meilleur 35.135) (6 s de validation)
+[idle graine 0] fin : 10942 episodes, meilleur val 35.135 s (/home/chchch/warehouse_ws/drl_v4/idle/ckpt_seed0_t100.pt)
+	Command being timed: "/home/chchch/warehouse-ros2/.venv/bin/python -m warehouse_marl.drl.train_v4 --kind idle --seed 0 --budget-min 115 --val-every-min 10 --out-dir /home/chchch/warehouse_ws/drl_v4/idle"
+	User time (seconds): 6854.98
+	System time (seconds): 3.97
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:55:17
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 901684
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 192
+	Minor (reclaiming a frame) page faults: 163063
+	Voluntary context switches: 417
+	Involuntary context switches: 266571
+	Swaps: 0
+	File system inputs: 58208
+	File system outputs: 6096
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

@@ -1,0 +1,253 @@
+etape,metrique,experience,condition,allocation,adversaire,drl_moyenne,adv_moyenne,ecart_moyen,p_wilcoxon,p_holm_famille
+idle,temps_traitement_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,rester_sur_place,27.8517,30.5691,-2.7174,2e-06,8e-05
+idle,temps_traitement_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,retour_au_depot,27.8517,36.8758,-9.0241,2e-06,8e-05
+idle,temps_traitement_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,centre_de_demande,27.8517,30.1101,-2.2583,2e-06,8e-05
+idle,temps_traitement_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_time,rester_sur_place,27.8517,30.5691,-2.7174,2e-06,8e-05
+idle,temps_traitement_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_time,retour_au_depot,27.8517,36.8758,-9.0241,2e-06,8e-05
+idle,temps_traitement_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_time,centre_de_demande,27.8517,30.1101,-2.2583,2e-06,8e-05
+idle,temps_traitement_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,rester_sur_place,41.9692,45.0705,-3.1013,8.2e-05,0.001394
+idle,temps_traitement_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,retour_au_depot,41.9692,50.8404,-8.8712,2e-06,8e-05
+idle,temps_traitement_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,centre_de_demande,41.9692,42.9688,-0.9996,0.001209,0.01572
+idle,temps_traitement_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_time,rester_sur_place,41.9692,45.0705,-3.1013,8.2e-05,0.001394
+idle,temps_traitement_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_time,retour_au_depot,41.9692,50.8404,-8.8712,2e-06,8e-05
+idle,temps_traitement_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_time,centre_de_demande,41.9692,42.9688,-0.9996,0.001209,0.01572
+idle,temps_traitement_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_pair,rester_sur_place,47.1476,52.7636,-5.616,1.9e-05,0.000381
+idle,temps_traitement_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_pair,retour_au_depot,47.1476,60.7269,-13.5793,2e-06,8e-05
+idle,temps_traitement_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_pair,centre_de_demande,47.1476,51.8854,-4.7377,2e-06,8e-05
+idle,temps_traitement_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_time,rester_sur_place,48.4801,51.8204,-3.3403,0.012079,0.096634
+idle,temps_traitement_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_time,retour_au_depot,48.4801,57.4048,-8.9247,1.3e-05,0.00028
+idle,temps_traitement_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_time,centre_de_demande,48.4801,49.9968,-1.5167,0.017181,0.12027
+idle,temps_traitement_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,rester_sur_place,67.9096,61.3711,6.5385,6e-06,0.000132
+idle,temps_traitement_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,retour_au_depot,67.9096,71.2426,-3.3331,0.001432,0.015757
+idle,temps_traitement_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,centre_de_demande,67.9096,63.435,4.4746,4.8e-05,0.000906
+idle,temps_traitement_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_time,rester_sur_place,67.9096,61.3711,6.5385,6e-06,0.000132
+idle,temps_traitement_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_time,retour_au_depot,67.9096,71.2426,-3.3331,0.001432,0.015757
+idle,temps_traitement_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_time,centre_de_demande,67.9096,63.435,4.4746,4.8e-05,0.000906
+idle,temps_traitement_moy_s,zipf,facile (s=0.5),greedy_pair,rester_sur_place,27.3602,27.4702,-0.11,0.784126,1.0
+idle,temps_traitement_moy_s,zipf,facile (s=0.5),greedy_pair,retour_au_depot,27.3602,37.3447,-9.9844,2e-06,8e-05
+idle,temps_traitement_moy_s,zipf,facile (s=0.5),greedy_pair,centre_de_demande,27.3602,32.5552,-5.195,2e-06,8e-05
+idle,temps_traitement_moy_s,zipf,facile (s=0.5),greedy_time,rester_sur_place,27.0592,27.1093,-0.0502,1.0,1.0
+idle,temps_traitement_moy_s,zipf,facile (s=0.5),greedy_time,retour_au_depot,27.0592,36.5247,-9.4656,2e-06,8e-05
+idle,temps_traitement_moy_s,zipf,facile (s=0.5),greedy_time,centre_de_demande,27.0592,31.4702,-4.4111,2e-06,8e-05
+idle,temps_traitement_moy_s,zipf,moyen (s=1.0),greedy_pair,rester_sur_place,29.0883,27.8728,1.2155,0.026642,0.159851
+idle,temps_traitement_moy_s,zipf,moyen (s=1.0),greedy_pair,retour_au_depot,29.0883,37.8202,-8.7319,2e-06,8e-05
+idle,temps_traitement_moy_s,zipf,moyen (s=1.0),greedy_pair,centre_de_demande,29.0883,32.784,-3.6957,4e-06,9.2e-05
+idle,temps_traitement_moy_s,zipf,moyen (s=1.0),greedy_time,rester_sur_place,28.4959,28.1655,0.3305,0.409098,1.0
+idle,temps_traitement_moy_s,zipf,moyen (s=1.0),greedy_time,retour_au_depot,28.4959,36.2612,-7.7653,2e-06,8e-05
+idle,temps_traitement_moy_s,zipf,moyen (s=1.0),greedy_time,centre_de_demande,28.4959,31.0072,-2.5113,0.000105,0.001574
+idle,temps_traitement_moy_s,zipf,difficile (s=1.5),greedy_pair,rester_sur_place,29.96,28.7125,1.2475,0.123093,0.615463
+idle,temps_traitement_moy_s,zipf,difficile (s=1.5),greedy_pair,retour_au_depot,29.96,40.1457,-10.1857,2e-06,8e-05
+idle,temps_traitement_moy_s,zipf,difficile (s=1.5),greedy_pair,centre_de_demande,29.96,32.7736,-2.8136,0.000586,0.008198
+idle,temps_traitement_moy_s,zipf,difficile (s=1.5),greedy_time,rester_sur_place,28.5626,27.6128,0.9498,0.153646,0.615463
+idle,temps_traitement_moy_s,zipf,difficile (s=1.5),greedy_time,retour_au_depot,28.5626,36.157,-7.5945,2e-06,8e-05
+idle,temps_traitement_moy_s,zipf,difficile (s=1.5),greedy_time,centre_de_demande,28.5626,30.0834,-1.5208,0.009436,0.084921
+idle,temps_trajet_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,rester_sur_place,2.2262,2.7135,-0.4873,2e-06,8e-05
+idle,temps_trajet_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,retour_au_depot,2.2262,4.456,-2.2298,2e-06,8e-05
+idle,temps_trajet_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,centre_de_demande,2.2262,2.8416,-0.6154,2e-06,8e-05
+idle,temps_trajet_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_time,rester_sur_place,2.2262,2.7135,-0.4873,2e-06,8e-05
+idle,temps_trajet_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_time,retour_au_depot,2.2262,4.456,-2.2298,2e-06,8e-05
+idle,temps_trajet_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_time,centre_de_demande,2.2262,2.8416,-0.6154,2e-06,8e-05
+idle,temps_trajet_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,rester_sur_place,2.4,2.7712,-0.3712,1.9e-05,0.000305
+idle,temps_trajet_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,retour_au_depot,2.4,3.7511,-1.3511,2e-06,8e-05
+idle,temps_trajet_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,centre_de_demande,2.4,2.7662,-0.3662,0.000182,0.002004
+idle,temps_trajet_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_time,rester_sur_place,2.4,2.7712,-0.3712,1.9e-05,0.000305
+idle,temps_trajet_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_time,retour_au_depot,2.4,3.7511,-1.3511,2e-06,8e-05
+idle,temps_trajet_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_time,centre_de_demande,2.4,2.7662,-0.3662,0.000182,0.002004
+idle,temps_trajet_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_pair,rester_sur_place,4.5486,5.4706,-0.922,1e-05,0.00021
+idle,temps_trajet_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_pair,retour_au_depot,4.5486,7.9366,-3.388,2e-06,8e-05
+idle,temps_trajet_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_pair,centre_de_demande,4.5486,5.7595,-1.2109,2e-06,8e-05
+idle,temps_trajet_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_time,rester_sur_place,4.7386,5.3755,-0.6369,1.3e-05,0.00024
+idle,temps_trajet_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_time,retour_au_depot,4.7386,7.3532,-2.6146,2e-06,8e-05
+idle,temps_trajet_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_time,centre_de_demande,4.7386,5.1587,-0.4201,0.00486,0.01944
+idle,temps_trajet_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,rester_sur_place,12.223,9.96,2.263,1e-05,0.00021
+idle,temps_trajet_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,retour_au_depot,12.223,13.2719,-1.0489,0.000851,0.006805
+idle,temps_trajet_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,centre_de_demande,12.223,10.4596,1.7634,1.9e-05,0.000305
+idle,temps_trajet_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_time,rester_sur_place,12.223,9.96,2.263,1e-05,0.00021
+idle,temps_trajet_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_time,retour_au_depot,12.223,13.2719,-1.0489,0.000851,0.006805
+idle,temps_trajet_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_time,centre_de_demande,12.223,10.4596,1.7634,1.9e-05,0.000305
+idle,temps_trajet_moy_s,zipf,facile (s=0.5),greedy_pair,rester_sur_place,15.6653,15.4834,0.1819,0.756166,1.0
+idle,temps_trajet_moy_s,zipf,facile (s=0.5),greedy_pair,retour_au_depot,15.6653,24.1115,-8.4462,2e-06,8e-05
+idle,temps_trajet_moy_s,zipf,facile (s=0.5),greedy_pair,centre_de_demande,15.6653,20.0263,-4.3609,2e-06,8e-05
+idle,temps_trajet_moy_s,zipf,facile (s=0.5),greedy_time,rester_sur_place,15.4704,15.3072,0.1632,0.570597,1.0
+idle,temps_trajet_moy_s,zipf,facile (s=0.5),greedy_time,retour_au_depot,15.4704,23.3245,-7.8541,2e-06,8e-05
+idle,temps_trajet_moy_s,zipf,facile (s=0.5),greedy_time,centre_de_demande,15.4704,19.1371,-3.6667,2e-06,8e-05
+idle,temps_trajet_moy_s,zipf,moyen (s=1.0),greedy_pair,rester_sur_place,14.7822,13.8079,0.9742,0.003153,0.015764
+idle,temps_trajet_moy_s,zipf,moyen (s=1.0),greedy_pair,retour_au_depot,14.7822,21.0134,-6.2313,2e-06,8e-05
+idle,temps_trajet_moy_s,zipf,moyen (s=1.0),greedy_pair,centre_de_demande,14.7822,17.4529,-2.6707,2e-06,8e-05
+idle,temps_trajet_moy_s,zipf,moyen (s=1.0),greedy_time,rester_sur_place,14.397,14.0228,0.3742,0.176853,0.53056
+idle,temps_trajet_moy_s,zipf,moyen (s=1.0),greedy_time,retour_au_depot,14.397,19.7096,-5.3126,2e-06,8e-05
+idle,temps_trajet_moy_s,zipf,moyen (s=1.0),greedy_time,centre_de_demande,14.397,16.2213,-1.8243,1.3e-05,0.00024
+idle,temps_trajet_moy_s,zipf,difficile (s=1.5),greedy_pair,rester_sur_place,10.0991,8.8909,1.2082,0.00021,0.002004
+idle,temps_trajet_moy_s,zipf,difficile (s=1.5),greedy_pair,retour_au_depot,10.0991,14.1801,-4.081,2e-06,8e-05
+idle,temps_trajet_moy_s,zipf,difficile (s=1.5),greedy_pair,centre_de_demande,10.0991,11.9019,-1.8028,1e-05,0.00021
+idle,temps_trajet_moy_s,zipf,difficile (s=1.5),greedy_time,rester_sur_place,9.3177,8.3792,0.9385,0.001209,0.007256
+idle,temps_trajet_moy_s,zipf,difficile (s=1.5),greedy_time,retour_au_depot,9.3177,13.0164,-3.6987,2e-06,8e-05
+idle,temps_trajet_moy_s,zipf,difficile (s=1.5),greedy_time,centre_de_demande,9.3177,10.6381,-1.3204,4.8e-05,0.000572
+idle,taches_echouees,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"15 racks, 3 r., rho=0.7",greedy_time,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"15 racks, 3 r., rho=0.7",greedy_time,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"15 racks, 3 r., rho=0.7",greedy_time,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"15 racks, 3 r., rho=0.9",greedy_time,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"15 racks, 3 r., rho=0.9",greedy_time,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"15 racks, 3 r., rho=0.9",greedy_time,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"40 racks, 6 r., vit. var.",greedy_pair,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"40 racks, 6 r., vit. var.",greedy_pair,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"40 racks, 6 r., vit. var.",greedy_pair,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"40 racks, 6 r., vit. var.",greedy_time,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"40 racks, 6 r., vit. var.",greedy_time,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"40 racks, 6 r., vit. var.",greedy_time,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"150 racks, 20 r., rho=0.7",greedy_time,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"150 racks, 20 r., rho=0.7",greedy_time,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,dataset,"150 racks, 20 r., rho=0.7",greedy_time,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,zipf,facile (s=0.5),greedy_pair,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,zipf,facile (s=0.5),greedy_pair,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,zipf,facile (s=0.5),greedy_pair,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,zipf,facile (s=0.5),greedy_time,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,zipf,facile (s=0.5),greedy_time,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,zipf,facile (s=0.5),greedy_time,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,zipf,moyen (s=1.0),greedy_pair,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,zipf,moyen (s=1.0),greedy_pair,retour_au_depot,0.0,0.05,-0.05,0.317311,1.0
+idle,taches_echouees,zipf,moyen (s=1.0),greedy_pair,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,zipf,moyen (s=1.0),greedy_time,rester_sur_place,0.0,0.05,-0.05,0.317311,1.0
+idle,taches_echouees,zipf,moyen (s=1.0),greedy_time,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,zipf,moyen (s=1.0),greedy_time,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,taches_echouees,zipf,difficile (s=1.5),greedy_pair,rester_sur_place,0.05,0.05,0.0,1.0,1.0
+idle,taches_echouees,zipf,difficile (s=1.5),greedy_pair,retour_au_depot,0.05,0.05,0.0,1.0,1.0
+idle,taches_echouees,zipf,difficile (s=1.5),greedy_pair,centre_de_demande,0.05,0.05,0.0,1.0,1.0
+idle,taches_echouees,zipf,difficile (s=1.5),greedy_time,rester_sur_place,0.05,0.05,0.0,1.0,1.0
+idle,taches_echouees,zipf,difficile (s=1.5),greedy_time,retour_au_depot,0.05,0.05,0.0,1.0,1.0
+idle,taches_echouees,zipf,difficile (s=1.5),greedy_time,centre_de_demande,0.05,0.05,0.0,1.0,1.0
+idle,conflits_aretes_pour_100_taches,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,rester_sur_place,1.8333,0.4667,1.3667,0.000107,0.001499
+idle,conflits_aretes_pour_100_taches,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,retour_au_depot,1.8333,7.6667,-5.8333,0.000181,0.001567
+idle,conflits_aretes_pour_100_taches,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,centre_de_demande,1.8333,4.2333,-2.4,0.000565,0.002661
+idle,conflits_aretes_pour_100_taches,dataset,"15 racks, 3 r., rho=0.7",greedy_time,rester_sur_place,1.8333,0.4667,1.3667,0.000107,0.001499
+idle,conflits_aretes_pour_100_taches,dataset,"15 racks, 3 r., rho=0.7",greedy_time,retour_au_depot,1.8333,7.6667,-5.8333,0.000181,0.001567
+idle,conflits_aretes_pour_100_taches,dataset,"15 racks, 3 r., rho=0.7",greedy_time,centre_de_demande,1.8333,4.2333,-2.4,0.000565,0.002661
+idle,conflits_aretes_pour_100_taches,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,rester_sur_place,1.9333,0.4667,1.4667,0.000134,0.001567
+idle,conflits_aretes_pour_100_taches,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,retour_au_depot,1.9333,5.6667,-3.7333,1e-05,0.000162
+idle,conflits_aretes_pour_100_taches,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,centre_de_demande,1.9333,4.1667,-2.2333,0.000532,0.002661
+idle,conflits_aretes_pour_100_taches,dataset,"15 racks, 3 r., rho=0.9",greedy_time,rester_sur_place,1.9333,0.4667,1.4667,0.000134,0.001567
+idle,conflits_aretes_pour_100_taches,dataset,"15 racks, 3 r., rho=0.9",greedy_time,retour_au_depot,1.9333,5.6667,-3.7333,1e-05,0.000162
+idle,conflits_aretes_pour_100_taches,dataset,"15 racks, 3 r., rho=0.9",greedy_time,centre_de_demande,1.9333,4.1667,-2.2333,0.000532,0.002661
+idle,conflits_aretes_pour_100_taches,dataset,"40 racks, 6 r., vit. var.",greedy_pair,rester_sur_place,5.6667,2.2333,3.4333,4e-06,8.4e-05
+idle,conflits_aretes_pour_100_taches,dataset,"40 racks, 6 r., vit. var.",greedy_pair,retour_au_depot,5.6667,16.7667,-11.1,4e-06,8.4e-05
+idle,conflits_aretes_pour_100_taches,dataset,"40 racks, 6 r., vit. var.",greedy_pair,centre_de_demande,5.6667,12.1667,-6.5,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,dataset,"40 racks, 6 r., vit. var.",greedy_time,rester_sur_place,6.1667,2.2333,3.9333,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,dataset,"40 racks, 6 r., vit. var.",greedy_time,retour_au_depot,6.1667,16.2333,-10.0667,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,dataset,"40 racks, 6 r., vit. var.",greedy_time,centre_de_demande,6.1667,11.2667,-5.1,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,rester_sur_place,20.6,10.0,10.6,0.000131,0.001567
+idle,conflits_aretes_pour_100_taches,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,retour_au_depot,20.6,39.3667,-18.7667,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,centre_de_demande,20.6,60.2,-39.6,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,dataset,"150 racks, 20 r., rho=0.7",greedy_time,rester_sur_place,20.6,10.0,10.6,0.000131,0.001567
+idle,conflits_aretes_pour_100_taches,dataset,"150 racks, 20 r., rho=0.7",greedy_time,retour_au_depot,20.6,39.3667,-18.7667,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,dataset,"150 racks, 20 r., rho=0.7",greedy_time,centre_de_demande,20.6,60.2,-39.6,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,zipf,facile (s=0.5),greedy_pair,rester_sur_place,9.0333,3.1333,5.9,1.3e-05,0.0002
+idle,conflits_aretes_pour_100_taches,zipf,facile (s=0.5),greedy_pair,retour_au_depot,9.0333,35.2,-26.1667,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,zipf,facile (s=0.5),greedy_pair,centre_de_demande,9.0333,22.7333,-13.7,4e-06,8.4e-05
+idle,conflits_aretes_pour_100_taches,zipf,facile (s=0.5),greedy_time,rester_sur_place,8.7333,2.7333,6.0,0.000131,0.001567
+idle,conflits_aretes_pour_100_taches,zipf,facile (s=0.5),greedy_time,retour_au_depot,8.7333,33.6,-24.8667,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,zipf,facile (s=0.5),greedy_time,centre_de_demande,8.7333,20.7,-11.9667,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,zipf,moyen (s=1.0),greedy_pair,rester_sur_place,8.2,2.8667,5.3333,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,zipf,moyen (s=1.0),greedy_pair,retour_au_depot,8.2,28.0081,-19.8081,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,zipf,moyen (s=1.0),greedy_pair,centre_de_demande,8.2,20.1333,-11.9333,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,zipf,moyen (s=1.0),greedy_time,rester_sur_place,10.0333,3.8676,6.1658,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,zipf,moyen (s=1.0),greedy_time,retour_au_depot,10.0333,26.8,-16.7667,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,zipf,moyen (s=1.0),greedy_time,centre_de_demande,10.0333,18.8,-8.7667,4e-06,8.4e-05
+idle,conflits_aretes_pour_100_taches,zipf,difficile (s=1.5),greedy_pair,rester_sur_place,7.436,2.0,5.436,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,zipf,difficile (s=1.5),greedy_pair,retour_au_depot,7.436,18.0396,-10.6036,6e-06,0.000103
+idle,conflits_aretes_pour_100_taches,zipf,difficile (s=1.5),greedy_pair,centre_de_demande,7.436,11.0709,-3.6349,0.003056,0.003056
+idle,conflits_aretes_pour_100_taches,zipf,difficile (s=1.5),greedy_time,rester_sur_place,7.7022,2.3002,5.402,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,zipf,difficile (s=1.5),greedy_time,retour_au_depot,7.7022,20.4056,-12.7034,2e-06,8e-05
+idle,conflits_aretes_pour_100_taches,zipf,difficile (s=1.5),greedy_time,centre_de_demande,7.7022,13.7711,-6.0689,2e-06,8e-05
+idle,attente_noeud_par_tache_s,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"15 racks, 3 r., rho=0.7",greedy_time,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"15 racks, 3 r., rho=0.7",greedy_time,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"15 racks, 3 r., rho=0.7",greedy_time,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"15 racks, 3 r., rho=0.9",greedy_time,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"15 racks, 3 r., rho=0.9",greedy_time,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"15 racks, 3 r., rho=0.9",greedy_time,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"40 racks, 6 r., vit. var.",greedy_pair,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"40 racks, 6 r., vit. var.",greedy_pair,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"40 racks, 6 r., vit. var.",greedy_pair,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"40 racks, 6 r., vit. var.",greedy_time,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"40 racks, 6 r., vit. var.",greedy_time,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"40 racks, 6 r., vit. var.",greedy_time,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"150 racks, 20 r., rho=0.7",greedy_time,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"150 racks, 20 r., rho=0.7",greedy_time,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,dataset,"150 racks, 20 r., rho=0.7",greedy_time,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,zipf,facile (s=0.5),greedy_pair,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,zipf,facile (s=0.5),greedy_pair,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,zipf,facile (s=0.5),greedy_pair,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,zipf,facile (s=0.5),greedy_time,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,zipf,facile (s=0.5),greedy_time,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,zipf,facile (s=0.5),greedy_time,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,zipf,moyen (s=1.0),greedy_pair,rester_sur_place,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,zipf,moyen (s=1.0),greedy_pair,retour_au_depot,0.0,0.0388,-0.0388,0.317311,1.0
+idle,attente_noeud_par_tache_s,zipf,moyen (s=1.0),greedy_pair,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,zipf,moyen (s=1.0),greedy_time,rester_sur_place,0.0,0.0302,-0.0302,0.317311,1.0
+idle,attente_noeud_par_tache_s,zipf,moyen (s=1.0),greedy_time,retour_au_depot,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,zipf,moyen (s=1.0),greedy_time,centre_de_demande,0.0,0.0,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,zipf,difficile (s=1.5),greedy_pair,rester_sur_place,0.0302,0.0302,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,zipf,difficile (s=1.5),greedy_pair,retour_au_depot,0.0302,0.0302,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,zipf,difficile (s=1.5),greedy_pair,centre_de_demande,0.0302,0.0302,0.0,1.0,1.0
+idle,attente_noeud_par_tache_s,zipf,difficile (s=1.5),greedy_time,rester_sur_place,0.0375,0.0302,0.0072,0.317311,1.0
+idle,attente_noeud_par_tache_s,zipf,difficile (s=1.5),greedy_time,retour_au_depot,0.0375,0.0302,0.0072,0.317311,1.0
+idle,attente_noeud_par_tache_s,zipf,difficile (s=1.5),greedy_time,centre_de_demande,0.0375,0.0302,0.0072,0.317311,1.0
+idle,approche_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,rester_sur_place,2.2262,2.7135,-0.4873,2e-06,8e-05
+idle,approche_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,retour_au_depot,2.2262,4.456,-2.2298,2e-06,8e-05
+idle,approche_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,centre_de_demande,2.2262,2.8416,-0.6154,2e-06,8e-05
+idle,approche_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_time,rester_sur_place,2.2262,2.7135,-0.4873,2e-06,8e-05
+idle,approche_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_time,retour_au_depot,2.2262,4.456,-2.2298,2e-06,8e-05
+idle,approche_moy_s,dataset,"15 racks, 3 r., rho=0.7",greedy_time,centre_de_demande,2.2262,2.8416,-0.6154,2e-06,8e-05
+idle,approche_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,rester_sur_place,2.4,2.7712,-0.3712,1.9e-05,0.000305
+idle,approche_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,retour_au_depot,2.4,3.7511,-1.3511,2e-06,8e-05
+idle,approche_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,centre_de_demande,2.4,2.7662,-0.3662,0.000182,0.002004
+idle,approche_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_time,rester_sur_place,2.4,2.7712,-0.3712,1.9e-05,0.000305
+idle,approche_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_time,retour_au_depot,2.4,3.7511,-1.3511,2e-06,8e-05
+idle,approche_moy_s,dataset,"15 racks, 3 r., rho=0.9",greedy_time,centre_de_demande,2.4,2.7662,-0.3662,0.000182,0.002004
+idle,approche_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_pair,rester_sur_place,4.5486,5.4706,-0.922,1e-05,0.00021
+idle,approche_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_pair,retour_au_depot,4.5486,7.9366,-3.388,2e-06,8e-05
+idle,approche_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_pair,centre_de_demande,4.5486,5.7595,-1.2109,2e-06,8e-05
+idle,approche_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_time,rester_sur_place,4.7386,5.3755,-0.6369,1.3e-05,0.00024
+idle,approche_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_time,retour_au_depot,4.7386,7.3532,-2.6146,2e-06,8e-05
+idle,approche_moy_s,dataset,"40 racks, 6 r., vit. var.",greedy_time,centre_de_demande,4.7386,5.1587,-0.4201,0.00486,0.01944
+idle,approche_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,rester_sur_place,12.223,9.96,2.263,1e-05,0.00021
+idle,approche_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,retour_au_depot,12.223,13.2719,-1.0489,0.000851,0.006805
+idle,approche_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,centre_de_demande,12.223,10.4596,1.7634,1.9e-05,0.000305
+idle,approche_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_time,rester_sur_place,12.223,9.96,2.263,1e-05,0.00021
+idle,approche_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_time,retour_au_depot,12.223,13.2719,-1.0489,0.000851,0.006805
+idle,approche_moy_s,dataset,"150 racks, 20 r., rho=0.7",greedy_time,centre_de_demande,12.223,10.4596,1.7634,1.9e-05,0.000305
+idle,approche_moy_s,zipf,facile (s=0.5),greedy_pair,rester_sur_place,15.6653,15.4834,0.1819,0.756166,1.0
+idle,approche_moy_s,zipf,facile (s=0.5),greedy_pair,retour_au_depot,15.6653,24.1115,-8.4462,2e-06,8e-05
+idle,approche_moy_s,zipf,facile (s=0.5),greedy_pair,centre_de_demande,15.6653,20.0263,-4.3609,2e-06,8e-05
+idle,approche_moy_s,zipf,facile (s=0.5),greedy_time,rester_sur_place,15.4704,15.3072,0.1632,0.570597,1.0
+idle,approche_moy_s,zipf,facile (s=0.5),greedy_time,retour_au_depot,15.4704,23.3245,-7.8541,2e-06,8e-05
+idle,approche_moy_s,zipf,facile (s=0.5),greedy_time,centre_de_demande,15.4704,19.1371,-3.6667,2e-06,8e-05
+idle,approche_moy_s,zipf,moyen (s=1.0),greedy_pair,rester_sur_place,14.7822,13.8079,0.9742,0.003153,0.015764
+idle,approche_moy_s,zipf,moyen (s=1.0),greedy_pair,retour_au_depot,14.7822,21.0134,-6.2313,2e-06,8e-05
+idle,approche_moy_s,zipf,moyen (s=1.0),greedy_pair,centre_de_demande,14.7822,17.4529,-2.6707,2e-06,8e-05
+idle,approche_moy_s,zipf,moyen (s=1.0),greedy_time,rester_sur_place,14.397,14.0228,0.3742,0.176853,0.53056
+idle,approche_moy_s,zipf,moyen (s=1.0),greedy_time,retour_au_depot,14.397,19.7096,-5.3126,2e-06,8e-05
+idle,approche_moy_s,zipf,moyen (s=1.0),greedy_time,centre_de_demande,14.397,16.2213,-1.8243,1.3e-05,0.00024
+idle,approche_moy_s,zipf,difficile (s=1.5),greedy_pair,rester_sur_place,10.0991,8.8909,1.2082,0.00021,0.002004
+idle,approche_moy_s,zipf,difficile (s=1.5),greedy_pair,retour_au_depot,10.0991,14.1801,-4.081,2e-06,8e-05
+idle,approche_moy_s,zipf,difficile (s=1.5),greedy_pair,centre_de_demande,10.0991,11.9019,-1.8028,1e-05,0.00021
+idle,approche_moy_s,zipf,difficile (s=1.5),greedy_time,rester_sur_place,9.3177,8.3792,0.9385,0.001209,0.007256
+idle,approche_moy_s,zipf,difficile (s=1.5),greedy_time,retour_au_depot,9.3177,13.0164,-3.6987,2e-06,8e-05
+idle,approche_moy_s,zipf,difficile (s=1.5),greedy_time,centre_de_demande,9.3177,10.6381,-1.3204,4.8e-05,0.000572
