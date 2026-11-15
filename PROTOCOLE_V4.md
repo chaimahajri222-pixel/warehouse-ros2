@@ -313,3 +313,20 @@ d'entraînement de 4 minutes, rejeté ensuite.
    l'exploration consomme le budget. Ne s'applique ni à la validation ni au test.
 5. **Budget :** 115 min d'entraînement par graine, plus la dernière validation,
    pour rester sous 2 h par graine.
+
+### Incident consigné après le début des entraînements
+
+6. **Interruption de l'entraînement de `drl_idle` (15/11/2026, 17 h 14).** Le
+   premier lancement des 3 graines (16 h 30) s'est arrêté après environ 43,7 min
+   sur 115 : la mémoire de la machine (RAM et swap) était saturée, le noyau a tué
+   le processus de l'éditeur, et les 3 entraînements, lancés depuis cette session,
+   se sont arrêtés avec lui (journal du noyau, « Out of memory: Killed process »).
+   Le script ne sait pas reprendre un entraînement (le tampon de rejeu et l'état
+   de l'optimiseur ne sont pas sauvegardés).
+   *Décision :* les 3 graines sont relancées **depuis le début**, avec les mêmes
+   réglages (115 min, en parallèle, `torch.set_num_threads(1)`), à 17 h 26, après
+   avoir vérifié qu'au moins 2,5 Go de mémoire étaient disponibles, et en processus
+   détachés (`setsid nohup`). Les fichiers du premier lancement sont conservés dans
+   `~/warehouse_ws/drl_v4/idle_interrompu_1714/`. Ils ne servent **ni** à la
+   sélection du modèle **ni** au test. Aucune donnée de test n'a été utilisée avant
+   ou pendant cet incident ; aucun réglage n'a été modifié.

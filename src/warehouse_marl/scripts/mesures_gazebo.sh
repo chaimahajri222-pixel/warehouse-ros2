@@ -10,7 +10,7 @@
 #   taches_<mode>.csv (task_metrics_logger), rfid_<mode>.csv
 #   (rfid_metrics_logger), launch_<mode>.log, ressources_<mode>.log
 #   (memoire libre et charge toutes les 30 s), synthese_taches.csv.
-set -u
+set +u                                   # setup.bash de ROS lit des variables non definies
 set -m                                   # jobs en arriere-plan : SIGINT transmis
 DUREE=${1:-900}
 MODELE=${2:-$HOME/warehouse_ws/drl_v3_footwear/drl3_best.pt}
