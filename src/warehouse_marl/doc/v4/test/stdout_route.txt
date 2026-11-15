@@ -1,0 +1,30 @@
+1440 essais de test (route), modele /home/chchch/warehouse_ws/drl_v4/route/selected_route.pt
+/home/chchch/warehouse_ws/test_v4/essais_route.csv (891 s)
+blocages  0 blocage/min                greedy_pair  DRL   26.08 vs dijkstra_dynamique   26.03  ecart  +0.051 [-0.037;+0.137]   6/20  p=0.2759 holm=1  pas de difference significative
+blocages  0 blocage/min                consensus    DRL   33.86 vs dijkstra_dynamique   34.11  ecart  -0.251 [-0.819;+0.110]   8/20  p=0.7628 holm=1  pas de difference significative
+blocages  1 blocage/min                greedy_pair  DRL   26.96 vs dijkstra_dynamique   26.98  ecart  -0.020 [-0.222;+0.197]  13/20  p=0.498 holm=1  pas de difference significative
+blocages  1 blocage/min                consensus    DRL   35.67 vs dijkstra_dynamique   35.92  ecart  -0.249 [-0.816;+0.251]   8/20  p=0.9563 holm=1  pas de difference significative
+blocages  3 blocage/min                greedy_pair  DRL   32.87 vs dijkstra_dynamique   31.64  ecart  +1.223 [+0.379;+2.078]   6/20  p=0.01923 holm=0.4424  pas de difference significative
+blocages  3 blocage/min                consensus    DRL   47.05 vs dijkstra_dynamique   46.73  ecart  +0.319 [-2.758;+3.282]   8/20  p=0.4524 holm=1  pas de difference significative
+blocages  6 blocage/min                greedy_pair  DRL   52.90 vs dijkstra_dynamique   51.79  ecart  +1.106 [-1.351;+3.759]   8/20  p=0.498 holm=1  pas de difference significative
+blocages  6 blocage/min                consensus    DRL   90.56 vs dijkstra_dynamique   73.75  ecart +16.814 [+3.909;+29.801]   4/20  p=0.004221 holm=0.1013  pas de difference significative
+taille    3 robots, 15 racks           greedy_pair  DRL   26.96 vs dijkstra_dynamique   26.98  ecart  -0.020 [-0.222;+0.197]  13/20  p=0.498 holm=1  pas de difference significative
+taille    3 robots, 15 racks           consensus    DRL   35.67 vs dijkstra_dynamique   35.92  ecart  -0.249 [-0.816;+0.251]   8/20  p=0.9563 holm=1  pas de difference significative
+taille    6 robots, 40 racks           greedy_pair  DRL   29.02 vs dijkstra_dynamique   28.98  ecart  +0.039 [-0.087;+0.158]   7/20  p=0.605 holm=1  pas de difference significative
+taille    6 robots, 40 racks           consensus    DRL   31.84 vs dijkstra_statique    31.90  ecart  -0.060 [-0.628;+0.539]   9/20  p=0.9679 holm=1  pas de difference significative
+taille    10 robots, 80 racks          greedy_pair  DRL   30.34 vs dijkstra_statique    30.47  ecart  -0.130 [-0.564;+0.200]  12/20  p=0.3271 holm=1  pas de difference significative
+taille    10 robots, 80 racks          consensus    DRL   33.03 vs dijkstra_statique    33.02  ecart  +0.013 [-0.216;+0.264]  11/20  p=0.8092 holm=1  pas de difference significative
+taille    20 robots, 150 racks         greedy_pair  DRL   35.43 vs dijkstra_dynamique   35.39  ecart  +0.041 [-0.227;+0.305]  12/20  p=0.8695 holm=1  pas de difference significative
+taille    20 robots, 150 racks         consensus    DRL   37.55 vs dijkstra_dynamique   37.70  ecart  -0.150 [-0.623;+0.235]  11/20  p=0.7112 holm=1  pas de difference significative
+dataset   15 racks, 3 r., rho=0.7      greedy_pair  DRL   30.57 vs dijkstra_dynamique   30.57  ecart  -0.001 [-0.022;+0.024]   4/20  p=0.4982 holm=1  pas de difference significative
+dataset   15 racks, 3 r., rho=0.7      consensus    DRL   41.43 vs dijkstra_dynamique   41.43  ecart  -0.007 [-0.040;+0.024]   4/20  p=0.5992 holm=1  pas de difference significative
+dataset   15 racks, 3 r., rho=0.9      greedy_pair  DRL   45.09 vs dijkstra_statique    45.03  ecart  +0.065 [-0.027;+0.210]   2/20  p=0.3105 holm=1  pas de difference significative
+dataset   15 racks, 3 r., rho=0.9      consensus    DRL   62.60 vs dijkstra_dynamique   62.51  ecart  +0.092 [+0.018;+0.182]   1/20  p=0.04252 holm=0.9355  pas de difference significative
+dataset   40 racks, 6 r., vit. var.    greedy_pair  DRL   53.34 vs dijkstra_dynamique   52.76  ecart  +0.572 [+0.050;+1.273]   3/20  p=0.1141 holm=1  pas de difference significative
+dataset   40 racks, 6 r., vit. var.    consensus    DRL   64.44 vs dijkstra_dynamique   64.83  ecart  -0.386 [-0.942;+0.048]   8/20  p=0.5701 holm=1  pas de difference significative
+dataset   150 racks, 20 r., rho=0.7    greedy_pair  DRL   61.35 vs dijkstra_dynamique   61.37  ecart  -0.017 [-0.263;+0.320]  13/20  p=0.2668 holm=1  pas de difference significative
+dataset   150 racks, 20 r., rho=0.7    consensus    DRL   70.70 vs dijkstra_dynamique   71.03  ecart  -0.334 [-0.710;+0.000]  11/20  p=0.1446 holm=1  pas de difference significative
+Figure : /home/chchch/warehouse_ws/test_v4/fig_route_blocages.png
+Figure : /home/chchch/warehouse_ws/test_v4/fig_route_taille.png
+Figure : /home/chchch/warehouse_ws/test_v4/fig_route_dataset.png
+Figure : /home/chchch/warehouse_ws/test_v4/fig_route_ecarts.png
