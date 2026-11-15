@@ -1,0 +1,212 @@
+# Test ROS blocage d'allee en direct, 2026-11-15T20:59:41+01:00, ROS_DOMAIN_ID=90, LOCALHOST, sans Gazebo
+# graph_publisher_node + consensus_node robot1 (TF statique shelf_0_0) et robot2 (shelf_2_2) ; blocages publies sur /warehouse/blocked_edges
+
+## repetition 1
+{
+ "encheres": [
+  {
+   "tache": "chauffe_1794772787",
+   "cible": "shelf_1_1",
+   "encheres": {
+    "robot1": 6.55,
+    "robot2": 7.25
+   },
+   "gagnant": "robot1"
+  },
+  {
+   "tache": "ref",
+   "cible": "shelf_0_2",
+   "encheres": {
+    "robot1": 7.0,
+    "robot2": 6.8
+   },
+   "gagnant": "robot2"
+  },
+  {
+   "tache": "detour",
+   "cible": "shelf_0_2",
+   "encheres": {
+    "robot2": 6.8,
+    "robot1": 13.1
+   },
+   "gagnant": "robot2"
+  },
+  {
+   "tache": "isole",
+   "cible": "shelf_1_1",
+   "encheres": {
+    "robot2": 7.25
+   },
+   "gagnant": "robot2"
+  },
+  {
+   "tache": "debloque",
+   "cible": "shelf_0_2",
+   "encheres": {
+    "robot2": 6.8,
+    "robot1": 7.0
+   },
+   "gagnant": "robot2"
+  }
+ ],
+ "verifications": {
+  "graph_state_arete_bloquee": true,
+  "cout_robot1_augmente_apres_blocage": true,
+  "graph_state_robot1_isole": true,
+  "robot1_n_encherit_plus": true,
+  "robot2_encherit_et_gagne": true,
+  "graph_state_debloque": true,
+  "robot1_encherit_de_nouveau": true,
+  "cout_robot1_revenu_a_la_reference": true
+ },
+ "reussi": true
+}
+robot1 : pertes simulees 0, retraits sur conflit 0, victoires 1, dernier compteur : 
+robot2 : pertes simulees 0, retraits sur conflit 0, victoires 4, dernier compteur : 
+graph_publisher : [INFO] [1794772793.478188749] [graph_publisher_node]: Arete shelf_0_1 <-> shelf_0_2 bloquee 120 s (source : test).
+graph_publisher : [INFO] [1794772797.883172797] [graph_publisher_node]: Arete shelf_0_0 <-> shelf_0_1 bloquee 120 s (source : test).
+graph_publisher : [INFO] [1794772797.884636107] [graph_publisher_node]: Arete shelf_0_0 <-> shelf_1_0 bloquee 120 s (source : test).
+graph_publisher : [INFO] [1794772802.290017674] [graph_publisher_node]: Arete shelf_0_1 <-> shelf_0_2 debloquee (source : test).
+graph_publisher : [INFO] [1794772802.295242084] [graph_publisher_node]: Arete shelf_0_0 <-> shelf_0_1 debloquee (source : test).
+graph_publisher : [INFO] [1794772802.298524513] [graph_publisher_node]: Arete shelf_0_0 <-> shelf_1_0 debloquee (source : test).
+RC=0
+
+## repetition 2
+{
+ "encheres": [
+  {
+   "tache": "chauffe_1794772810",
+   "cible": "shelf_1_1",
+   "encheres": {
+    "robot2": 7.25,
+    "robot1": 6.55
+   },
+   "gagnant": "robot1"
+  },
+  {
+   "tache": "ref",
+   "cible": "shelf_0_2",
+   "encheres": {
+    "robot2": 6.8,
+    "robot1": 7.0
+   },
+   "gagnant": "robot2"
+  },
+  {
+   "tache": "detour",
+   "cible": "shelf_0_2",
+   "encheres": {
+    "robot2": 6.8,
+    "robot1": 13.1
+   },
+   "gagnant": "robot2"
+  },
+  {
+   "tache": "isole",
+   "cible": "shelf_1_1",
+   "encheres": {
+    "robot2": 7.25
+   },
+   "gagnant": "robot2"
+  },
+  {
+   "tache": "debloque",
+   "cible": "shelf_0_2",
+   "encheres": {
+    "robot1": 7.0,
+    "robot2": 6.8
+   },
+   "gagnant": "robot2"
+  }
+ ],
+ "verifications": {
+  "graph_state_arete_bloquee": true,
+  "cout_robot1_augmente_apres_blocage": true,
+  "graph_state_robot1_isole": true,
+  "robot1_n_encherit_plus": true,
+  "robot2_encherit_et_gagne": true,
+  "graph_state_debloque": true,
+  "robot1_encherit_de_nouveau": true,
+  "cout_robot1_revenu_a_la_reference": true
+ },
+ "reussi": true
+}
+robot1 : pertes simulees 0, retraits sur conflit 0, victoires 1, dernier compteur : 
+robot2 : pertes simulees 0, retraits sur conflit 0, victoires 4, dernier compteur : 
+graph_publisher : [INFO] [1794772816.902909492] [graph_publisher_node]: Arete shelf_0_1 <-> shelf_0_2 bloquee 120 s (source : test).
+graph_publisher : [INFO] [1794772821.311219543] [graph_publisher_node]: Arete shelf_0_0 <-> shelf_0_1 bloquee 120 s (source : test).
+graph_publisher : [INFO] [1794772821.317913227] [graph_publisher_node]: Arete shelf_0_0 <-> shelf_1_0 bloquee 120 s (source : test).
+graph_publisher : [INFO] [1794772825.726105448] [graph_publisher_node]: Arete shelf_0_1 <-> shelf_0_2 debloquee (source : test).
+graph_publisher : [INFO] [1794772825.730752168] [graph_publisher_node]: Arete shelf_0_0 <-> shelf_0_1 debloquee (source : test).
+graph_publisher : [INFO] [1794772825.736605129] [graph_publisher_node]: Arete shelf_0_0 <-> shelf_1_0 debloquee (source : test).
+RC=0
+
+## repetition 3
+{
+ "encheres": [
+  {
+   "tache": "chauffe_1794772833",
+   "cible": "shelf_1_1",
+   "encheres": {
+    "robot2": 7.25,
+    "robot1": 6.55
+   },
+   "gagnant": "robot1"
+  },
+  {
+   "tache": "ref",
+   "cible": "shelf_0_2",
+   "encheres": {
+    "robot2": 6.8,
+    "robot1": 7.0
+   },
+   "gagnant": "robot2"
+  },
+  {
+   "tache": "detour",
+   "cible": "shelf_0_2",
+   "encheres": {
+    "robot2": 6.8,
+    "robot1": 13.1
+   },
+   "gagnant": "robot2"
+  },
+  {
+   "tache": "isole",
+   "cible": "shelf_1_1",
+   "encheres": {
+    "robot2": 7.25
+   },
+   "gagnant": "robot2"
+  },
+  {
+   "tache": "debloque",
+   "cible": "shelf_0_2",
+   "encheres": {
+    "robot1": 7.0,
+    "robot2": 6.8
+   },
+   "gagnant": "robot2"
+  }
+ ],
+ "verifications": {
+  "graph_state_arete_bloquee": true,
+  "cout_robot1_augmente_apres_blocage": true,
+  "graph_state_robot1_isole": true,
+  "robot1_n_encherit_plus": true,
+  "robot2_encherit_et_gagne": true,
+  "graph_state_debloque": true,
+  "robot1_encherit_de_nouveau": true,
+  "cout_robot1_revenu_a_la_reference": true
+ },
+ "reussi": true
+}
+robot1 : pertes simulees 0, retraits sur conflit 0, victoires 1, dernier compteur : 
+robot2 : pertes simulees 0, retraits sur conflit 0, victoires 4, dernier compteur : 
+graph_publisher : [INFO] [1794772839.833023783] [graph_publisher_node]: Arete shelf_0_1 <-> shelf_0_2 bloquee 120 s (source : test).
+graph_publisher : [INFO] [1794772844.242170000] [graph_publisher_node]: Arete shelf_0_0 <-> shelf_0_1 bloquee 120 s (source : test).
+graph_publisher : [INFO] [1794772844.248698438] [graph_publisher_node]: Arete shelf_0_0 <-> shelf_1_0 bloquee 120 s (source : test).
+graph_publisher : [INFO] [1794772848.647522539] [graph_publisher_node]: Arete shelf_0_1 <-> shelf_0_2 debloquee (source : test).
+graph_publisher : [INFO] [1794772848.649719164] [graph_publisher_node]: Arete shelf_0_0 <-> shelf_0_1 debloquee (source : test).
+graph_publisher : [INFO] [1794772848.652118151] [graph_publisher_node]: Arete shelf_0_0 <-> shelf_1_0 debloquee (source : test).
+RC=0
