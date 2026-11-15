@@ -177,5 +177,22 @@ class TestTrainingNeverSeesTest(unittest.TestCase):
         self.assertNotEqual(run(2), run(3))
 
 
+class TestBestHeuristicComparison(unittest.TestCase):
+    def test_picks_lowest_mean_heuristic_and_pairs_seeds(self):
+        from warehouse_marl.allocation_benchmark import vs_best_heuristic
+        rows = []
+        for seed in range(6):
+            for m, v in (('fifo', 30 + seed), ('greedy_pair', 25 + seed),
+                         ('consensus', 40), ('random', 10), ('drl3_direct', 24 + seed)):
+                rows.append({'experience': 'dataset', 'condition': 'c', 'methode': m,
+                             'graine': seed, 'temps_traitement_moy_s': float(v)})
+        (r,) = vs_best_heuristic(rows, 'drl3_direct')
+        self.assertEqual(r['meilleure_heuristique'], 'greedy_pair')   # random exclu
+        self.assertEqual(r['gagne'], '6/6')
+        self.assertLess(r['gain_pct'], 5.0)
+        self.assertGreater(r['gain_pct'], 0.0)
+        self.assertEqual((r['ecart_ic95_bas'], r['ecart_ic95_haut']), (-1.0, -1.0))
+
+
 if __name__ == '__main__':
     unittest.main()

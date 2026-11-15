@@ -766,6 +766,45 @@ def stats_table(rows, metric='temps_traitement_moy_s'):
     return out
 
 
+HEURISTICS = ('fifo', 'consensus', 'greedy_pair', 'greedy_time')
+
+
+def vs_best_heuristic(rows, method, metric='temps_traitement_moy_s', experience='dataset'):
+    """Pour chaque condition : ``method`` contre l'heuristique de plus faible
+    moyenne (choisie sur ces memes essais, ce qui avantage l'heuristique).
+    Moyennes et IC 95 % bootstrap, IC 95 % de l'ecart apparie, Wilcoxon."""
+    out = []
+    sub = [r for r in rows if r['experience'] == experience]
+    for cond in dict.fromkeys(r['condition'] for r in sub):
+        by_m = {}
+        for r in sub:
+            if r['condition'] == cond:
+                by_m.setdefault(r['methode'], {})[r['graine']] = r[metric]
+        if method not in by_m:
+            continue
+        heur = {m: v for m, v in by_m.items() if m in HEURISTICS}
+        if not heur:
+            continue
+        best = min(heur, key=lambda m: statistics.mean(heur[m].values()))
+        seeds = sorted(set(by_m[method]) & set(heur[best]))
+        a = [by_m[method][s] for s in seeds]
+        b = [heur[best][s] for s in seeds]
+        diffs = [x - y for x, y in zip(a, b)]
+        (alo, ahi), (blo, bhi) = bootstrap_ci(a), bootstrap_ci(b)
+        dlo, dhi = bootstrap_ci(diffs)
+        out.append({'condition': cond, 'methode': method, 'meilleure_heuristique': best,
+                    'drl3_moyenne': round(statistics.mean(a), 3),
+                    'drl3_ic95_bas': round(alo, 3), 'drl3_ic95_haut': round(ahi, 3),
+                    'heur_moyenne': round(statistics.mean(b), 3),
+                    'heur_ic95_bas': round(blo, 3), 'heur_ic95_haut': round(bhi, 3),
+                    'gain_pct': round(100 * (statistics.mean(b) - statistics.mean(a))
+                                      / statistics.mean(b), 2),
+                    'ecart_ic95_bas': round(dlo, 3), 'ecart_ic95_haut': round(dhi, 3),
+                    'gagne': f'{sum(x < y for x, y in zip(a, b))}/{len(seeds)}',
+                    'p_wilcoxon': round(wilcoxon_p(a, b), 4)})
+    return out
+
+
 def write_csv(path, rows):
     keys = list(dict.fromkeys(k for r in rows for k in r))
     with open(path, 'w', newline='') as f:
@@ -861,7 +900,8 @@ def _print_table(title, table):
 def main(argv=None):
     p = argparse.ArgumentParser(description='Banc d essai hors-ligne de l allocation de taches.')
     p.add_argument('--exp', default='all',
-                   choices=['load', 'scale', 'blocking', 'network', 'structured', 'all'])
+                   choices=['load', 'scale', 'blocking', 'network', 'structured', 'dataset',
+                            'all'])
     p.add_argument('--seeds', type=int, default=10)
     p.add_argument('--tasks', type=int, default=150, help='taches par essai')
     p.add_argument('--robots', type=int, default=3)
@@ -904,8 +944,16 @@ def main(argv=None):
                     for x in (0.0, 0.1, 0.3, 0.5)],
         'structured': [dict(lvl, robots=6, dims=(8, 5), block_min=60.0, block_max=300.0,
                             deadline_base=60.0) for lvl in STRUCTURED_LEVELS],
+        # Vagues de TEST du jeu de donnees reel (dataset_footwear), toutes methodes.
+        'dataset': [dict(label=f'15 racks, 3 r., rho={x}', rho=x, robots=3, dims=(5, 3),
+                         footwear=True) for x in (0.7, 0.9)]
+        + [dict(label='40 racks, 6 r., vit. var.', rho=0.9, robots=6, dims=(8, 5),
+                speeds=(0.3, 0.5, 0.7), footwear=True),
+           dict(label='150 racks, 20 r., rho=0.7', rho=0.7, robots=20, dims=(15, 10),
+                footwear=True)],
     }
-    exps = list(plans) if args.exp == 'all' else [args.exp]
+    # 'all' = experiences synthetiques ; 'dataset' (donnees reelles) a part
+    exps = [e for e in plans if e != 'dataset'] if args.exp == 'all' else [args.exp]
     needed = {c['robots'] for e in exps for c in plans[e]}
     agents = ({n: load_agent(args.model, n) for n in needed}
               if any(m.startswith('drl_') for m in methods) else {})
@@ -928,6 +976,19 @@ def main(argv=None):
     if 'structured' in exps:
         _print_table('\nTaux de taches en retard (%), experience structured :',
                      [r for r in late if r['experience'] == 'structured'])
+    if 'dataset' in exps:
+        best = vs_best_heuristic(rows, 'drl3_direct')
+        if best:
+            write_csv(f'{args.out}_dataset_vs_meilleure.csv', best)
+            print('\nDonnees reelles (vagues de test) : drl3_direct contre la meilleure '
+                  'heuristique de chaque condition (temps de traitement moyen, s) :')
+            for r in best:
+                print(f"  {r['condition']:26s} drl3 {r['drl3_moyenne']:6.2f} "
+                      f"[{r['drl3_ic95_bas']:.2f} ; {r['drl3_ic95_haut']:.2f}]  "
+                      f"meilleure = {r['meilleure_heuristique']:11s} {r['heur_moyenne']:6.2f} "
+                      f"[{r['heur_ic95_bas']:.2f} ; {r['heur_ic95_haut']:.2f}]  "
+                      f"gain {r['gain_pct']:+.2f} % (ecart IC95 [{r['ecart_ic95_bas']:+.2f} ; "
+                      f"{r['ecart_ic95_haut']:+.2f}] s, {r['gagne']}, p={r['p_wilcoxon']})")
     plots(rows, args.out)
 
 
