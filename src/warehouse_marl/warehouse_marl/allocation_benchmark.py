@@ -516,6 +516,36 @@ class Benchmark:
                 pairs.append((r, task, feats[r.rid]))
         return pairs
 
+    def candidate_pairs_v3(self):
+        """Comme candidate_pairs, avec les caracteristiques relatives v3
+        (drl/features_v3.py), calculees sur l'ensemble des couples."""
+        from warehouse_marl.drl.features_v3 import decision_features, due_in, graph_diameter
+        free = [r for r in self.robots if self.idle(r)]
+        if not free:
+            return []
+        cand = self.candidate_tasks()
+        if not cand:
+            return []
+        if getattr(self, '_diameter', None) is None:
+            self._diameter = graph_diameter(self.g)
+        specs, keys = [], []
+        for task in cand:
+            for r in free:
+                c = self.path_cost(r.node, task.target)
+                specs.append({'robot': r.rid, 'task': task.task_id, 'cost': c, 'speed': r.speed,
+                              'congestion': 0.0 if math.isinf(c)
+                              else self.path_congestion(r.node, task.target),
+                              'load': self.load(r)})
+                keys.append((r, task))
+        tasks = {k.task_id: {'age': self.t - k.created, 'priority': k.priority,
+                             'due_in': due_in(k.due, self.t)} for k in cand}
+        feats = decision_features(
+            specs, tasks, n_robots=len(self.robots), n_free=len(free),
+            queue_len=len(self.open), diameter=self._diameter,
+            mean_speed=statistics.mean(r.speed for r in self.robots),
+            max_active=self.max_active, pick_time=self.pick_time)
+        return [(r, k, f) for (r, k), f in zip(keys, feats)]
+
     def assign_pair(self, r: Robot, task: Task):
         """Attribution centralisee d'un couple (drl2_direct / env_v2)."""
         self.open.remove(task)

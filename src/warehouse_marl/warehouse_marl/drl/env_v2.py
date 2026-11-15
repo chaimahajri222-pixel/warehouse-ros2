@@ -59,17 +59,25 @@ def service_time(dims, speed, pick_time) -> float:
 
 
 def make_benchmark(method: str, scenario: Dict, speed=0.5, pick_time=10.0, agent2=None,
-                   bias_weight=1.0) -> Benchmark:
+                   bias_weight=1.0, agent3=None) -> Benchmark:
     """Construit un Benchmark a partir d'un scenario
-    {dims, robots, rho, block_rate, tasks, seed, [loss]}."""
+    {dims, robots, rho, block_rate, tasks, seed, [loss, skew, speeds,
+    deadline_base, block_min, block_max]} (cles optionnelles : valeurs par
+    defaut du banc)."""
     dims = tuple(scenario['dims'])
-    rate = scenario['rho'] * scenario['robots'] / service_time(dims, speed, pick_time)
+    speeds = scenario.get('speeds')
+    mean_speed = sum(speeds) / len(speeds) if speeds else speed
+    rate = scenario['rho'] * scenario['robots'] / service_time(dims, mean_speed, pick_time)
     loss = scenario.get('loss', 0.0)
     return Benchmark(method, build_grid_warehouse(*dims), scenario['robots'], rate,
                      scenario['tasks'], seed=scenario['seed'], speed=speed,
                      pick_time=pick_time, block_rate=scenario.get('block_rate', 0.0),
+                     block_min=scenario.get('block_min', 30.0),
+                     block_max=scenario.get('block_max', 120.0),
                      msg_loss=loss, msg_delay=0.05 + 2 * loss, agent2=agent2,
-                     bias_weight=bias_weight)
+                     bias_weight=bias_weight, demand_skew=scenario.get('skew', 0.0),
+                     speeds=speeds, deadline_base=scenario.get('deadline_base', 60.0),
+                     agent3=agent3)
 
 
 class AllocationEnvV2:
