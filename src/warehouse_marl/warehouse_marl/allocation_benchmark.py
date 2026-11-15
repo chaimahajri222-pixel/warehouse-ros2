@@ -158,6 +158,14 @@ class Benchmark:
                  demand_skew=0.0, speeds=None, deadline_base=60.0, agent3=None,
                  targets=None):
         self.m, self.g, self.rng = method, graph, random.Random(seed)
+        # Generateurs separes : le MONDE (blocages d'aretes) et le RESEAU
+        # (pertes de messages) ne dependent pas des decisions, donc toutes
+        # les methodes voient exactement les memes blocages pour une graine.
+        # self.rng sert aux arrivees (tirees a l'initialisation) et aux choix
+        # de la methode 'random'.
+        self.rng_world = random.Random(seed * 1_000_003 + 17)
+        self.rng_net = random.Random(seed * 1_000_033 + 29)
+        self.block_log: List[tuple] = []          # (debut, arete, fin)
         self.agent, self.bias_w = agent, bias_weight
         self.agent2 = agent2                  # modele DRL v2 (drl/pair_dqn.py)
         self.agent3 = agent3                  # modele DRL v3 (drl/residual_dqn.py)
@@ -390,7 +398,7 @@ class Benchmark:
             claimants = []
             for rid, cost in task.bids.items():
                 seen = {o: c for o, c in task.bids.items()
-                        if o == rid or (self.rng.random() >= self.loss
+                        if o == rid or (self.rng_net.random() >= self.loss
                                         and task.bid_time[o] + self.delay <= task.deadline)}
                 if min(seen.items(), key=lambda kv: (kv[1], kv[0]))[0] == rid:
                     claimants.append(rid)
@@ -417,13 +425,14 @@ class Benchmark:
 
     # ----- monde ------------------------------------------------------------
     def blockages(self):
-        if self.block_rate > 0 and self.rng.random() < self.block_rate * self.dt:
+        if self.block_rate > 0 and self.rng_world.random() < self.block_rate * self.dt:
             edges = [(u, v) for u, v in self.g.G.edges
                      if u.startswith('shelf') and v.startswith('shelf') and u < v
                      and (u, v) not in self.blocked]
             if edges:
-                u, v = self.rng.choice(edges)
-                self.blocked[(u, v)] = self.t + self.rng.uniform(self.block_min, self.block_max)
+                u, v = self.rng_world.choice(edges)
+                self.blocked[(u, v)] = self.t + self.rng_world.uniform(self.block_min, self.block_max)
+                self.block_log.append((self.t, (u, v), self.blocked[(u, v)]))
                 self.g.set_blocked(u, v, True); self.g.set_blocked(v, u, True)
                 self._invalidate()
         for (u, v), end in list(self.blocked.items()):
