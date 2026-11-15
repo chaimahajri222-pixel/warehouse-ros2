@@ -522,7 +522,7 @@ nulle, c'est-a-dire `greedy_pair`. En fin d'entrainement, les modeles sont de
 8 a 20 % moins bons en validation (13,4 % en moyenne). La correction apprise
 atteint une valeur absolue moyenne d'environ 6, alors que le terme de base
 (cout / diametre) reste entre 0 et 1 : elle efface la regle de depart au
-lieu de la corriger. La perte reste haute (0,75 -> 0,79 en moyenne, contre
+lieu de la corriger. La perte reste haute (0,88 -> 0,79 en moyenne, contre
 0,33 en synthetique). Q est stable pour 2 graines sur 5.
 
 **Banc d'essai** : `--exp dataset`, 10 graines, 150 taches par essai.
