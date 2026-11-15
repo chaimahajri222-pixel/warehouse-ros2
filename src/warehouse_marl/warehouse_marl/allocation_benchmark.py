@@ -39,6 +39,8 @@ Exemples :
     ros2 run warehouse_marl allocation_benchmark --exp all --seeds 10
     ros2 run warehouse_marl allocation_benchmark --exp load --model warehouse_dqn_3robots.pt
     ros2 run warehouse_marl allocation_benchmark --exp all --seeds 10 --model2 drl_v2/drl2_best.pt
+    ros2 run warehouse_marl allocation_benchmark --exp structured --model3 drl_v3/drl3_best.pt
+    ros2 run warehouse_marl allocation_benchmark --exp load --demand-skew 1.5 --speeds 0.3,0.5,0.7
     python3 -m warehouse_marl.allocation_benchmark --exp scale --seeds 5
 
 Sorties (prefixe --out) : CSV des essais, tableau statistique (moyenne,
@@ -636,6 +638,21 @@ def load_agent2(model_path):
         return None
 
 
+def load_agent3(model_path):
+    """Modele DRL v3 residuel (train_drl_v3), toute taille de flotte."""
+    if not model_path:
+        return None
+    if not os.path.isfile(model_path):
+        print(f'Modele v3 {model_path} introuvable : methode drl3_direct ignoree.')
+        return None
+    try:
+        from warehouse_marl.drl.residual_dqn import load_residual_model
+        return load_residual_model(model_path)
+    except Exception as exc:   # torch absent, mauvais format...
+        print(f'Impossible de charger le modele v3 {model_path} ({exc}) : drl3_direct ignoree.')
+        return None
+
+
 def run_experiment(name, configs, methods, seeds, args, agents, agent2=None, agent3=None):
     rows = []
     for cfg in configs:
@@ -825,6 +842,7 @@ def main(argv=None):
     p.add_argument('--robots', type=int, default=3)
     p.add_argument('--model', default='', help='modele DQN .pt (pour drl_hybrid / drl_direct)')
     p.add_argument('--model2', default='', help='modele DRL v2 .pt (train_drl_v2) pour drl2_*')
+    p.add_argument('--model3', default='', help='modele DRL v3 .pt (train_drl_v3) pour drl3_direct')
     p.add_argument('--bias-weight', type=float, default=1.0,
                    help='poids du biais DRL (v1 : -Q ; v2 : biais calibre)')
     p.add_argument('--speed', type=float, default=0.5, help='vitesse des robots (m/s)')
@@ -863,11 +881,12 @@ def main(argv=None):
     agents = ({n: load_agent(args.model, n) for n in needed}
               if any(m.startswith('drl_') for m in methods) else {})
     agent2 = load_agent2(args.model2) if any(m.startswith('drl2') for m in methods) else None
+    agent3 = load_agent3(args.model3) if any(m.startswith('drl3') for m in methods) else None
 
     rows = []
     for e in exps:
         print(f'Experience {e} ...')
-        rows += run_experiment(e, plans[e], methods, args.seeds, args, agents, agent2)
+        rows += run_experiment(e, plans[e], methods, args.seeds, args, agents, agent2, agent3)
     write_csv(f'{args.out}_essais.csv', rows)
     table = stats_table(rows)
     write_csv(f'{args.out}_statistiques.csv', table)

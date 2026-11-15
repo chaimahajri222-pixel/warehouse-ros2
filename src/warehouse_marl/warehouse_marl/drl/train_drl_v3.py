@@ -136,7 +136,8 @@ def train_seed(job) -> Dict:
           f'vs greedy_pair {best["gain_vs_greedy_pair_pct"]:+.2f} %', flush=True)
     decay = max(1, int(args.eps_decay_frac * args.episodes))
     for ep in range(1, args.episodes + 1):
-        eps = max(args.eps_end, args.eps_start - (args.eps_start - args.eps_end) * (ep - 1) / decay)
+        frac = (ep - 1) / decay
+        eps = max(args.eps_end, args.eps_start - (args.eps_start - args.eps_end) * frac)
         obs, info = env.reset()
         done = info['done']
         rewards, raws, losses, qs, grads, corrs, metrics = [], [], [], [], [], [], {}
@@ -245,8 +246,8 @@ def indicators(results, refs) -> List[Dict]:
     rows.append({
         'graine': 'toutes', 'meilleure_val_s': round(statistics.mean(bests), 3),
         'ecart_type_graines_s': round(statistics.pstdev(bests), 3),
-        **{f'gain_val_vs_{m}_pct': round(statistics.mean(r[f'gain_val_vs_{m}_pct'] for r in rows), 2)
-           for m in REFERENCES},
+        **{f'gain_val_vs_{m}_pct': round(
+            statistics.mean(r[f'gain_val_vs_{m}_pct'] for r in rows), 2) for m in REFERENCES},
         'gain_final_vs_greedy_pair_pct': round(
             statistics.mean(r['gain_final_vs_greedy_pair_pct'] for r in rows), 2),
         'q_stable_toutes_graines': all(r['q_stable'] for r in rows),
