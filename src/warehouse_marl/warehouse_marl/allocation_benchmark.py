@@ -134,9 +134,10 @@ class Benchmark:
                  bias_weight=1.0, speed=0.5, pick_time=10.0, slowdown=0.5,
                  block_rate=0.0, block_min=30.0, block_max=120.0,
                  msg_loss=0.0, msg_delay=0.05, window=1.5, bid_delay=0.2,
-                 claim_window=0.5, max_active=3, dt=0.25, timeout=90.0):
+                 claim_window=0.5, max_active=3, dt=0.25, timeout=90.0, agent2=None):
         self.m, self.g, self.rng = method, graph, random.Random(seed)
         self.agent, self.bias_w = agent, bias_weight
+        self.agent2 = agent2                  # modele DRL v2 (drl/pair_dqn.py)
         self.speed, self.pick_time, self.slow = speed, pick_time, slowdown
         self.block_rate, self.block_min, self.block_max = block_rate, block_min, block_max
         self.loss, self.delay = msg_loss, msg_delay
@@ -158,13 +159,31 @@ class Benchmark:
         self.conflicts = 0
         self.t = 0.0
         self.pc_cache: Dict[tuple, float] = {}
+        self.cong_cache: Dict[tuple, float] = {}
+        self.next_arrival = 0
+        self.horizon = self.arrivals[-1].created + 3600.0
+        self.k_candidates = 5             # DRL v2 : taches candidates par decision
+        self.n_decisions = 0
 
     # ----- outils ---------------------------------------------------------
+    def _invalidate(self):
+        self.pc_cache.clear()
+        self.cong_cache.clear()
+
     def path_cost(self, src, dst):
         key = (src, dst)
         if key not in self.pc_cache:
             self.pc_cache[key] = self.g.shortest_path(src, dst)[1]
         return self.pc_cache[key]
+
+    def path_congestion(self, src, dst):
+        """Somme des congestions (robots presents) sur le plus court chemin."""
+        key = (src, dst)
+        if key not in self.cong_cache:
+            path, _ = self.g.shortest_path(src, dst)
+            self.cong_cache[key] = sum(self.g.G[u][v].get('congestion', 0.0)
+                                       for u, v in zip(path, path[1:]))
+        return self.cong_cache[key]
 
     def idle(self, r: Robot):
         return r.task is None and not r.queue
@@ -306,12 +325,12 @@ class Benchmark:
                 u, v = self.rng.choice(edges)
                 self.blocked[(u, v)] = self.t + self.rng.uniform(self.block_min, self.block_max)
                 self.g.set_blocked(u, v, True); self.g.set_blocked(v, u, True)
-                self.pc_cache.clear()
+                self._invalidate()
         for (u, v), end in list(self.blocked.items()):
             if self.t >= end:
                 del self.blocked[(u, v)]
                 self.g.set_blocked(u, v, False); self.g.set_blocked(v, u, False)
-                self.pc_cache.clear()
+                self._invalidate()
 
     def move(self, r: Robot):
         if r.task is None:
@@ -329,7 +348,7 @@ class Benchmark:
             r.edge_left -= self.dt
             if r.edge_left <= 0:
                 u, v = r.edge
-                self.g.update_congestion(u, v, -1.0); self.pc_cache.clear()
+                self.g.update_congestion(u, v, -1.0); self._invalidate()
                 r.node, r.edge = v, None
             return
         if r.node == r.task.target:
@@ -346,22 +365,86 @@ class Benchmark:
         base = self.g.G[u][v]['base_weight']
         r.edge, r.edge_left = (u, v), base / self.speed * (1.0 + self.slow * cong)
         r.distance += base
-        self.g.update_congestion(u, v, 1.0); self.pc_cache.clear()
+        self.g.update_congestion(u, v, 1.0); self._invalidate()
+
+    # Un pas de simulation = begin_tick() ; allocate() ; end_tick().
+    # Decoupe pour que drl/env_v2.py puisse s'arreter entre deux decisions
+    # d'allocation sans dupliquer le monde simule.
+    def begin_tick(self):
+        """Arrivees de taches puis blocages/deblocages d'aretes."""
+        while (self.next_arrival < len(self.arrivals)
+               and self.arrivals[self.next_arrival].created <= self.t):
+            k = self.arrivals[self.next_arrival]
+            self.open.append(k); self.tasks.append(k); self.next_arrival += 1
+        self.blockages()
+
+    def end_tick(self):
+        """Deplace les robots, avance le temps ; True si l'essai est fini."""
+        for r in self.robots:
+            self.move(r)
+        self.t += self.dt
+        return self.all_arrived() and not self.open and all(
+            r.task is None and not r.queue for r in self.robots)
+
+    def all_arrived(self):
+        return self.next_arrival == len(self.arrivals)
 
     def run(self):
-        i, horizon = 0, self.arrivals[-1].created + 3600.0
-        while self.t < horizon:
-            while i < len(self.arrivals) and self.arrivals[i].created <= self.t:
-                k = self.arrivals[i]; self.open.append(k); self.tasks.append(k); i += 1
-            self.blockages()
+        while self.t < self.horizon:
+            self.begin_tick()
             self.allocate()
-            for r in self.robots:
-                self.move(r)
-            self.t += self.dt
-            if i == len(self.arrivals) and not self.open and all(
-                    r.task is None and not r.queue for r in self.robots):
+            if self.end_tick():
                 break
         return self.metrics()
+
+    # ----- DRL v2 : couples (robot libre, tache candidate) --------------------
+    def candidate_tasks(self):
+        """Les K taches ouvertes les plus anciennes dont la cible a de la place."""
+        out = []
+        for k in sorted(self.open, key=lambda x: (x.created, x.task_id)):
+            if not self.target_full(k.target):
+                out.append(k)
+                if len(out) == self.k_candidates:
+                    break
+        return out
+
+    def task_dict(self, k: Task):
+        return {'id': k.task_id, 'target': k.target, 'priority': k.priority,
+                'created': k.created}
+
+    def pair_features(self, robots, task: Task, free, cand):
+        """Caracteristiques v2 de ``task`` pour chaque robot de ``robots``
+        (dict rid -> vecteur), voir drl/features_v2.py."""
+        from warehouse_marl.drl.features_v2 import features_for_robots
+        node = {r.rid: r.node for r in self.robots}
+        return features_for_robots(
+            [r.rid for r in robots], [r.rid for r in free], self.task_dict(task),
+            [self.task_dict(k) for k in cand],
+            cost=lambda rid, tgt: self.path_cost(node[rid], tgt),
+            congestion=lambda rid, tgt: self.path_congestion(node[rid], tgt),
+            load={r.rid: self.load(r) for r in self.robots},
+            n_robots=len(self.robots), queue_len=len(self.open),
+            max_active=self.max_active, now=self.t)
+
+    def candidate_pairs(self):
+        """Liste [(robot, tache, caracteristiques)] des couples possibles."""
+        free = [r for r in self.robots if self.idle(r)]
+        if not free:
+            return []
+        cand = self.candidate_tasks()
+        pairs = []
+        for task in cand:
+            feats = self.pair_features(free, task, free, cand)
+            for r in free:
+                pairs.append((r, task, feats[r.rid]))
+        return pairs
+
+    def assign_pair(self, r: Robot, task: Task):
+        """Attribution centralisee d'un couple (drl2_direct / env_v2)."""
+        self.open.remove(task)
+        self.assign(task, r)
+        self.msgs += len(self.robots) + 1      # comme fifo : etats + ordre
+        self.n_decisions += 1
 
     def metrics(self):
         done = [k for k in self.tasks if k.done is not None and not k.failed]
