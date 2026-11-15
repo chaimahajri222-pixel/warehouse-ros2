@@ -238,6 +238,22 @@ class Benchmark:
                 r = min(free, key=lambda x: (self.path_cost(x.node, task.target), x.rid))
                 self.open.remove(task); self.assign(task, r)
                 self.msgs += len(self.robots) + 1      # interrogation des etats + ordre
+        elif self.m in ('drl2_direct', 'greedy_pair'):
+            # Centralise, couple par couple (meme regle que drl/env_v2.py) :
+            #   drl2_direct : couple (robot libre, tache) de Q maximale ;
+            #   greedy_pair : temoin SANS apprentissage, meme espace de decision,
+            #                 couple de cout de chemin minimal (egalite -> la
+            #                 tache la plus ancienne).
+            while True:
+                pairs = self.candidate_pairs()
+                if not pairs:
+                    break
+                if self.m == 'drl2_direct':
+                    q = self.agent2.scores([f for _, _, f in pairs])
+                else:
+                    q = [-f[0] for _, _, f in pairs]
+                r, task, _ = pairs[int(max(range(len(q)), key=lambda j: q[j]))]
+                self.assign_pair(r, task)
         elif self.m == 'drl_direct':
             for task in list(self.open):
                 q = self.q_values(task)

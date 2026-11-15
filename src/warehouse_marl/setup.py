@@ -52,6 +52,8 @@ setup(
             'warehouse_dashboard = warehouse_marl.dashboard_server:main',
             # Entrainement hors-ligne du modele DRL (pas un noeud ROS2)
             'train_drl = warehouse_marl.drl.train_drl:main',
+            # DRL v2 : Q par couple (robot, tache), independant de la taille de flotte
+            'train_drl_v2 = warehouse_marl.drl.train_drl_v2:main',
         ],
     },
 )
