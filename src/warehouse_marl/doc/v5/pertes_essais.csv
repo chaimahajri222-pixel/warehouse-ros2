@@ -1,0 +1,7 @@
+section,taches,attribuees,attribuees_une_seule_fois,mises_en_file_multiples,executions_multiples,reussies_une_fois,non_attribuees,conflits,retraits_sur_conflit,executant_different_du_meilleur,encheres_publiees,encheres_recues_au_dernier_rejet,pertes_simulees,delai_attribution_moy_s,toutes_terminees,reussi,rc
+msg_loss=0.0 graine=1,30,30,30,0,0,30,0,0,0,0,53,,0,2.632,True,True,0
+msg_loss=0.5 graine=1,30,30,30,0,0,30,0,2,2,0,54,107,62,2.597,True,True,0
+msg_loss=0.0 graine=2,30,30,30,0,0,30,0,0,0,0,56,,0,2.499,True,True,0
+msg_loss=0.5 graine=2,30,30,30,0,0,30,0,0,0,0,55,115,68,3.895,True,True,0
+msg_loss=0.0 graine=3,30,30,30,0,0,30,0,0,0,0,59,,0,2.334,True,True,0
+msg_loss=0.5 graine=3,30,30,30,0,0,30,0,0,0,0,59,120,60,2.319,True,True,0

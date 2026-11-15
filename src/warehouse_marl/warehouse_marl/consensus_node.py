@@ -34,6 +34,8 @@ politique DRL (voir drl_allocator_node.py -> publish sur
 
 import json
 import math
+import random
+import zlib
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
@@ -69,11 +71,24 @@ class ConsensusNode(Node):
         self.declare_parameter('bid_delay_sec', 0.2)
         self.declare_parameter('map_origin_x', -1.5)
         self.declare_parameter('map_origin_y', -1.0)
+        # Perte de messages simulee (couche IoT) : fraction des encheres
+        # recues des AUTRES agents ignoree au hasard (0 = aucune perte).
+        # Tirage reproductible : graine msg_loss_seed combinee au robot_id.
+        self.declare_parameter('msg_loss', 0.0)
+        self.declare_parameter('msg_loss_seed', 0)
 
         self.robot_id = self.get_parameter('robot_id').value
         self.bidding_window = self.get_parameter('bidding_window_sec').value
         self.max_concurrent = self.get_parameter('max_concurrent_tasks').value
         self.bid_delay = float(self.get_parameter('bid_delay_sec').value)
+        self.msg_loss = float(self.get_parameter('msg_loss').value)
+        if not 0.0 <= self.msg_loss <= 1.0:
+            raise ValueError(f'msg_loss hors de [0, 1] : {self.msg_loss}')
+        self._loss_rng = random.Random(
+            int(self.get_parameter('msg_loss_seed').value) * 1_000_003
+            + zlib.crc32(str(self.robot_id).encode()))
+        self.bids_received = 0
+        self.bids_dropped = 0
 
         self.graph = build_demo_warehouse(
             float(self.get_parameter('map_origin_x').value),
@@ -123,7 +138,8 @@ class ConsensusNode(Node):
         self.create_timer(0.2, self._check_deadlines)
         self.create_timer(0.2, self._update_pose)
 
-        self.get_logger().info(f"[{self.robot_id}] ConsensusNode demarre.")
+        self.get_logger().info(
+            f"[{self.robot_id}] ConsensusNode demarre (msg_loss={self.msg_loss}).")
 
     # ------------------------------------------------------------------ #
     def _now(self) -> float:
@@ -257,6 +273,14 @@ class ConsensusNode(Node):
             task_id, robot_id, cost = data['task_id'], data['robot_id'], data['cost']
         except (json.JSONDecodeError, KeyError):
             return
+        if robot_id != self.robot_id:
+            self.bids_received += 1
+            if self.msg_loss > 0.0 and self._loss_rng.random() < self.msg_loss:
+                self.bids_dropped += 1
+                self.get_logger().info(
+                    f"[{self.robot_id}] perte simulee : enchere de {robot_id} sur {task_id} "
+                    f"ignoree ({self.bids_dropped}/{self.bids_received})")
+                return
 
         if task_id not in self.tasks:
             # Tache encore inconnue localement (message arrive avant /new) ->
