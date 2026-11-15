@@ -54,6 +54,8 @@ setup(
             'train_drl = warehouse_marl.drl.train_drl:main',
             # DRL v2 : Q par couple (robot, tache), independant de la taille de flotte
             'train_drl_v2 = warehouse_marl.drl.train_drl_v2:main',
+            # DRL v3 : Q residuel sur greedy_pair, service mesure, scenarios structures
+            'train_drl_v3 = warehouse_marl.drl.train_drl_v3:main',
         ],
     },
 )
