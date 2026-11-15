@@ -57,9 +57,13 @@ def sample_training_scenario(rng: random.Random, n_tasks: int, sizes=TRAIN_SIZES
 class AllocationEnvV3:
     def __init__(self, seed: int = 0, n_tasks: int = 80, reward_center: Optional[float] = None,
                  failure_penalty_s: float = 120.0, late_penalty_s: float = 0.0,
-                 sizes=TRAIN_SIZES):
+                 sizes=TRAIN_SIZES, tasks_from: str = '', data_dir: Optional[str] = None):
         self._rng = random.Random(seed)
         self.n_tasks, self.sizes = n_tasks, sizes
+        # tasks_from='footwear' : taches des vagues reelles de la partie
+        # 'train_fit' du jeu de donnees (jamais de vague de test)
+        self.tasks_from, self.data_dir = tasks_from, data_dir
+        self._starts = None
         self.reward_center = reward_center
         self.failure_penalty_s, self.late_penalty_s = failure_penalty_s, late_penalty_s
         self.bench = None
@@ -69,9 +73,20 @@ class AllocationEnvV3:
         self._alloc_phase = False
 
     # ------------------------------------------------------------------ #
+    def sample_scenario(self) -> Dict:
+        sc = sample_training_scenario(self._rng, self.n_tasks, self.sizes)
+        if self.tasks_from == 'footwear':
+            if self._starts is None:
+                from warehouse_marl.dataset_footwear import load_dataset
+                self._starts = load_dataset(self.data_dir).window_starts('train_fit',
+                                                                         self.n_tasks)
+            sc['skew'] = 0.0                       # la demande vient des donnees
+            sc['footwear'] = {'split': 'train_fit', 'start': self._rng.choice(self._starts),
+                              'data_dir': self.data_dir}
+        return sc
+
     def reset(self, scenario: Optional[Dict] = None):
-        self.scenario = dict(scenario) if scenario else sample_training_scenario(
-            self._rng, self.n_tasks, self.sizes)
+        self.scenario = dict(scenario) if scenario else self.sample_scenario()
         self.bench = make_benchmark('drl3_direct', self.scenario)
         self._alloc_phase = False
         self._pending = []
@@ -144,10 +159,12 @@ class AllocationEnvV3:
         return self.observation(), done, info
 
 
-def greedy_reward_center(seed: int, episodes: int, n_tasks: int, sizes=TRAIN_SIZES) -> float:
+def greedy_reward_center(seed: int, episodes: int, n_tasks: int, sizes=TRAIN_SIZES,
+                         tasks_from: str = '', data_dir: Optional[str] = None) -> float:
     """Recompense brute moyenne de la politique greedy_pair (Q residuel a
     correction nulle) sur la distribution d'entrainement : reference figee."""
-    env = AllocationEnvV3(seed=seed, n_tasks=n_tasks, reward_center=None, sizes=sizes)
+    env = AllocationEnvV3(seed=seed, n_tasks=n_tasks, reward_center=None, sizes=sizes,
+                          tasks_from=tasks_from, data_dir=data_dir)
     raws: List[float] = []
     for _ in range(episodes):
         obs, info = env.reset()

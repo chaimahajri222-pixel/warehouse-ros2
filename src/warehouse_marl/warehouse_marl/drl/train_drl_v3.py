@@ -8,6 +8,7 @@ heterogenes, demande de Zipf, blocages longs.
 
     ros2 run warehouse_marl train_drl_v3 --episodes 1000 --seeds 5 --workers 3 --out-dir drl_v3
     python3 -m warehouse_marl.drl.train_drl_v3 --episodes 30 --seeds 2 --val-every 10  # essai
+    ros2 run warehouse_marl train_drl_v3 --tasks-from footwear --out-dir drl_v3_footwear
 
 La validation (scenarios FIXES) a lieu a l'episode 0 (correction nulle =
 greedy_pair) puis tous les --val-every episodes ; le meilleur modele de
@@ -51,9 +52,19 @@ VAL_CONFIGS = [
 ]
 
 
-def val_scenarios(n_tasks: int, n_seeds: int = 2) -> List[Dict]:
-    return [dict({'block_rate': 0.0}, **cfg, tasks=n_tasks, seed=700_003 + 7919 * i + 104_729 * s)
-            for i, cfg in enumerate(VAL_CONFIGS) for s in range(n_seeds)]
+def val_scenarios(n_tasks: int, n_seeds: int = 2, tasks_from: str = '',
+                  data_dir=None) -> List[Dict]:
+    out = [dict({'block_rate': 0.0}, **cfg, tasks=n_tasks, seed=700_003 + 7919 * i + 104_729 * s)
+           for i, cfg in enumerate(VAL_CONFIGS) for s in range(n_seeds)]
+    if tasks_from == 'footwear':
+        # fenetres FIXES de la partie 'train_val' (jamais le test)
+        from warehouse_marl.dataset_footwear import load_dataset
+        ds = load_dataset(data_dir)
+        for k, sc in enumerate(out):
+            sc.pop('skew', None)
+            sc['footwear'] = {'split': 'train_val', 'data_dir': data_dir,
+                              'start': ds.evenly_spaced_start('train_val', n_tasks, k, len(out))}
+    return out
 
 
 def evaluate(method: str, scenarios, agent=None) -> List[float]:
@@ -90,6 +101,10 @@ def parse_args(argv=None):
                    help='penalite (s) par tache finie apres son delai (0 = temps seul)')
     p.add_argument('--double', dest='double', action='store_true', default=True)
     p.add_argument('--no-double', dest='double', action='store_false')
+    p.add_argument('--tasks-from', default='', choices=['', 'footwear'],
+                   help='footwear : apprendre sur les vagues reelles (train_fit) et valider '
+                        'sur train_val ; les vagues de test ne sont jamais utilisees')
+    p.add_argument('--data-dir', default='', help='dossier des CSV footwear')
     p.add_argument('--out-dir', default='drl_v3')
     return p.parse_args(argv)
 
@@ -110,11 +125,13 @@ def train_seed(job) -> Dict:
     np.random.seed(seed)
     env = AllocationEnvV3(seed=20_000 + seed, n_tasks=args.tasks, reward_center=center,
                           failure_penalty_s=args.failure_penalty,
-                          late_penalty_s=args.late_penalty)
+                          late_penalty_s=args.late_penalty, tasks_from=args.tasks_from,
+                          data_dir=args.data_dir or None)
     agent = ResidualDQN(hidden=args.hidden, lr=args.lr, gamma=args.gamma, double=args.double,
                         buffer_size=args.buffer, batch_size=args.batch_size, warmup=args.warmup,
                         seed=seed, beta=args.beta, tau=args.tau)
     agent.meta = {'reward_norm_s': 60.0, 'reward_center': center, 'train_seed': seed,
+                  'tasks_from': args.tasks_from or 'synthetiques',
                   'failure_penalty_s': args.failure_penalty, 'late_penalty_s': args.late_penalty}
     path = os.path.join(args.out_dir, f'drl3_seed{seed}.pt')
     log, vals, t0 = [], [], time.time()
@@ -317,11 +334,13 @@ def main(argv=None):
     args = parse_args(argv)
     os.makedirs(args.out_dir, exist_ok=True)
     t0 = time.time()
-    val_sc = val_scenarios(args.val_tasks)
+    val_sc = val_scenarios(args.val_tasks, tasks_from=args.tasks_from,
+                           data_dir=args.data_dir or None)
     print(f'Validation : {len(val_sc)} scenarios fixes ; references {", ".join(REFERENCES)} ...')
     refs = {m: evaluate(m, val_sc) for m in REFERENCES}
     print('  ' + ', '.join(f'{m} {statistics.mean(refs[m]):.2f} s' for m in REFERENCES))
-    center = greedy_reward_center(seed=999, episodes=args.center_episodes, n_tasks=args.tasks)
+    center = greedy_reward_center(seed=999, episodes=args.center_episodes, n_tasks=args.tasks,
+                                  tasks_from=args.tasks_from, data_dir=args.data_dir or None)
     print(f'Reference de centrage figee (greedy_pair, {args.center_episodes} episodes) : '
           f'{center:.4f}')
     jobs = [(k, args, val_sc, refs, center) for k in range(args.seeds)]

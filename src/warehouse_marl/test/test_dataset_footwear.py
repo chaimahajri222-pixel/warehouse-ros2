@@ -137,5 +137,45 @@ class TestBenchmarkTasks(unittest.TestCase):
         self.assertEqual(ds.service_time(g, 0.5, 10.0), ds.service_time(g, 0.5, 10.0))
 
 
+@unittest.skipUnless(HAVE_DATA, 'jeu de donnees footwear absent')
+class TestTrainingNeverSeesTest(unittest.TestCase):
+    def test_training_episodes_use_train_fit_only(self):
+        from warehouse_marl.drl.env_v3 import AllocationEnvV3
+        ds = load_dataset()
+        fit, test = set(ds.waves_of('train_fit')), set(ds.waves_of('test'))
+        env = AllocationEnvV3(seed=1, n_tasks=80, tasks_from='footwear')
+        for _ in range(200):
+            sc = env.sample_scenario()
+            self.assertEqual(sc['footwear']['split'], 'train_fit')
+            waves = {p.wave for p in ds.window('train_fit', sc['footwear']['start'], 80)}
+            self.assertTrue(waves <= fit)
+            self.assertFalse(waves & test)
+
+    def test_validation_uses_train_val_only(self):
+        from warehouse_marl.drl.train_drl_v3 import val_scenarios
+        ds = load_dataset()
+        val, test = set(ds.waves_of('train_val')), set(ds.waves_of('test'))
+        scs = val_scenarios(100, tasks_from='footwear')
+        self.assertEqual(len({sc['footwear']['start'] for sc in scs}), len(scs))
+        for sc in scs:
+            waves = {p.wave for p in ds.window('train_val', sc['footwear']['start'], 100)}
+            self.assertTrue(waves <= val)
+            self.assertFalse(waves & test)
+
+    def test_footwear_training_is_deterministic(self):
+        from warehouse_marl.drl.env_v3 import AllocationEnvV3
+
+        def run(seed):
+            env = AllocationEnvV3(seed=seed, n_tasks=30, tasks_from='footwear')
+            obs, info = env.reset()
+            trace, done = [repr(info['scenario'])], info['done']
+            while not done:
+                obs, done, inf = env.step(0)
+                trace += [round(t[1], 12) for t in inf['transitions']]
+            return trace
+        self.assertEqual(run(2), run(2))
+        self.assertNotEqual(run(2), run(3))
+
+
 if __name__ == '__main__':
     unittest.main()
