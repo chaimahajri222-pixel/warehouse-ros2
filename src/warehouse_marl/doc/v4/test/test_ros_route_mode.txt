@@ -1,0 +1,20 @@
+# Test ROS route_mode (etape 3), 2026-11-15T16:30:15+01:00, ROS_DOMAIN_ID=87, LOCALHOST
+## mode dijkstra
+{"route": ["charging_dock", "shelf_2_0", "shelf_3_0", "shelf_4_0", "shelf_4_1", "shelf_4_2"], "route_mode": "dijkstra", "n_points": 4, "points": [[1.5, -0.5], [1.5, -4.2], [5.0, -4.2], [8.5, -4.2]], "etats": ["queued", "navigating", "succeeded"], "reussi": true}
+--- journal du noeud (dijkstra) ---
+[INFO] [1794756621.320600742] [mission_executor_node]: MissionExecutorNode pret pour ['robot1']; cibles Nav2 dans frame map.
+[INFO] [1794756621.959242692] [mission_executor_node]: ros_t0 en file pour robot1 -> shelf_4_2.
+[INFO] [1794756621.966080667] [mission_executor_node]: ros_t0: route dijkstra charging_dock -> shelf_2_0 -> shelf_3_0 -> shelf_4_0 -> shelf_4_1 -> shelf_4_2
+[INFO] [1794756621.985320526] [mission_executor_node]: robot1 execute ros_t0 -> (8.50, -4.20).
+[INFO] [1794756621.999220967] [mission_executor_node]: robot1 a termine ros_t0.
+RC=0
+## mode drl (modele selected_route.pt = ckpt_seed1_t60.pt)
+{"route": ["charging_dock", "shelf_2_0", "shelf_2_1", "shelf_2_2", "shelf_3_2", "shelf_4_2"], "route_mode": "drl", "n_points": 4, "points": [[1.5, -0.5], [5.0, -0.5], [8.5, -0.5], [8.5, -4.2]], "etats": ["queued", "navigating", "succeeded"], "reussi": true}
+--- journal du noeud (drl) ---
+[INFO] [1794756636.624984023] [mission_executor_node]: Politique drl_route chargee : /home/chchch/warehouse_ws/drl_v4/route/selected_route.pt
+[INFO] [1794756636.827879639] [mission_executor_node]: MissionExecutorNode pret pour ['robot1']; cibles Nav2 dans frame map.
+[INFO] [1794756638.581471496] [mission_executor_node]: ros_t0 en file pour robot1 -> shelf_4_2.
+[INFO] [1794756638.604891203] [mission_executor_node]: ros_t0: route drl charging_dock -> shelf_2_0 -> shelf_2_1 -> shelf_2_2 -> shelf_3_2 -> shelf_4_2
+[INFO] [1794756638.628092209] [mission_executor_node]: robot1 execute ros_t0 -> (8.50, -4.20).
+[INFO] [1794756638.635183448] [mission_executor_node]: robot1 a termine ros_t0.
+RC=0
