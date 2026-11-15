@@ -511,6 +511,48 @@ ros2 run warehouse_marl allocation_benchmark --exp dataset --seeds 10 \
 ros2 run warehouse_marl allocation_benchmark --exp load --tasks-from footwear
 ```
 
+### Resultats sur les vagues de test (2026-11-15)
+
+**Entrainement** : `train_drl_v3 --tasks-from footwear`, 5 graines x 1 000
+episodes, memes reglages que l'entrainement synthetique, 48 min 42 s.
+Validation (`train_val`) : FIFO 47,61 s, consensus 58,54 s, `greedy_pair`
+46,65 s, `greedy_time` 45,63 s. **Aucune graine n'a jamais fait mieux que
+l'episode 0** : le meilleur modele de chaque graine est donc la correction
+nulle, c'est-a-dire `greedy_pair`. En fin d'entrainement, les modeles sont de
+8 a 20 % moins bons en validation (13,4 % en moyenne). La correction apprise
+atteint une valeur absolue moyenne d'environ 6, alors que le terme de base
+(cout / diametre) reste entre 0 et 1 : elle efface la regle de depart au
+lieu de la corriger. La perte reste haute (0,75 -> 0,79 en moyenne, contre
+0,33 en synthetique). Q est stable pour 2 graines sur 5.
+
+**Banc d'essai** : `--exp dataset`, 10 graines, 150 taches par essai.
+Temps de traitement moyen (s), IC 95 % bootstrap, ecart apparie, Wilcoxon :
+
+| Condition | Meilleure heuristique | drl3 (modele reel) | drl3 (modele synthetique) |
+|---|---|---|---|
+| 15 racks, 3 robots, rho=0,7 | greedy_pair 40,23 [28,28 ; 60,88] | 40,23 (identique) | 40,48, -0,6 % (p=0,35) |
+| 15 racks, 3 robots, rho=0,9 | greedy_pair 54,76 [36,49 ; 86,83] | 54,76 (identique) | 55,30, -1,0 % (p=0,87) |
+| 40 racks, 6 robots, vitesses 0,3/0,5/0,7 | greedy_time 54,22 [43,47 ; 69,41] | 55,42, -2,2 % (p=0,77) | 54,35, -0,2 % (p=0,63) |
+| 150 racks, 20 robots, rho=0,7 | greedy_pair 58,58 [48,66 ; 70,91] | 58,58 (identique) | 77,44, **-32,2 %** (0/10, p=0,002) |
+
+Sur les donnees reelles, FIFO, `greedy_pair` et `greedy_time` sont a moins
+de 2,5 % l'une de l'autre ; le consensus est 15 a 23 % plus lent. Les IC
+sont larges parce que les fenetres de test different beaucoup (rafales
+sur les racks les plus demandes, capacite d'un robot par rack).
+
+**Conclusion.** Sur les donnees reelles, le DRL v3 ne bat pas la
+meilleure heuristique. Le garde-fou fonctionne : le modele choisi en
+validation reproduit `greedy_pair` au lieu de degrader le resultat. Le
+modele entraine en synthetique perd 32 % sur le grand entrepot reel : il
+ne se transfere pas. Pistes : borner la correction (par exemple
+`tanh` x 0,5) ou la regulariser vers 0 ; apprendre sur des fenetres plus
+longues et plus d'episodes ; residu sur `greedy_time` ; ajouter la
+popularite recente des racks comme caracteristique, car la demande reelle
+derive au fil des mois.
+
+Sorties brutes : `~/warehouse_ws/drl_v3_footwear/` (modeles, courbes,
+journaux) et `~/warehouse_ws/drl_v3_footwear/dataset_test/` (CSV, figures).
+
 ## Limites connues / pistes d'extension pour le memoire
 
 - L'environnement DRL (`drl/env.py`) est un environnement **de haut
