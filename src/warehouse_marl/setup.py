@@ -46,6 +46,8 @@ setup(
             'rfid_metrics_logger = warehouse_marl.rfid_metrics_logger:main',
             'rfid_offline_experiment = warehouse_marl.rfid_experiment:offline_main',
             'plot_rfid_metrics = warehouse_marl.rfid_experiment:plot_main',
+            # Banc d'essai hors-ligne de l'allocation de taches
+            'allocation_benchmark = warehouse_marl.allocation_benchmark:main',
             # Tableau de bord web (carte, RFID, missions)
             'warehouse_dashboard = warehouse_marl.dashboard_server:main',
             # Entrainement hors-ligne du modele DRL (pas un noeud ROS2)
