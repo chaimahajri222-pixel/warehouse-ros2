@@ -56,3 +56,21 @@ def test_static_route_ignores_congestion_but_avoids_blocks():
     g.set_blocked('shelf_2_1', 'shelf_2_0', True)
     path = b.static_path('shelf_2_0', 'shelf_2_1')
     assert path[0] == 'shelf_2_0' and path[-1] == 'shelf_2_1' and len(path) > 2
+
+
+def test_route_planner_untrained_drl_equals_dijkstra_and_waypoints():
+    from warehouse_marl.route_planner import plan_route, route_to_waypoints
+    from warehouse_marl.warehouse_graph import build_demo_warehouse
+    g = build_demo_warehouse(-1.5, -1.0)
+    agent = V4DQN('route', N_ROUTE_FEATURES, gamma=1.0)
+    for goal in ('shelf_4_2', 'shelf_0_2', 'station_B'):
+        ref = plan_route(g, 'charging_dock', goal, 'dijkstra')
+        assert plan_route(g, 'charging_dock', goal, 'drl', agent=agent) == ref
+    g.set_blocked('shelf_2_0', 'shelf_3_0', True)
+    g.set_blocked('shelf_3_0', 'shelf_2_0', True)
+    route = plan_route(g, 'charging_dock', 'shelf_4_0', 'drl', agent=agent,
+                       block_elapsed={('shelf_2_0', 'shelf_3_0'): 10.0})
+    assert route[-1] == 'shelf_4_0'
+    assert all(not g.G[u][v]['blocked'] for u, v in zip(route, route[1:]))
+    pts = route_to_waypoints(g, route)
+    assert all(abs(a[0] - b[0]) + abs(a[1] - b[1]) > 1e-6 for a, b in zip(pts, pts[1:]))

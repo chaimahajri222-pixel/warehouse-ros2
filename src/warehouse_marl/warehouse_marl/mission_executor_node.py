@@ -7,6 +7,7 @@ and publishes lifecycle status used to release allocator capacity.
 """
 
 from collections import deque
+import math
 from dataclasses import dataclass
 import json
 from typing import Deque, Dict, Optional
@@ -15,14 +16,16 @@ import rclpy
 from action_msgs.msg import GoalStatus, GoalStatusArray
 from action_msgs.srv import CancelGoal
 from geometry_msgs.msg import PoseStamped
-from nav2_msgs.action import NavigateToPose
+from nav2_msgs.action import FollowWaypoints, NavigateToPose
 from rclpy.action import ActionClient
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy
 from std_msgs.msg import Bool, String
 
-from warehouse_marl.dynamic_blocking import FailureTracker, access_edge, block_message
+from warehouse_marl.dynamic_blocking import (
+    EdgeBlockManager, FailureTracker, access_edge, block_message, edge_key, parse_block_message)
+from warehouse_marl.route_planner import plan_route, route_to_waypoints
 from warehouse_marl.warehouse_graph import build_demo_warehouse
 
 
@@ -55,6 +58,14 @@ class MissionExecutorNode(Node):
         self.declare_parameter('block_after_failures', 2)
         self.declare_parameter('block_duration_sec', 60.0)
         self.declare_parameter('failure_window_sec', 300.0)
+        # Routage (protocole v4, etape 3) :
+        #   direct   : un seul NavigateToPose vers la cible (comportement historique) ;
+        #   dijkstra : route du graphe dynamique -> points de passage FollowWaypoints ;
+        #   drl      : route deroulee par la politique drl_route (route_model .pt).
+        self.declare_parameter('route_mode', 'direct')
+        self.declare_parameter('route_model', '')
+        self.declare_parameter('robot_start_nodes', [''])
+        self.declare_parameter('robot_speed', 0.5)
 
         self.robot_names = list(self.get_parameter('robot_names').value)
         self.max_retries = int(self.get_parameter('max_retries').value)
@@ -64,6 +75,31 @@ class MissionExecutorNode(Node):
             float(self.get_parameter('map_origin_x').value),
             float(self.get_parameter('map_origin_y').value),
         )
+
+        self.route_mode = str(self.get_parameter('route_mode').value)
+        if self.route_mode not in ('direct', 'dijkstra', 'drl'):
+            raise ValueError(f'route_mode inconnu : {self.route_mode}')
+        self.robot_speed = float(self.get_parameter('robot_speed').value)
+        self.route_agent = None
+        if self.route_mode == 'drl':
+            from warehouse_marl.drl.v4_dqn import load_v4_model
+            model = str(self.get_parameter('route_model').value)
+            self.route_agent = load_v4_model(model, 'route')
+            self.get_logger().info(f'Politique drl_route chargee : {model}')
+        starts = [s for s in self.get_parameter('robot_start_nodes').value if s]
+        self._robot_node = {
+            robot: (starts[i] if i < len(starts) else 'charging_dock')
+            for i, robot in enumerate(self.robot_names)}
+        self.blocks = EdgeBlockManager(self.graph)
+        self._block_since: Dict[tuple, float] = {}
+        self._wp_clients = {}
+        if self.route_mode != 'direct':
+            self._wp_clients = {
+                robot: ActionClient(self, FollowWaypoints, f'/{robot}/follow_waypoints')
+                for robot in self.robot_names}
+            self.create_subscription(
+                String, '/warehouse/blocked_edges', self._on_blocked_edge, 10)
+        self.route_pub = self.create_publisher(String, '/warehouse/routes', 10)
 
         # Avoid rclpy.Node's internal ``_clients`` attribute.
         self._nav_clients = {
@@ -133,6 +169,48 @@ class MissionExecutorNode(Node):
 
     def _now(self) -> float:
         return self.get_clock().now().nanoseconds / 1e9
+
+    def _on_blocked_edge(self, msg: String):
+        try:
+            data = parse_block_message(msg.data)
+        except ValueError as exc:
+            self.get_logger().warn(f'/warehouse/blocked_edges ignore : {exc}')
+            return
+        now = self._now()
+        self.blocks.apply(data, now)
+        key = edge_key(data['u'], data['v'])
+        if data['blocked']:
+            self._block_since.setdefault(key, now)
+        else:
+            self._block_since.pop(key, None)
+
+    def _plan(self, robot_id: str, target: str):
+        """Route du graphe (liste de noeuds) pour route_mode dijkstra|drl."""
+        now = self._now()
+        for key in self.blocks.expire(now):
+            self._block_since.pop(key, None)
+        elapsed = {k: now - t0 for k, t0 in self._block_since.items()}
+        start = self._robot_node[robot_id]
+        return plan_route(self.graph, start, target,
+                          'drl' if self.route_mode == 'drl' else 'dijkstra',
+                          agent=self.route_agent, speed=self.robot_speed,
+                          block_elapsed=elapsed)
+
+    def _waypoint_goal(self, route):
+        goal = FollowWaypoints.Goal()
+        stamp = self.get_clock().now().to_msg()
+        last = self.graph.G.nodes[route[-1]]
+        points = route_to_waypoints(self.graph, route) or [(last['x'], last['y'], 0.0)]
+        for x, y, yaw in points:
+            pose = PoseStamped()
+            pose.header.frame_id = 'map'
+            pose.header.stamp = stamp
+            pose.pose.position.x = float(x)
+            pose.pose.position.y = float(y)
+            pose.pose.orientation.z = math.sin(yaw / 2.0)
+            pose.pose.orientation.w = math.cos(yaw / 2.0)
+            goal.poses.append(pose)
+        return goal
 
     def _on_new_task(self, msg: String):
         try:
@@ -216,12 +294,14 @@ class MissionExecutorNode(Node):
         for robot_id in self.robot_names:
             if self._active[robot_id] is not None or not self._queues[robot_id]:
                 continue
-            client = self._nav_clients[robot_id]
+            client = (self._wp_clients[robot_id] if self.route_mode != 'direct'
+                      else self._nav_clients[robot_id])
             if not client.server_is_ready():
                 now = self._now()
                 if now - self._last_server_warning[robot_id] >= 10.0:
-                    self.get_logger().warn(
-                        f'Attend /{robot_id}/navigate_to_pose.')
+                    action = ('follow_waypoints' if self.route_mode != 'direct'
+                              else 'navigate_to_pose')
+                    self.get_logger().warn(f'Attend /{robot_id}/{action}.')
                     self._last_server_warning[robot_id] = now
                 continue
 
@@ -239,6 +319,25 @@ class MissionExecutorNode(Node):
             mission = self._queues[robot_id].popleft()
             self._active[robot_id] = mission
             node = self.graph.G.nodes[mission.target_node]
+            if self.route_mode != 'direct':
+                route = self._plan(robot_id, mission.target_node)
+                if len(route) < 2 and route != [mission.target_node]:
+                    self.get_logger().warn(
+                        f'{mission.task_id}: aucune route de '
+                        f'{self._robot_node[robot_id]} a {mission.target_node}.')
+                    self._finish_or_retry(mission, GoalStatus.STATUS_ABORTED)
+                    continue
+                if route == [mission.target_node]:
+                    route = [mission.target_node, mission.target_node]
+                self.route_pub.publish(String(data=json.dumps({
+                    'task_id': mission.task_id, 'robot_id': robot_id,
+                    'route_mode': self.route_mode, 'route': route})))
+                self.get_logger().info(
+                    f'{mission.task_id}: route {self.route_mode} {" -> ".join(route)}')
+                future = client.send_goal_async(self._waypoint_goal(route))
+                future.add_done_callback(
+                    lambda result, item=mission: self._on_goal_response(result, item))
+                continue
             goal = NavigateToPose.Goal()
             goal.pose = PoseStamped()
             goal.pose.header.frame_id = 'map'
@@ -287,6 +386,7 @@ class MissionExecutorNode(Node):
             self.get_logger().info(
                 f'{mission.robot_id} a termine {mission.task_id}.')
             self.failures.record_success(mission.target_node)
+            self._robot_node[mission.robot_id] = mission.target_node
             self._finish(mission, 'succeeded', status)
         else:
             if status != GoalStatus.STATUS_CANCELED:
