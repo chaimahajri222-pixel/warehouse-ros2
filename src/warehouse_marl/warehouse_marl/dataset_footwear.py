@@ -134,6 +134,26 @@ def project_locations(locations: Dict[str, StorageLocation], rows: int,
     return out
 
 
+def _distances_from(graph, src: str) -> Dict[str, float]:
+    """Plus courts chemins depuis ``src`` (poids de base, sans congestion)."""
+    import heapq
+    G = graph.G
+    dist = {src: 0.0}
+    heap = [(0.0, src)]
+    while heap:
+        d, u = heapq.heappop(heap)
+        if d > dist[u]:
+            continue
+        for v in G._adj[u]:
+            if G[u][v].get('blocked'):
+                continue
+            nd = d + G[u][v]['base_weight']
+            if nd < dist.get(v, float('inf')):
+                dist[v] = nd
+                heapq.heappush(heap, (nd, v))
+    return dist
+
+
 class FootwearDataset:
     def __init__(self, data_dir: Optional[str] = None, train_frac: float = TRAIN_FRAC,
                  fit_frac: float = FIT_FRAC):
@@ -164,6 +184,7 @@ class FootwearDataset:
             if split == 'train':
                 self.lines['train_fit' if p.wave in fit_waves else 'train_val'].append(p)
         self._projection: Dict[Tuple[int, int], Dict[str, str]] = {}
+        self._service: Dict[tuple, float] = {}
 
     # ------------------------------------------------------------------ #
     def waves_of(self, split: str) -> List[int]:
@@ -197,6 +218,28 @@ class FootwearDataset:
         """k-ieme de n fenetres regulierement reparties sur ``split``."""
         starts = self.window_starts(split, n_tasks)
         return starts[(k * len(starts)) // max(n, 1)]
+
+    def service_time(self, graph, speed: float, pick_time: float,
+                     split: str = 'train_fit') -> float:
+        """Temps de service moyen (s) sous la distribution EMPIRIQUE des
+        cibles de ``split`` : E[cout(a, b)] / vitesse + prelevement, a et b
+        tires independamment selon la frequence des racks. Sert a garder la
+        meme charge rho qu'avec une demande uniforme (mean_service_time).
+        Calcule sur 'train_fit' par defaut : aucune information du test."""
+        key = (grid_shape(graph), speed, pick_time, split)
+        if key in self._service:
+            return self._service[key]
+        proj = self.projection(graph)
+        freq: Dict[str, int] = {}
+        for p in self.lines[split]:
+            freq[proj[p.location]] = freq.get(proj[p.location], 0) + 1
+        total = sum(freq.values())
+        expected = 0.0
+        for a, fa in freq.items():
+            dist = _distances_from(graph, a)
+            expected += fa / total * sum(fb / total * dist.get(b, 0.0) for b, fb in freq.items())
+        self._service[key] = expected / speed + pick_time
+        return self._service[key]
 
     def stats(self) -> Dict:
         return {

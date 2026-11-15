@@ -62,14 +62,24 @@ def make_benchmark(method: str, scenario: Dict, speed=0.5, pick_time=10.0, agent
                    bias_weight=1.0, agent3=None) -> Benchmark:
     """Construit un Benchmark a partir d'un scenario
     {dims, robots, rho, block_rate, tasks, seed, [loss, skew, speeds,
-    deadline_base, block_min, block_max]} (cles optionnelles : valeurs par
-    defaut du banc)."""
+    deadline_base, block_min, block_max, footwear]} (cles optionnelles :
+    valeurs par defaut du banc). ``footwear`` = {split, start, [data_dir]} :
+    taches prises dans le jeu de donnees reel (dataset_footwear)."""
     dims = tuple(scenario['dims'])
     speeds = scenario.get('speeds')
     mean_speed = sum(speeds) / len(speeds) if speeds else speed
-    rate = scenario['rho'] * scenario['robots'] / service_time(dims, mean_speed, pick_time)
     loss = scenario.get('loss', 0.0)
-    return Benchmark(method, build_grid_warehouse(*dims), scenario['robots'], rate,
+    graph = build_grid_warehouse(*dims)
+    targets = None
+    service = service_time(dims, mean_speed, pick_time)
+    if scenario.get('footwear'):          # taches du jeu de donnees reel
+        from warehouse_marl.dataset_footwear import load_dataset
+        fw = scenario['footwear']
+        ds = load_dataset(fw.get('data_dir'))
+        targets = ds.targets(graph, fw['split'], fw['start'], scenario['tasks'])
+        service = ds.service_time(graph, mean_speed, pick_time)   # meme charge rho
+    rate = scenario['rho'] * scenario['robots'] / service
+    return Benchmark(method, graph, scenario['robots'], rate,
                      scenario['tasks'], seed=scenario['seed'], speed=speed,
                      pick_time=pick_time, block_rate=scenario.get('block_rate', 0.0),
                      block_min=scenario.get('block_min', 30.0),
@@ -77,7 +87,7 @@ def make_benchmark(method: str, scenario: Dict, speed=0.5, pick_time=10.0, agent
                      msg_loss=loss, msg_delay=0.05 + 2 * loss, agent2=agent2,
                      bias_weight=bias_weight, demand_skew=scenario.get('skew', 0.0),
                      speeds=speeds, deadline_base=scenario.get('deadline_base', 60.0),
-                     agent3=agent3)
+                     agent3=agent3, targets=targets)
 
 
 class AllocationEnvV2:

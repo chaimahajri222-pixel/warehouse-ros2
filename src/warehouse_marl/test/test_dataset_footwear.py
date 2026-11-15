@@ -104,5 +104,38 @@ class TestProjection(unittest.TestCase):
         self.assertTrue(proj[xmax.code].endswith('_2'))
 
 
+@unittest.skipUnless(HAVE_DATA, 'jeu de donnees footwear absent')
+class TestBenchmarkTasks(unittest.TestCase):
+    def test_benchmark_uses_test_waves_in_order(self):
+        from warehouse_marl.drl.env_v2 import make_benchmark
+        ds = load_dataset()
+        test_waves = set(ds.waves_of('test'))
+        for k in range(10):
+            start = ds.evenly_spaced_start('test', 150, k, 10)
+            window = ds.window('test', start, 150)
+            self.assertTrue({p.wave for p in window} <= test_waves)
+            sc = dict(dims=(5, 3), robots=3, rho=0.7, tasks=150, seed=k,
+                      footwear={'split': 'test', 'start': start})
+            b = make_benchmark('fifo', sc)
+            proj = ds.projection(b.g)
+            self.assertEqual([t.target for t in b.arrivals], [proj[p.location] for p in window])
+            self.assertTrue(all(t.priority == 1.0 for t in b.arrivals))
+
+    def test_footwear_runs_are_deterministic(self):
+        from warehouse_marl.drl.env_v2 import make_benchmark
+        ds = load_dataset()
+        sc = dict(dims=(8, 5), robots=6, rho=0.9, tasks=80, seed=5,
+                  footwear={'split': 'test', 'start': ds.evenly_spaced_start('test', 80, 2, 10)})
+        self.assertEqual(make_benchmark('greedy_pair', sc).run(),
+                         make_benchmark('greedy_pair', sc).run())
+
+    def test_same_load_uses_empirical_service_time(self):
+        ds = load_dataset()
+        g = build_grid_warehouse(5, 3)
+        from warehouse_marl.allocation_benchmark import mean_service_time
+        self.assertLess(ds.service_time(g, 0.5, 10.0), mean_service_time(g, 0.5, 10.0))
+        self.assertEqual(ds.service_time(g, 0.5, 10.0), ds.service_time(g, 0.5, 10.0))
+
+
 if __name__ == '__main__':
     unittest.main()

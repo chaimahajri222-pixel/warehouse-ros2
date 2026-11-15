@@ -155,7 +155,8 @@ class Benchmark:
                  block_rate=0.0, block_min=30.0, block_max=120.0,
                  msg_loss=0.0, msg_delay=0.05, window=1.5, bid_delay=0.2,
                  claim_window=0.5, max_active=3, dt=0.25, timeout=90.0, agent2=None,
-                 demand_skew=0.0, speeds=None, deadline_base=60.0, agent3=None):
+                 demand_skew=0.0, speeds=None, deadline_base=60.0, agent3=None,
+                 targets=None):
         self.m, self.g, self.rng = method, graph, random.Random(seed)
         self.agent, self.bias_w = agent, bias_weight
         self.agent2 = agent2                  # modele DRL v2 (drl/pair_dqn.py)
@@ -180,9 +181,19 @@ class Benchmark:
             popular = list(self.shelves)
             random.Random(seed + 2000).shuffle(popular)
             weights = [1.0 / (k + 1) ** demand_skew for k in range(len(popular))]
+        # targets : cibles imposees (jeu de donnees reel, dataset_footwear),
+        # dans l'ordre ; les arrivees restent poissonniennes (meme rate) et la
+        # priorite vaut 1 (le jeu de donnees n'en fournit pas).
+        if targets is not None and len(targets) < n_tasks:
+            raise ValueError(f'{len(targets)} cibles pour {n_tasks} taches')
         t, self.arrivals = 0.0, []
         for k in range(n_tasks):
             t += self.rng.expovariate(rate)
+            if targets is not None:
+                task = Task(f't{k}', targets[k], 1.0, t)
+                task.due = t + deadline_base / task.priority
+                self.arrivals.append(task)
+                continue
             target = (self.rng.choices(popular, weights)[0] if demand_skew > 0
                       else self.rng.choice(self.shelves))
             task = Task(f't{k}', target, round(self.rng.uniform(0.5, 2.0), 2), t)
@@ -661,7 +672,15 @@ def run_experiment(name, configs, methods, seeds, args, agents, agent2=None, age
         speeds = cfg.get('speeds', args.speeds)
         base_graph = build_grid_warehouse(*graph_dims)
         mean_speed = statistics.mean(speeds) if speeds else args.speed
-        service = mean_service_time(base_graph, mean_speed, args.pick_time)
+        footwear = cfg.get('footwear') or args.tasks_from == 'footwear'
+        if footwear:
+            # taches reelles (vagues de TEST) ; meme charge rho avec le temps de
+            # service de la distribution empirique des cibles (partie train)
+            from warehouse_marl.dataset_footwear import load_dataset
+            ds = load_dataset(args.data_dir or None)
+            service = ds.service_time(base_graph, mean_speed, args.pick_time)
+        else:
+            service = mean_service_time(base_graph, mean_speed, args.pick_time)
         rate = cfg['rho'] * n_robots / service
         for seed in range(seeds):
             for m in methods:
@@ -674,6 +693,10 @@ def run_experiment(name, configs, methods, seeds, args, agents, agent2=None, age
                 elif m.startswith('drl') and agents.get(n_robots) is None:
                     continue
                 graph = build_grid_warehouse(*graph_dims)
+                targets = None
+                if footwear:      # fenetres regulierement reparties sur le test
+                    start = ds.evenly_spaced_start('test', args.tasks, seed, seeds)
+                    targets = ds.targets(graph, 'test', start, args.tasks)
                 b = Benchmark(m, graph, n_robots, rate, args.tasks, seed=1000 * seed + 7,
                               agent=agents.get(n_robots), agent2=agent2, agent3=agent3,
                               bias_weight=args.bias_weight,
@@ -683,12 +706,14 @@ def run_experiment(name, configs, methods, seeds, args, agents, agent2=None, age
                               block_max=cfg.get('block_max', args.block_max),
                               demand_skew=cfg.get('skew', args.demand_skew), speeds=speeds,
                               deadline_base=cfg.get('deadline_base', args.deadline_base),
-                              msg_loss=cfg.get('loss', args.msg_loss), msg_delay=cfg.get('delay', 0.05))
+                              msg_loss=cfg.get('loss', args.msg_loss), msg_delay=cfg.get('delay', 0.05),
+                              targets=targets)
                 res = b.run()
                 res.update(experience=name, methode=m, graine=seed, robots=n_robots,
                            racks=graph_dims[0] * graph_dims[1], rho=cfg['rho'],
                            condition=cfg['label'], block_rate=cfg.get('block_rate', args.block_rate),
-                           perte_msg=cfg.get('loss', args.msg_loss))
+                           perte_msg=cfg.get('loss', args.msg_loss),
+                           taches='footwear (test)' if footwear else 'synthetiques')
                 rows.append(res)
         print(f'  [{name}] {cfg["label"]} termine')
     return rows
@@ -857,6 +882,10 @@ def main(argv=None):
                    help='vitesses des robots, attribuees cycliquement, ex. "0.3,0.5,0.7"')
     p.add_argument('--deadline-base', type=float, default=60.0,
                    help='delai d une tache = base / priorite (s)')
+    p.add_argument('--tasks-from', default='', choices=['', 'footwear'],
+                   help='footwear : taches tirees des vagues de TEST du jeu de donnees reel')
+    p.add_argument('--data-dir', default='',
+                   help='dossier des CSV footwear (defaut : ~/warehouse_ws/data/footwear)')
     p.add_argument('--methods', default=','.join(METHODS))
     p.add_argument('--out', default='allocation_benchmark')
     args = p.parse_args(argv)
