@@ -344,6 +344,98 @@ et normaliser les couts par le diametre de l'entrepot, inclure 80-150 racks
 et 10-20 robots a l'entrainement, entrainer 1000+ episodes avec 5 graines,
 et en hybride laisser le DRL orienter le CHOIX DE LA TACHE de chaque robot.
 
+## Donnees
+
+### Source et licence
+
+- **Jeu de donnees** : *Order Picking Dataset from a Warehouse of a
+  Footwear Manufacturing Company*, Mendeley Data, version 1 (24/12/2024),
+  doi:[10.17632/pf2w725pw3.1](https://doi.org/10.17632/pf2w725pw3.1),
+  contributeur Rodrigo Furlan de Assis (Ecole de technologie superieure).
+- **Article** : Data in Brief (2025),
+  doi:[10.1016/j.dib.2025.111837](https://doi.org/10.1016/j.dib.2025.111837).
+- **Licence du jeu de donnees** : CC BY 4.0, d'apres la page Mendeley Data :
+  reutilisation libre avec attribution, a citer dans le memoire. La
+  licence de l'article n'a pas pu etre verifiee (la page de l'editeur
+  refuse les acces automatiques).
+- Les fichiers ne sont pas dans le depot. Decompresser le zip dans
+  `~/warehouse_ws/data/footwear/`, ou indiquer un autre dossier avec
+  `--data-dir` ou la variable d'environnement `WAREHOUSE_FOOTWEAR_DIR`.
+
+### Fichiers utilises (verifies a l'ouverture)
+
+| Fichier | Format | Colonnes | Contenu |
+|---|---|---|---|
+| `Storage_Location.csv` | `,` | `originalLocation, position, x, y, z` | 2 292 emplacements, 18 zones (A a R), x de 86 a 666, y de 0 a 1 440, 4 niveaux z |
+| `Picking_Wave.csv` | `;`, UTF-8 avec BOM | `waveNumber, reference, Size (US), quantityToPick (units), locations, operator` | 215 192 lignes, 9 707 vagues (1 a 30 lignes, mediane 24), 22 operateurs, quantite toujours 1, un emplacement par ligne |
+
+Le README du jeu annonce des coordonnees en metres ; les valeurs (jusqu'a
+1 440) evoquent plutot des decimetres. Cela n'a pas d'effet ici : la
+projection n'utilise que l'ordre et les proportions des coordonnees.
+
+### Ordre temporel et separation entrainement / test
+
+`Picking_Wave.csv` est en ordre **chronologique inverse** : les numeros de
+vague decroissent strictement, et les dates de creation des commandes
+(`Customer_Order.csv`) vont du 19/10/2023 au 05/01/2023. Les vagues sont
+remises dans l'ordre chronologique (numero croissant, aucune inversion de
+date) ; dans une vague, l'ordre des lignes du fichier est garde.
+
+| Partie | Vagues | Lignes | Usage |
+|---|---|---|---|
+| `train` (70 % premieres vagues) | 6 245 | 127 130 | entrainement (`train_drl_v3 --tasks-from footwear`) |
+| dont `train_fit` (85 %) | 5 384 | 109 665 | episodes d'apprentissage |
+| dont `train_val` (15 %) | 861 | 17 465 | validation et choix du meilleur modele |
+| `test` (30 % suivantes) | 2 898 | 64 453 | `allocation_benchmark --exp dataset` ou `--tasks-from footwear` |
+
+Il n'y a pas de melange : la derniere vague d'entrainement (40215) precede
+la premiere vague de test (40216). Les tests verifient qu'aucune vague de
+test n'entre dans un episode ni dans la validation.
+
+**Lignes exclues** : 23 609 lignes (10,97 %) visent un emplacement absent de
+`Storage_Location.csv`, faute de coordonnees : `RC-01` (22 979), `RC-04`
+(361), `RC-05` (100), `C-102`, `C-026`, etc. Les 564 vagues qui ne
+contiennent que de telles lignes ne produisent aucune tache.
+
+### Projection sur le graphe
+
+Chaque emplacement reel (x, y) est projete sur le rack `shelf_<r>_<c>` le
+plus proche, apres une mise a l'echelle affine de la boite englobante des
+emplacements sur la grille des racks, axe par axe :
+
+```text
+c = arrondi((x - xmin) / (xmax - xmin) * (colonnes - 1))
+r = arrondi((ymax - y) / (ymax - ymin) * (rangees - 1))   # rangee 0 = plus grands y
+```
+
+Ces fonctions sont monotones : l'ordre des coordonnees reelles est conserve
+sur chaque axe (teste). Elles servent pour `build_demo_warehouse` (5 x 3)
+et pour les grilles plus grandes. Les 1 199 emplacements utilises
+atteignent 13 racks sur 15 (5 x 3), 34 sur 40 (8 x 5) et 115 sur 150
+(15 x 10). La demande est concentree : sur le test, le rack le plus demande
+recoit 31 % des taches en 5 x 3, 13 % en 8 x 5 et 8 % en 15 x 10.
+
+### Des vagues aux taches
+
+- Chaque ligne d'une vague devient une tache de prelevement sur le rack
+  projete, dans l'ordre chronologique. Un essai prend `--tasks` lignes
+  consecutives, a partir d'un debut de vague. Les 10 graines du banc
+  utilisent 10 fenetres reparties regulierement sur la periode de test.
+- Les arrivees restent poissonniennes. Pour garder **la meme charge rho**,
+  le debit utilise le temps de service moyen sous la distribution
+  **empirique** des cibles (partie `train_fit`, sans information du test) :
+  20,2 s au lieu de 26,4 s avec une demande uniforme en 5 x 3.
+- Priorite 1 pour toutes les taches (le jeu de donnees n'en a pas) ; delai
+  = creation + `--deadline-base`. L'operateur et l'article sont lus mais ne
+  servent pas a la simulation (les robots remplacent les operateurs).
+
+```bash
+ros2 run warehouse_marl train_drl_v3 --tasks-from footwear --out-dir drl_v3_footwear
+ros2 run warehouse_marl allocation_benchmark --exp dataset --seeds 10 \
+    --model3 drl_v3_footwear/drl3_best.pt
+ros2 run warehouse_marl allocation_benchmark --exp load --tasks-from footwear
+```
+
 ## Limites connues / pistes d'extension pour le memoire
 
 - L'environnement DRL (`drl/env.py`) est un environnement **de haut
