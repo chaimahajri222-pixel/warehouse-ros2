@@ -60,9 +60,9 @@ from typing import Dict, List, Optional
 from warehouse_marl.warehouse_graph import (
     WarehouseGraph, WarehouseNode, build_demo_warehouse)
 
-METHODS = ('random', 'fifo', 'consensus', 'greedy_pair', 'drl_hybrid', 'drl_direct',
-           'drl2_hybrid', 'drl2_direct')
-REFERENCES = ('fifo', 'consensus', 'greedy_pair')
+METHODS = ('random', 'fifo', 'consensus', 'greedy_pair', 'greedy_time', 'drl_hybrid',
+           'drl_direct', 'drl2_hybrid', 'drl2_direct', 'drl3_direct')
+REFERENCES = ('fifo', 'consensus', 'greedy_pair', 'greedy_time')
 LABELS = {
     'random': 'Aleatoire',
     'fifo': 'FIFO + plus proche (centralise)',
@@ -72,6 +72,8 @@ LABELS = {
     'drl_direct': 'DRL direct',
     'drl2_hybrid': 'DRL v2 hybride (consensus + biais calibre)',
     'drl2_direct': 'DRL v2 direct (Q par couple)',
+    'greedy_time': 'Couple de temps de trajet min. (vitesses, sans apprentissage)',
+    'drl3_direct': 'DRL v3 direct (residuel sur greedy_pair)',
 }
 
 
@@ -123,8 +125,9 @@ class Task:
     failed: bool = False
     bids: Dict[str, float] = field(default_factory=dict)
     bid_time: Dict[str, float] = field(default_factory=dict)
-    deadline: Optional[float] = None
+    deadline: Optional[float] = None          # fin de la fenetre d'enchere
     claim_until: Optional[float] = None
+    due: Optional[float] = None               # delai de livraison (creation + base / priorite)
 
 
 @dataclass
@@ -141,6 +144,7 @@ class Robot:
     busy_time: float = 0.0
     open_bid: Optional[str] = None
     n_done: int = 0
+    speed: Optional[float] = None       # None = vitesse commune du banc
 
 
 class Benchmark:
@@ -148,10 +152,13 @@ class Benchmark:
                  bias_weight=1.0, speed=0.5, pick_time=10.0, slowdown=0.5,
                  block_rate=0.0, block_min=30.0, block_max=120.0,
                  msg_loss=0.0, msg_delay=0.05, window=1.5, bid_delay=0.2,
-                 claim_window=0.5, max_active=3, dt=0.25, timeout=90.0, agent2=None):
+                 claim_window=0.5, max_active=3, dt=0.25, timeout=90.0, agent2=None,
+                 demand_skew=0.0, speeds=None, deadline_base=60.0, agent3=None):
         self.m, self.g, self.rng = method, graph, random.Random(seed)
         self.agent, self.bias_w = agent, bias_weight
         self.agent2 = agent2                  # modele DRL v2 (drl/pair_dqn.py)
+        self.agent3 = agent3                  # modele DRL v3 (drl/residual_dqn.py)
+        self.demand_skew, self.deadline_base = demand_skew, deadline_base
         self.speed, self.pick_time, self.slow = speed, pick_time, slowdown
         self.block_rate, self.block_min, self.block_max = block_rate, block_min, block_max
         self.loss, self.delay = msg_loss, msg_delay
@@ -160,12 +167,25 @@ class Benchmark:
         stations = [n for n, d in graph.G.nodes(data=True) if d['node_type'] == 'station']
         self.shelves = [n for n, d in graph.G.nodes(data=True) if d['node_type'] == 'shelf']
         self.robots = [Robot(f'robot{i + 1}', stations[i % len(stations)]) for i in range(n_robots)]
+        # Robots heterogenes : vitesses attribuees cycliquement (robot1 <- speeds[0]...)
+        for i, r in enumerate(self.robots):
+            r.speed = float(speeds[i % len(speeds)]) if speeds else speed
         self.names = [r.rid for r in self.robots]
+        # Demande de type Zipf par rack : quelques racks tres sollicites. Le
+        # classement de popularite vient d'un generateur separe, et la
+        # demande uniforme (skew=0) garde exactement les tirages d'origine.
+        if demand_skew > 0:
+            popular = list(self.shelves)
+            random.Random(seed + 2000).shuffle(popular)
+            weights = [1.0 / (k + 1) ** demand_skew for k in range(len(popular))]
         t, self.arrivals = 0.0, []
         for k in range(n_tasks):
             t += self.rng.expovariate(rate)
-            self.arrivals.append(Task(f't{k}', self.rng.choice(self.shelves),
-                                      round(self.rng.uniform(0.5, 2.0), 2), t))
+            target = (self.rng.choices(popular, weights)[0] if demand_skew > 0
+                      else self.rng.choice(self.shelves))
+            task = Task(f't{k}', target, round(self.rng.uniform(0.5, 2.0), 2), t)
+            task.due = t + deadline_base / task.priority
+            self.arrivals.append(task)
         self.open: List[Task] = []
         self.tasks: List[Task] = []
         self.blocked: Dict[tuple, float] = {}
@@ -263,6 +283,18 @@ class Benchmark:
                 r = min(free, key=lambda x: (self.path_cost(x.node, task.target), x.rid))
                 self.open.remove(task); self.assign(task, r)
                 self.msgs += len(self.robots) + 1      # interrogation des etats + ordre
+        elif self.m == 'greedy_time':
+            # Temoin sans apprentissage tenant compte de la vitesse de chaque
+            # robot : couple de temps de trajet estime minimal.
+            from warehouse_marl.drl.features_v2 import finite_cost
+            while True:
+                pairs = self.candidate_pairs()
+                if not pairs:
+                    break
+                q = [-finite_cost(self.path_cost(r.node, k.target)) / r.speed
+                     for r, k, _ in pairs]
+                r, task, _ = pairs[int(max(range(len(q)), key=lambda j: q[j]))]
+                self.assign_pair(r, task)
         elif self.m in ('drl2_direct', 'greedy_pair'):
             # Centralise, couple par couple (meme regle que drl/env_v2.py) :
             #   drl2_direct : couple (robot libre, tache) de Q maximale ;
@@ -408,7 +440,7 @@ class Benchmark:
         u, v = path[0], path[1]
         cong = self.g.G[u][v].get('congestion', 0.0)
         base = self.g.G[u][v]['base_weight']
-        r.edge, r.edge_left = (u, v), base / self.speed * (1.0 + self.slow * cong)
+        r.edge, r.edge_left = (u, v), base / r.speed * (1.0 + self.slow * cong)
         r.distance += base
         self.g.update_congestion(u, v, 1.0); self._invalidate()
 
@@ -515,6 +547,11 @@ class Benchmark:
             'utilisation_robots_pct': 100.0 * statistics.mean(r.busy_time for r in self.robots) / max(self.t, 1e-6),
             'desequilibre_charge': (statistics.pstdev(counts) / statistics.mean(counts)) if statistics.mean(counts) > 0 else 0.0,
             'duree_simulee_s': self.t,
+            # tache en retard : finie apres son delai (creation + base / priorite),
+            # echouee ou jamais finie ; en % de toutes les taches
+            'taches_en_retard_pct': 100.0 * sum(
+                1 for k in self.tasks if k.failed or k.done is None
+                or (k.due is not None and k.done > k.due)) / max(1, len(self.tasks)),
         }
 
 
@@ -559,27 +596,36 @@ def load_agent2(model_path):
         return None
 
 
-def run_experiment(name, configs, methods, seeds, args, agents, agent2=None):
+def run_experiment(name, configs, methods, seeds, args, agents, agent2=None, agent3=None):
     rows = []
     for cfg in configs:
         graph_dims = cfg.get('dims', (5, 3))
         n_robots = cfg['robots']
+        speeds = cfg.get('speeds', args.speeds)
         base_graph = build_grid_warehouse(*graph_dims)
-        service = mean_service_time(base_graph, args.speed, args.pick_time)
+        mean_speed = statistics.mean(speeds) if speeds else args.speed
+        service = mean_service_time(base_graph, mean_speed, args.pick_time)
         rate = cfg['rho'] * n_robots / service
         for seed in range(seeds):
             for m in methods:
-                if m.startswith('drl2'):
+                if m.startswith('drl3'):
+                    if agent3 is None:
+                        continue
+                elif m.startswith('drl2'):
                     if agent2 is None:
                         continue
                 elif m.startswith('drl') and agents.get(n_robots) is None:
                     continue
                 graph = build_grid_warehouse(*graph_dims)
                 b = Benchmark(m, graph, n_robots, rate, args.tasks, seed=1000 * seed + 7,
-                              agent=agents.get(n_robots), agent2=agent2,
+                              agent=agents.get(n_robots), agent2=agent2, agent3=agent3,
                               bias_weight=args.bias_weight,
                               speed=args.speed, pick_time=args.pick_time,
                               block_rate=cfg.get('block_rate', args.block_rate),
+                              block_min=cfg.get('block_min', args.block_min),
+                              block_max=cfg.get('block_max', args.block_max),
+                              demand_skew=cfg.get('skew', args.demand_skew), speeds=speeds,
+                              deadline_base=cfg.get('deadline_base', args.deadline_base),
                               msg_loss=cfg.get('loss', args.msg_loss), msg_delay=cfg.get('delay', 0.05))
                 res = b.run()
                 res.update(experience=name, methode=m, graine=seed, robots=n_robots,
@@ -629,7 +675,9 @@ def stats_table(rows, metric='temps_traitement_moy_s'):
                 common = [s for s in seeds if s in ref]
                 if m != ref_name and len(common) >= 5:
                     a = [vals[s] for s in common]; b = [ref[s] for s in common]
-                    row[f'gain_vs_{ref_name}_pct'] = round(100 * (statistics.mean(b) - statistics.mean(a)) / statistics.mean(b), 1)
+                    mb = statistics.mean(b)
+                    row[f'gain_vs_{ref_name}_pct'] = (round(100 * (mb - statistics.mean(a)) / mb, 1)
+                                                      if mb else math.nan)
                     row[f'gagne_vs_{ref_name}'] = f'{sum(x < y for x, y in zip(a, b))}/{len(common)}'
                     row[f'p_wilcoxon_vs_{ref_name}'] = round(wilcoxon_p(a, b), 4)
             out.append(row)
@@ -672,8 +720,10 @@ def plots(rows, out):
                    ('attente_attribution_moy_s', "Attente avant attribution (s)"),
                    ('messages_par_tache', 'Messages par tache'),
                    ('conflits_pour_100_taches', 'Conflits pour 100 taches'),
-                   ('desequilibre_charge', 'Desequilibre de charge (CV)')]
-        fig, axs = plt.subplots(2, 3, figsize=(15, 8))
+                   ('desequilibre_charge', 'Desequilibre de charge (CV)'),
+                   ('taches_en_retard_pct', 'Taches en retard (%)'),
+                   ('distance_par_tache_m', 'Distance par tache (m)')]
+        fig, axs = plt.subplots(2, 4, figsize=(19, 8))
         axs = axs.ravel()
         for ax, (metric, lab) in zip(axs, metrics):
             w = 0.8 / len(methods)
@@ -695,9 +745,41 @@ def plots(rows, out):
         print(f'Figure : {out}_{exp}.png')
 
 
+def _speeds(text):
+    """'0.3,0.5,0.7' -> (0.3, 0.5, 0.7) ; '' -> None (vitesse commune)."""
+    vals = tuple(float(x) for x in str(text).split(',') if x.strip())
+    if any(v <= 0 for v in vals):
+        raise argparse.ArgumentTypeError('les vitesses doivent etre > 0')
+    return vals or None
+
+
+# Experience 'structured' : scenarios ou anticiper peut payer (demande de
+# Zipf, robots heterogenes, delais par priorite, blocages longs), sur 3
+# niveaux de difficulte, 6 robots et 40 racks.
+STRUCTURED_LEVELS = [
+    dict(label='facile', rho=0.6, skew=0.5, speeds=(0.4, 0.5, 0.6), block_rate=0.5 / 60.0),
+    dict(label='moyen', rho=0.75, skew=1.0, speeds=(0.3, 0.5, 0.7), block_rate=1.0 / 60.0),
+    dict(label='difficile', rho=0.9, skew=1.5, speeds=(0.25, 0.5, 0.75), block_rate=2.0 / 60.0),
+]
+
+
+def _print_table(title, table):
+    print(title)
+    for r in table:
+        extra = ''
+        for ref, lab in (('fifo', 'FIFO'), ('consensus', 'consensus'),
+                         ('greedy_pair', 'greedy_pair'), ('greedy_time', 'greedy_time')):
+            if f'gain_vs_{ref}_pct' in r:
+                extra += (f"  vs {lab} {r[f'gain_vs_{ref}_pct']:+.1f} % "
+                          f"({r[f'gagne_vs_{ref}']}, p={r[f'p_wilcoxon_vs_{ref}']})")
+        print(f"  {r['experience']:10s} {r['condition']:22s} {r['methode']:11s} "
+              f"{r['moyenne']:7.1f} [{r['ic95_bas']:.1f} ; {r['ic95_haut']:.1f}]{extra}")
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description='Banc d essai hors-ligne de l allocation de taches.')
-    p.add_argument('--exp', default='all', choices=['load', 'scale', 'blocking', 'network', 'all'])
+    p.add_argument('--exp', default='all',
+                   choices=['load', 'scale', 'blocking', 'network', 'structured', 'all'])
     p.add_argument('--seeds', type=int, default=10)
     p.add_argument('--tasks', type=int, default=150, help='taches par essai')
     p.add_argument('--robots', type=int, default=3)
@@ -709,6 +791,14 @@ def main(argv=None):
     p.add_argument('--pick-time', type=float, default=10.0)
     p.add_argument('--block-rate', type=float, default=0.0, help='blocages d aretes par seconde')
     p.add_argument('--msg-loss', type=float, default=0.0)
+    p.add_argument('--block-min', type=float, default=30.0, help='duree min. d un blocage (s)')
+    p.add_argument('--block-max', type=float, default=120.0, help='duree max. d un blocage (s)')
+    p.add_argument('--demand-skew', type=float, default=0.0,
+                   help='demande de Zipf par rack (0 = uniforme)')
+    p.add_argument('--speeds', type=_speeds, default=None,
+                   help='vitesses des robots, attribuees cycliquement, ex. "0.3,0.5,0.7"')
+    p.add_argument('--deadline-base', type=float, default=60.0,
+                   help='delai d une tache = base / priorite (s)')
     p.add_argument('--methods', default=','.join(METHODS))
     p.add_argument('--out', default='allocation_benchmark')
     args = p.parse_args(argv)
@@ -725,6 +815,8 @@ def main(argv=None):
                      for x in (0, 1, 3, 6)],
         'network': [dict(label=f'perte {int(100 * x)} %', rho=0.7, robots=R, loss=x, delay=0.05 + 2 * x)
                     for x in (0.0, 0.1, 0.3, 0.5)],
+        'structured': [dict(lvl, robots=6, dims=(8, 5), block_min=60.0, block_max=300.0,
+                            deadline_base=60.0) for lvl in STRUCTURED_LEVELS],
     }
     exps = list(plans) if args.exp == 'all' else [args.exp]
     needed = {c['robots'] for e in exps for c in plans[e]}
@@ -739,18 +831,15 @@ def main(argv=None):
     write_csv(f'{args.out}_essais.csv', rows)
     table = stats_table(rows)
     write_csv(f'{args.out}_statistiques.csv', table)
-    print(f'\nCSV : {args.out}_essais.csv, {args.out}_statistiques.csv\n')
-    print('Temps de traitement moyen (s), IC 95 %, gain et test de Wilcoxon apparie :')
-    for r in table:
-        extra = ''
-        if 'gain_vs_fifo_pct' in r:
-            extra += f"  vs FIFO {r['gain_vs_fifo_pct']:+.1f} % ({r['gagne_vs_fifo']}, p={r['p_wilcoxon_vs_fifo']})"
-        if 'gain_vs_consensus_pct' in r:
-            extra += f"  vs consensus {r['gain_vs_consensus_pct']:+.1f} % ({r['gagne_vs_consensus']}, p={r['p_wilcoxon_vs_consensus']})"
-        if 'gain_vs_greedy_pair_pct' in r:
-            extra += f"  vs greedy_pair {r['gain_vs_greedy_pair_pct']:+.1f} % ({r['gagne_vs_greedy_pair']}, p={r['p_wilcoxon_vs_greedy_pair']})"
-        print(f"  {r['experience']:8s} {r['condition']:22s} {r['methode']:11s} "
-              f"{r['moyenne']:7.1f} [{r['ic95_bas']:.1f} ; {r['ic95_haut']:.1f}]{extra}")
+    late = stats_table(rows, metric='taches_en_retard_pct')
+    write_csv(f'{args.out}_statistiques_retard.csv', late)
+    print(f'\nCSV : {args.out}_essais.csv, {args.out}_statistiques.csv, '
+          f'{args.out}_statistiques_retard.csv\n')
+    _print_table('Temps de traitement moyen (s), IC 95 %, gain et test de Wilcoxon apparie :',
+                 table)
+    if 'structured' in exps:
+        _print_table('\nTaux de taches en retard (%), experience structured :',
+                     [r for r in late if r['experience'] == 'structured'])
     plots(rows, args.out)
 
 
