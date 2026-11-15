@@ -229,6 +229,121 @@ et un etat terminal (`succeeded`, `failed`, `rejected`, `canceled`) avec
 `elapsed_sec`. Il permet de mesurer le temps physique creation -> fin, plus
 pertinent que le seul temps d'allocation.
 
+## DRL v2 : evaluation
+
+### Pourquoi une v2
+
+Le DQN v1 (`drl/env.py`) ne pouvait pas battre l'heuristique : il recevait
++1 quand il choisissait le robot de cout minimal (il apprenait a COPIER
+l'heuristique), son observation contenait l'index du robot, la charge des
+robots baissait au hasard (aucun temps de traitement mesurable), l'entree
+du reseau valait `n_robots*3+1` (un modele par taille de flotte) et le
+biais hybride ajoutait `-Q` a des metres sans calibration.
+
+### Ce que fait la v2
+
+| Element | Fichier |
+|---|---|
+| Caracteristiques par couple (robot libre, tache), sans index de robot | `drl/features_v2.py` |
+| Environnement construit sur la simulation du banc d'essai | `drl/env_v2.py` |
+| Reseau partage Q(couple) a une sortie, Double DQN | `drl/pair_dqn.py` |
+| Entrainement multi-graines, validation, figures, indicateurs | `drl/train_drl_v2.py` (`train_drl_v2`) |
+| Methodes `drl2_direct`, `drl2_hybrid` et temoin `greedy_pair` | `allocation_benchmark.py` (`--model2`) |
+| Deploiement ROS (`obs_version:=v2`, `bias_weight`) | `drl_allocator_node.py`, fichiers launch |
+
+- **Decision** : quand des robots sont libres et que des taches attendent,
+  l'agent note chaque couple (robot libre, tache parmi les K=5 plus
+  anciennes dont la cible a de la place) et choisit le couple de Q maximale.
+  Il choisit donc aussi QUELLE tache servir, pas seulement quel robot.
+- **Caracteristiques (11)** : cout du chemin dynamique / 20, cible
+  accessible, congestion sur le chemin, age de la tache, priorite, part de
+  robots libres, file par robot, cout du robot libre concurrent le plus
+  proche, avantage sur ce concurrent, cout de la meilleure autre tache pour
+  ce robot, charge du robot. Meme dimension pour 3, 4 ou 20 robots.
+- **Recompense** : `-(attente cumulee des taches en file jusqu'a la decision
+  suivante + duree estimee de la tache choisie) / 60 s`, centree par une
+  moyenne glissante. Sa somme sur un episode est (au signe pres) la somme des
+  temps de traitement. Aucun bonus pour le robot le moins couteux (teste).
+- **Episodes** : rho dans {0.5, 0.7, 0.9}, 3 a 6 robots, entrepot 5x3 ou
+  8x5, 0, 1 ou 3 blocages d'aretes par minute, 80 taches.
+- **Temoin `greedy_pair`** : meme espace de decision que le DRL v2, sans
+  apprentissage (couple de cout de chemin minimal). Il separe ce qu'apporte
+  l'apprentissage de ce qu'apporte le fait de choisir la tache.
+- **Biais hybride calibre** :
+  `bias = -bias_weight * (Q - moyenne des Q des robots libres) * echelle`,
+  echelle = 60 s x vitesse du modele (30 m par unite de Q a 0,5 m/s),
+  modifiable par le parametre `bias_scale_m`.
+
+### Commandes
+
+```bash
+# Entrainement (3 graines, ~4 min sur un Intel i3-7020U)
+ros2 run warehouse_marl train_drl_v2 --episodes 300 --seeds 3 --out-dir drl_v2
+
+# Banc d'essai complet avec le meilleur modele
+ros2 run warehouse_marl allocation_benchmark --exp all --seeds 10 \
+    --model2 drl_v2/drl2_best.pt
+
+# Deploiement ROS (le modele v2 sert pour toute taille de flotte)
+ros2 launch warehouse_marl warehouse_full.launch.py drl_mode:=hybrid \
+    obs_version:=v2 model_path:=$PWD/drl_v2/drl2_best.pt bias_weight:=1.0
+```
+
+`train_drl_v2` ecrit `drl2_seed<k>.pt`, `drl2_best.pt`,
+`training_log_v2.csv` (recompense, perte TD, Q moyenne, norme du gradient,
+epsilon, temps de traitement par episode), `validation_v2.csv`,
+`indicators_v2.csv` et `training_curves_v2.png`. Options utiles :
+`--no-double`, `--patience`, `--val-every`, `--gamma`, `--lr`.
+
+### Resultats (2026-11-15, 3 graines x 300 episodes, banc 10 graines x 150 taches)
+
+Entrainement : 4 min 15 s pour les 3 graines (arret anticipe a 140, 240 et
+280 episodes). Validation (12 scenarios fixes) : DRL v2 29,15 s +/- 0,21
+entre graines, FIFO 35,90 s, consensus 42,82 s, `greedy_pair` 29,05 s. Le
+meilleur modele (graine 0) a ete retenu a l'episode 20 (epsilon 0,88) ; la
+courbe de validation reste plate ensuite. Q n'est stable en fin
+d'entrainement que pour 1 graine sur 3 (derive due au centrage glissant).
+
+Temps de traitement moyen (s), banc d'essai, `drl2_direct` contre les
+references (gain, robots gagnants sur 10 graines, Wilcoxon apparie) :
+
+| Condition | drl2_direct | vs FIFO | vs consensus | vs greedy_pair |
+|---|---|---|---|---|
+| rho=0.5, 3 robots | 23.2 | +1.2 % (6/10, p=0.37) | +11.2 % (10/10, p=0.002) | -0.2 % (p=0.50) |
+| rho=0.7, 3 robots | 26.7 | +9.7 % (10/10, p=0.002) | +24.2 % (10/10, p=0.002) | +0.1 % (p=1.0) |
+| rho=0.9, 3 robots | 30.3 | +34.6 % (10/10, p=0.002) | +46.4 % (10/10, p=0.002) | -0.9 % (p=0.38) |
+| 6 robots, 40 racks | 29.5 | +0.5 % (5/10, p=0.77) | +8.6 % (9/10, p=0.004) | -1.6 % (p=0.19) |
+| 10 robots, 80 racks | 32.3 | -4.5 % (3/10, p=0.11) | +3.0 % (7/10, p=0.32) | -6.7 % (p=0.014) |
+| 20 robots, 150 racks | 36.7 | -4.1 % (1/10, p=0.006) | +1.2 % (8/10, p=0.23) | -4.0 % (p=0.004) |
+| 3 blocages/min | 31.9 | +21.1 % (10/10, p=0.002) | +32.4 % (10/10, p=0.002) | -0.5 % (p=0.56) |
+| 6 blocages/min | 58.4 | +52.2 % (10/10, p=0.002) | +26.4 % (9/10, p=0.004) | -5.7 % (p=0.11) |
+| perte 50 % | 26.7 | +9.7 % (10/10, p=0.002) | +24.7 % (10/10, p=0.002) | +0.1 % (p=1.0) |
+
+`drl2_hybrid` reste au niveau du consensus ou un peu en dessous (-0.3 % a
+-4.7 % ; significatif a rho=0.5, 1 blocage/min, 10 et 20 robots).
+
+**Lecture honnete.** Le DRL v2 direct bat FIFO et le consensus dans
+l'entrepot de demonstration, mais tout ce gain vient de l'espace de
+decision (choisir aussi la tache) : `greedy_pair`, sans apprentissage, fait
+aussi bien partout et mieux a grande echelle. L'apprentissage n'apporte
+pas de gain mesurable :
+1. la regle gloutonne est deja presque optimale pour cette recompense, et le
+   reseau apprend surtout a classer les couples par cout ;
+2. hors distribution (80 et 150 racks, 10 et 20 robots, alors que
+   l'entrainement va jusqu'a 40 racks et 6 robots), les couts /20 sortent de
+   la plage vue et le modele perd 4 a 7 % ;
+3. en mode hybride, le biais ne change que le robot gagnant d'une tache
+   choisie par priorite ; la perte du consensus (ordre par priorite, latence
+   des encheres) n'est pas corrigee.
+
+Pistes : apprendre un residu par rapport a `greedy_pair` (Q = -cout + correction),
+figer la reference de centrage (ou passer en recompense moyenne / semi-MDP
+avec gamma^dt), utiliser le temps de service realise, ajouter des
+caracteristiques relatives (rang du cout, ecart au cout minimal, rang d'age)
+et normaliser les couts par le diametre de l'entrepot, inclure 80-150 racks
+et 10-20 robots a l'entrainement, entrainer 1000+ episodes avec 5 graines,
+et en hybride laisser le DRL orienter le CHOIX DE LA TACHE de chaque robot.
+
 ## Limites connues / pistes d'extension pour le memoire
 
 - L'environnement DRL (`drl/env.py`) est un environnement **de haut

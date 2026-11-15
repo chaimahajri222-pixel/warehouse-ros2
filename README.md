@@ -366,6 +366,20 @@ ros2 run warehouse_marl train_drl --episodes 500 --n-agents 3 --out warehouse_dq
 ros2 launch warehouse_marl warehouse_full.launch.py drl_mode:=hybrid model_path:=$PWD/warehouse_dqn_3robots.pt
 ```
 
+**DRL v2** scores each (free robot, task) pair with one shared network, so one
+model works for any fleet size. Train it, evaluate it, and run it with:
+
+```bash
+ros2 run warehouse_marl train_drl_v2 --episodes 300 --seeds 3 --out-dir drl_v2
+ros2 run warehouse_marl allocation_benchmark --exp all --seeds 10 --model2 drl_v2/drl2_best.pt
+ros2 launch warehouse_marl warehouse_full.launch.py drl_mode:=hybrid obs_version:=v2 \
+  model_path:=$PWD/drl_v2/drl2_best.pt
+```
+
+Design, results and limits (it beats FIFO and consensus on the demo
+warehouse, but no more than the untrained `greedy_pair` rule): see
+"DRL v2 : evaluation" in `src/warehouse_marl/README.md`.
+
 ---
 
 ## Known limitations

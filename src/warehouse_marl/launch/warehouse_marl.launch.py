@@ -44,6 +44,8 @@ def launch_setup(context, *args, **kwargs):
 
     drl_mode = LaunchConfiguration('drl_mode').perform(context)
     model_path = LaunchConfiguration('model_path').perform(context)
+    obs_version = LaunchConfiguration('obs_version').perform(context)
+    bias_weight = float(LaunchConfiguration('bias_weight').perform(context))
     map_origin_x = float(LaunchConfiguration('map_origin_x').perform(context))
     map_origin_y = float(LaunchConfiguration('map_origin_y').perform(context))
     map_topic = LaunchConfiguration('map_topic').perform(context)
@@ -107,6 +109,8 @@ def launch_setup(context, *args, **kwargs):
                 'robot_names': robot_names,
                 'mode': drl_mode,
                 'model_path': model_path,
+                'obs_version': obs_version,
+                'bias_weight': bias_weight,
             }],
         ))
 
@@ -145,6 +149,14 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'model_path', default_value='warehouse_dqn.pt',
             description="Chemin vers le modele DQN entraine (.pt)"
+        ),
+        DeclareLaunchArgument(
+            'obs_version', default_value='v1',
+            description="'v1' : modele train_drl ; 'v2' : modele train_drl_v2 (Q par couple)"
+        ),
+        DeclareLaunchArgument(
+            'bias_weight', default_value='1.0',
+            description='v2 hybrid : poids du biais calibre'
         ),
         DeclareLaunchArgument(
             'map_origin_x', default_value='-1.5',

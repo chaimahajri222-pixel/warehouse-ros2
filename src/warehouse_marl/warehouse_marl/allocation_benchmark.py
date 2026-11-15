@@ -19,7 +19,15 @@ Methodes comparees :
                 (dispatcher CENTRALISE, reference classique) ;
   consensus   : encheres distribuees, mode ``heuristic`` du systeme ;
   drl_hybrid  : encheres distribuees + biais -Q du DQN (mode ``hybrid``) ;
-  drl_direct  : argmax des Q-values, file par robot (mode ``direct``).
+  drl_direct  : argmax des Q-values, file par robot (mode ``direct``) ;
+  greedy_pair : temoin centralise SANS apprentissage dans l'espace de
+                decision du DRL v2 : couple (robot libre, tache parmi les 5
+                plus anciennes) de cout de chemin minimal ;
+  drl2_hybrid : encheres distribuees + biais calibre du DRL v2
+                (-w * (Q - moyenne des Q) * echelle en metres) ;
+  drl2_direct : DRL v2 centralise, couple (robot libre, tache) de Q maximale.
+  Le modele v2 (--model2, produit par train_drl_v2) sert pour toutes les
+  tailles de flotte.
 
 Le monde simule : les robots se deplacent sur les aretes du graphe a vitesse
 constante, ralentis par la congestion (robots deja sur l'arete) ; des aretes
@@ -30,6 +38,7 @@ retardes (couche IoT).
 Exemples :
     ros2 run warehouse_marl allocation_benchmark --exp all --seeds 10
     ros2 run warehouse_marl allocation_benchmark --exp load --model warehouse_dqn_3robots.pt
+    ros2 run warehouse_marl allocation_benchmark --exp all --seeds 10 --model2 drl_v2/drl2_best.pt
     python3 -m warehouse_marl.allocation_benchmark --exp scale --seeds 5
 
 Sorties (prefixe --out) : CSV des essais, tableau statistique (moyenne,
@@ -51,13 +60,18 @@ from typing import Dict, List, Optional
 from warehouse_marl.warehouse_graph import (
     WarehouseGraph, WarehouseNode, build_demo_warehouse)
 
-METHODS = ('random', 'fifo', 'consensus', 'drl_hybrid', 'drl_direct')
+METHODS = ('random', 'fifo', 'consensus', 'greedy_pair', 'drl_hybrid', 'drl_direct',
+           'drl2_hybrid', 'drl2_direct')
+REFERENCES = ('fifo', 'consensus', 'greedy_pair')
 LABELS = {
     'random': 'Aleatoire',
     'fifo': 'FIFO + plus proche (centralise)',
     'consensus': 'Consensus heuristique',
+    'greedy_pair': 'Couple de cout min. (centralise, sans apprentissage)',
     'drl_hybrid': 'DRL hybride (consensus + biais)',
     'drl_direct': 'DRL direct',
+    'drl2_hybrid': 'DRL v2 hybride (consensus + biais calibre)',
+    'drl2_direct': 'DRL v2 direct (Q par couple)',
 }
 
 
@@ -210,6 +224,17 @@ class Benchmark:
         import numpy as np
         return self.agent.q_values(np.array(self.observation(task), dtype=np.float32))
 
+    def hybrid_bias_v2(self, task: Task):
+        """Biais calibre du DRL v2 pour ``task`` : rid -> metres (robots libres)."""
+        from warehouse_marl.drl.features_v2 import bias_scale_from_meta, calibrated_bias
+        free = [r for r in self.robots if self.idle(r)]
+        if not free:
+            return {}
+        feats = self.pair_features(free, task, free, self.candidate_tasks())
+        q = self.agent2.scores([feats[r.rid] for r in free])
+        scale = bias_scale_from_meta(getattr(self.agent2, 'meta', {}), self.speed)
+        return dict(zip([r.rid for r in free], calibrated_bias(q, self.bias_w, scale)))
+
     def assign(self, task: Task, r: Robot):
         task.robot, task.assigned = r.rid, self.t
         if r.task is None:
@@ -288,6 +313,10 @@ class Benchmark:
                     if task.task_id not in bias:
                         bias[task.task_id] = self.q_values(task)
                     cost += self.bias_w * -float(bias[task.task_id][self.names.index(r.rid)])
+                elif self.m == 'drl2_hybrid':
+                    if task.task_id not in bias:
+                        bias[task.task_id] = self.hybrid_bias_v2(task)
+                    cost += bias[task.task_id].get(r.rid, 0.0)
                 task.bids[r.rid], task.bid_time[r.rid] = cost, self.t
                 r.open_bid = task.task_id
                 self.msgs += 1
@@ -515,7 +544,22 @@ def load_agent(model_path, n_robots):
         return None
 
 
-def run_experiment(name, configs, methods, seeds, args, agents):
+def load_agent2(model_path):
+    """Modele DRL v2 (independant du nombre de robots)."""
+    if not model_path:
+        return None
+    if not os.path.isfile(model_path):
+        print(f'Modele v2 {model_path} introuvable : methodes drl2 ignorees.')
+        return None
+    try:
+        from warehouse_marl.drl.pair_dqn import load_pair_model
+        return load_pair_model(model_path)
+    except Exception as exc:   # torch absent, mauvais format...
+        print(f'Impossible de charger le modele v2 {model_path} ({exc}) : methodes drl2 ignorees.')
+        return None
+
+
+def run_experiment(name, configs, methods, seeds, args, agents, agent2=None):
     rows = []
     for cfg in configs:
         graph_dims = cfg.get('dims', (5, 3))
@@ -525,11 +569,15 @@ def run_experiment(name, configs, methods, seeds, args, agents):
         rate = cfg['rho'] * n_robots / service
         for seed in range(seeds):
             for m in methods:
-                if m.startswith('drl') and agents.get(n_robots) is None:
+                if m.startswith('drl2'):
+                    if agent2 is None:
+                        continue
+                elif m.startswith('drl') and agents.get(n_robots) is None:
                     continue
                 graph = build_grid_warehouse(*graph_dims)
                 b = Benchmark(m, graph, n_robots, rate, args.tasks, seed=1000 * seed + 7,
-                              agent=agents.get(n_robots), bias_weight=args.bias_weight,
+                              agent=agents.get(n_robots), agent2=agent2,
+                              bias_weight=args.bias_weight,
                               speed=args.speed, pick_time=args.pick_time,
                               block_rate=cfg.get('block_rate', args.block_rate),
                               msg_loss=cfg.get('loss', args.msg_loss), msg_delay=cfg.get('delay', 0.05))
@@ -567,7 +615,6 @@ def stats_table(rows, metric='temps_traitement_moy_s'):
         by_m = {}
         for r in sub:
             by_m.setdefault(r['methode'], {})[r['graine']] = r[metric]
-        ref_f, ref_c = by_m.get('fifo', {}), by_m.get('consensus', {})
         for m, vals in by_m.items():
             seeds = sorted(vals)
             xs = [vals[s] for s in seeds if not math.isnan(vals[s])]
@@ -577,7 +624,8 @@ def stats_table(rows, metric='temps_traitement_moy_s'):
             row = {'experience': exp, 'condition': cond, 'methode': m,
                    'moyenne': round(statistics.mean(xs), 2), 'ic95_bas': round(lo, 2),
                    'ic95_haut': round(hi, 2)}
-            for ref_name, ref in (('fifo', ref_f), ('consensus', ref_c)):
+            for ref_name in REFERENCES:
+                ref = by_m.get(ref_name, {})
                 common = [s for s in seeds if s in ref]
                 if m != ref_name and len(common) >= 5:
                     a = [vals[s] for s in common]; b = [ref[s] for s in common]
@@ -654,7 +702,9 @@ def main(argv=None):
     p.add_argument('--tasks', type=int, default=150, help='taches par essai')
     p.add_argument('--robots', type=int, default=3)
     p.add_argument('--model', default='', help='modele DQN .pt (pour drl_hybrid / drl_direct)')
-    p.add_argument('--bias-weight', type=float, default=1.0)
+    p.add_argument('--model2', default='', help='modele DRL v2 .pt (train_drl_v2) pour drl2_*')
+    p.add_argument('--bias-weight', type=float, default=1.0,
+                   help='poids du biais DRL (v1 : -Q ; v2 : biais calibre)')
     p.add_argument('--speed', type=float, default=0.5, help='vitesse des robots (m/s)')
     p.add_argument('--pick-time', type=float, default=10.0)
     p.add_argument('--block-rate', type=float, default=0.0, help='blocages d aretes par seconde')
@@ -678,12 +728,14 @@ def main(argv=None):
     }
     exps = list(plans) if args.exp == 'all' else [args.exp]
     needed = {c['robots'] for e in exps for c in plans[e]}
-    agents = {n: load_agent(args.model, n) for n in needed} if any(m.startswith('drl') for m in methods) else {}
+    agents = ({n: load_agent(args.model, n) for n in needed}
+              if any(m.startswith('drl_') for m in methods) else {})
+    agent2 = load_agent2(args.model2) if any(m.startswith('drl2') for m in methods) else None
 
     rows = []
     for e in exps:
         print(f'Experience {e} ...')
-        rows += run_experiment(e, plans[e], methods, args.seeds, args, agents)
+        rows += run_experiment(e, plans[e], methods, args.seeds, args, agents, agent2)
     write_csv(f'{args.out}_essais.csv', rows)
     table = stats_table(rows)
     write_csv(f'{args.out}_statistiques.csv', table)
@@ -694,7 +746,9 @@ def main(argv=None):
         if 'gain_vs_fifo_pct' in r:
             extra += f"  vs FIFO {r['gain_vs_fifo_pct']:+.1f} % ({r['gagne_vs_fifo']}, p={r['p_wilcoxon_vs_fifo']})"
         if 'gain_vs_consensus_pct' in r:
-            extra += f"  vs consensus {r['gain_vs_consensus_pct']:+.1f} % (p={r['p_wilcoxon_vs_consensus']})"
+            extra += f"  vs consensus {r['gain_vs_consensus_pct']:+.1f} % ({r['gagne_vs_consensus']}, p={r['p_wilcoxon_vs_consensus']})"
+        if 'gain_vs_greedy_pair_pct' in r:
+            extra += f"  vs greedy_pair {r['gain_vs_greedy_pair_pct']:+.1f} % ({r['gagne_vs_greedy_pair']}, p={r['p_wilcoxon_vs_greedy_pair']})"
         print(f"  {r['experience']:8s} {r['condition']:22s} {r['methode']:11s} "
               f"{r['moyenne']:7.1f} [{r['ic95_bas']:.1f} ; {r['ic95_haut']:.1f}]{extra}")
     plots(rows, args.out)

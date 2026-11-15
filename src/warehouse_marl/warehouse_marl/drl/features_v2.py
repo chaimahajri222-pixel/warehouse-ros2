@@ -101,3 +101,20 @@ def features_for_robots(robots: Sequence[str], free: Iterable[str], task: Dict,
             min(others) if others else None, min(alts) if alts else None,
             load.get(r, 0), max_active)
     return out
+
+
+def calibrated_bias(q_values: Sequence[float], weight: float, scale_m: float) -> List[float]:
+    """Biais additif (en metres de cout d'enchere) pour le mode hybride v2 :
+        bias_i = -weight * (Q_i - moyenne(Q)) * scale_m
+    Seul l'ecart a la moyenne compte (le niveau absolu de Q, arbitraire apres
+    centrage de la recompense, n'intervient pas). ``scale_m`` convertit une
+    unite de Q (REWARD_NORM_S secondes de temps de traitement) en metres :
+    scale_m = REWARD_NORM_S * vitesse du robot."""
+    if not len(q_values):
+        return []
+    mean = sum(float(q) for q in q_values) / len(q_values)
+    return [-weight * (float(q) - mean) * scale_m for q in q_values]
+
+
+def bias_scale_from_meta(meta: Dict, default_speed: float = 0.5) -> float:
+    return float(meta.get('reward_norm_s', 60.0)) * float(meta.get('speed', default_speed))

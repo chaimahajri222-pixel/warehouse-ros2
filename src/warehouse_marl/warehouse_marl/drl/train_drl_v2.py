@@ -79,7 +79,8 @@ def parse_args(argv=None):
     p.add_argument('--batch-size', type=int, default=64)
     p.add_argument('--buffer', type=int, default=50_000)
     p.add_argument('--warmup', type=int, default=500)
-    p.add_argument('--target-every', type=int, default=250, help='pas entre copies du reseau cible')
+    p.add_argument('--target-every', type=int, default=250,
+                   help='pas entre copies du reseau cible')
     p.add_argument('--eps-start', type=float, default=1.0)
     p.add_argument('--eps-end', type=float, default=0.05)
     p.add_argument('--eps-decay-frac', type=float, default=0.5,
@@ -96,7 +97,9 @@ def train_seed(k: int, args, val_sc, refs, out_dir) -> Dict:
     from warehouse_marl.drl.pair_dqn import PairDQN
 
     seed = args.seed_base + k
-    random.seed(seed); np.random.seed(seed); torch.manual_seed(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
     env = AllocationEnvV2(seed=10_000 + seed, n_tasks=args.tasks)
     agent = PairDQN(hidden=args.hidden, lr=args.lr, gamma=args.gamma, double=args.double,
                     buffer_size=args.buffer, batch_size=args.batch_size,
@@ -109,7 +112,8 @@ def train_seed(k: int, args, val_sc, refs, out_dir) -> Dict:
     best_path = os.path.join(out_dir, f'drl2_seed{seed}.pt')
     t0 = time.time()
     for ep in range(1, args.episodes + 1):
-        eps = max(args.eps_end, args.eps_start - (args.eps_start - args.eps_end) * (ep - 1) / decay_eps)
+        frac = (ep - 1) / decay_eps
+        eps = max(args.eps_end, args.eps_start - (args.eps_start - args.eps_end) * frac)
         obs, info = env.reset()
         done = info['done']
         rewards, raws, losses, qs, grads = [], [], [], [], []
@@ -120,8 +124,11 @@ def train_seed(k: int, args, val_sc, refs, out_dir) -> Dict:
             agent.remember(obs[a], r, nxt, done)
             st = agent.train_step()
             if st:
-                losses.append(st['loss']); qs.append(st['q']); grads.append(st['grad'])
-            rewards.append(r); raws.append(inf['raw_reward'])
+                losses.append(st['loss'])
+                qs.append(st['q'])
+                grads.append(st['grad'])
+            rewards.append(r)
+            raws.append(inf['raw_reward'])
             obs = nxt
             metrics = inf.get('metrics', metrics)
         sc = env.scenario
@@ -206,7 +213,8 @@ def indicators(results, refs) -> List[Dict]:
             'episode_meilleur': res['best_ep'],
             'gain_val_vs_fifo_pct': round(best_val.get('gain_vs_fifo_pct', math.nan), 2),
             'gain_val_vs_consensus_pct': round(best_val.get('gain_vs_consensus_pct', math.nan), 2),
-            'gain_val_vs_greedy_pair_pct': round(best_val.get('gain_vs_greedy_pair_pct', math.nan), 2),
+            'gain_val_vs_greedy_pair_pct': round(
+                best_val.get('gain_vs_greedy_pair_pct', math.nan), 2),
             'episode_convergence_5pct': conv,
             'perte_debut': round(_window(losses, 0.1, False), 4),
             'perte_fin': round(_window(losses, 0.1, True), 4),
@@ -221,8 +229,10 @@ def indicators(results, refs) -> List[Dict]:
         'meilleure_val_s': round(statistics.mean(bests), 2),
         'ecart_type_graines_s': round(statistics.pstdev(bests), 2) if len(bests) > 1 else 0.0,
         'gain_val_vs_fifo_pct': round(statistics.mean(r['gain_val_vs_fifo_pct'] for r in rows), 2),
-        'gain_val_vs_consensus_pct': round(statistics.mean(r['gain_val_vs_consensus_pct'] for r in rows), 2),
-        'gain_val_vs_greedy_pair_pct': round(statistics.mean(r['gain_val_vs_greedy_pair_pct'] for r in rows), 2),
+        'gain_val_vs_consensus_pct': round(
+            statistics.mean(r['gain_val_vs_consensus_pct'] for r in rows), 2),
+        'gain_val_vs_greedy_pair_pct': round(
+            statistics.mean(r['gain_val_vs_greedy_pair_pct'] for r in rows), 2),
         'val_fifo_s': round(fifo, 2), 'val_consensus_s': round(cons, 2),
         'val_greedy_pair_s': round(statistics.mean(refs['greedy_pair']), 2),
     })
@@ -233,7 +243,8 @@ def write_csv(path, rows):
     keys = list(dict.fromkeys(k for r in rows for k in r))
     with open(path, 'w', newline='') as f:
         w = csv.DictWriter(f, fieldnames=keys)
-        w.writeheader(); w.writerows(rows)
+        w.writeheader()
+        w.writerows(rows)
 
 
 def plot(results, refs, path, smooth=10):
@@ -267,18 +278,21 @@ def plot(results, refs, path, smooth=10):
             ('perte_td', 'Perte TD (Huber)'), ('q_moy', 'Valeur Q moyenne (lot)')]):
         a = stack(key)
         with warnings.catch_warnings(), np.errstate(all='ignore'):
-            warnings.simplefilter('ignore', RuntimeWarning)   # episodes avant le 1er pas d apprentissage
+            # episodes sans pas d'apprentissage (avant warmup) : colonnes vides
+            warnings.simplefilter('ignore', RuntimeWarning)
             m, s = np.nanmean(a, axis=0), np.nanstd(a, axis=0)
         ax.plot(ep, m, color='C0')
         ax.fill_between(ep, m - s, m + s, color='C0', alpha=0.25)
         ax.set_title(f'{title}, moy. glissante {smooth} ep.', fontsize=10)
-        ax.set_xlabel('episode'); ax.grid(alpha=0.3)
+        ax.set_xlabel('episode')
+        ax.grid(alpha=0.3)
     ax = axs[1, 1]
     eps = sorted({v['episode'] for r in results for v in r['vals']})
     m, s = [], []
     for e in eps:
         xs = [v['val_drl2_s'] for r in results for v in r['vals'] if v['episode'] == e]
-        m.append(np.mean(xs)); s.append(np.std(xs))
+        m.append(np.mean(xs))
+        s.append(np.std(xs))
     m, s = np.array(m), np.array(s)
     ax.plot(eps, m, 'o-', color='C0', label=f'DRL v2 ({len(results)} graines)')
     ax.fill_between(eps, m - s, m + s, color='C0', alpha=0.25)
@@ -287,7 +301,9 @@ def plot(results, refs, path, smooth=10):
     ax.axhline(np.mean(refs['greedy_pair']), color='C3', ls=':',
                label='greedy_pair (couple de cout min., sans apprentissage)')
     ax.set_title('Validation : temps de traitement moyen (s), scenarios fixes', fontsize=10)
-    ax.set_xlabel('episode'); ax.legend(fontsize=8); ax.grid(alpha=0.3)
+    ax.set_xlabel('episode')
+    ax.legend(fontsize=8)
+    ax.grid(alpha=0.3)
     fig.tight_layout()
     fig.savefig(path, dpi=150)
     plt.close(fig)
@@ -300,7 +316,8 @@ def main(argv=None):
     torch.set_num_threads(max(1, args.threads))
     os.makedirs(args.out_dir, exist_ok=True)
     val_sc = val_scenarios(args.val_tasks)
-    print(f'Validation : {len(val_sc)} scenarios fixes ; references FIFO, consensus, greedy_pair ...')
+    print(f'Validation : {len(val_sc)} scenarios fixes ; '
+          'references FIFO, consensus, greedy_pair ...')
     refs = {m: evaluate(m, val_sc) for m in ('fifo', 'consensus', 'greedy_pair')}
     print(f'  FIFO {statistics.mean(refs["fifo"]):.2f} s, '
           f'consensus {statistics.mean(refs["consensus"]):.2f} s, '

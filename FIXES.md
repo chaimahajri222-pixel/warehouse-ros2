@@ -829,6 +829,74 @@ Task-status monitoring:
 ros2 topic echo /warehouse/tasks/status
 ```
 
+## DRL v2: task allocation that can be compared fairly (2026-11-15)
+
+### Problems in the v1 DQN
+
+- `drl/env.py` gave +1 when the chosen robot had the minimum cost, so the DQN
+  learned to copy the heuristic.
+- The observation contained the robot index (`idx / n_robots`), which has no
+  physical meaning.
+- Robot load decreased at random (30 %). There was no time and no queue, so
+  processing time could not be measured.
+- The network input was `n_robots*3+1`, so a model trained for 3 robots did
+  not work with 4 or 20.
+- In hybrid mode, `-Q` was added to a cost in metres without calibration.
+- `train_drl.py` logged only reward and mean cost, for one seed.
+
+### Changes
+
+- `drl/features_v2.py`: 11 features per (free robot, candidate task) pair.
+  None depends on the robot index or name.
+- `drl/env_v2.py`: training environment built on the
+  `allocation_benchmark.Benchmark` world (dynamic graph, congestion, edge
+  blockages, Poisson arrivals, queue, pick time). One decision chooses a
+  pair among the 5 oldest tasks. The reward is
+  `-(queue waiting time until the next decision + estimated service time of
+  the chosen task) / 60 s`, centred by a running mean.
+- `drl/pair_dqn.py`: shared one-output Q network, replay memory, target
+  network, Huber loss, gradient clipping, Double DQN by default.
+- `drl/train_drl_v2.py` (`train_drl_v2`): several seeds, per-episode CSV
+  (reward, TD loss, mean Q, gradient norm, epsilon, processing time),
+  validation on fixed scenarios against FIFO, consensus and `greedy_pair`,
+  best model kept per seed (patience), curves and an indicator table.
+- `allocation_benchmark.py`: `run()` split into `begin_tick()` /
+  `end_tick()`. Results of `random`, `fifo` and `consensus` were checked to
+  be identical before and after. New methods: `drl2_direct`, `drl2_hybrid`
+  (`--model2`), and the `greedy_pair` control (same decision space as DRL v2,
+  no learning). Tables now also compare against `greedy_pair`.
+- `drl_allocator_node.py`: `obs_version` parameter, `v1` by default (old
+  behaviour unchanged). With `v2`, hybrid mode publishes
+  `bias = -bias_weight * (Q - mean Q of free robots) * bias_scale_m`. Launch
+  files pass `obs_version` and `bias_weight`.
+- `test/test_drl_v2.py`: same observation width for 3, 4 and 20 robots,
+  features unchanged when robots are reordered or renamed, reward
+  independent of whether the chosen robot is the cheapest, determinism with
+  a fixed seed, calibrated bias.
+
+### Verification
+
+- `pytest test/` in the venv: 14 passed. With the system Python (no
+  PyTorch): 13 passed, 1 skipped (the PyTorch test).
+- `colcon build --packages-select rosnav_bot warehouse_marl` succeeds.
+- `drl_allocator_node` was started with `obs_version:=v2` in `hybrid` and
+  `direct` modes on an isolated ROS domain. It published a zero-mean bias
+  and a direct assignment to the nearest robot. With the default `v1`, it
+  starts as before, with and without a model.
+- Training, 3 seeds x 300 episodes: 4 min 15 s on an Intel i3-7020U.
+- `ros2 run warehouse_marl allocation_benchmark --exp all --seeds 10 --model2
+  drl_v2/drl2_best.pt`: 351 s.
+
+### Result
+
+`drl2_direct` beats FIFO and consensus on the demo warehouse, for example
++9.7 % and +24.2 % at rho=0.7, 10/10 seeds, Wilcoxon p=0.002. It does not
+beat the untrained `greedy_pair` rule anywhere. It is worse at 10 and 20
+robots (-6.7 % and -4.0 % against `greedy_pair`). `drl2_hybrid` is at, or
+slightly below, consensus. The gain comes from choosing the task, not from
+learning. Full table and tuning ideas: `src/warehouse_marl/README.md`,
+section "DRL v2 : evaluation".
+
 ## Known limitations
 
 - With `explore:=false` and no saved map, SLAM initially knows only the area

@@ -124,6 +124,8 @@ def launch_setup(context, *args, **kwargs):
                 'robot_names': ','.join(robot_names),
                 'drl_mode': drl_mode,
                 'model_path': model_path,
+                'obs_version': LaunchConfiguration('obs_version').perform(context),
+                'bias_weight': LaunchConfiguration('bias_weight').perform(context),
                 'map_origin_x': map_origin_x,
                 'map_origin_y': map_origin_y,
                 'map_topic': map_topic,
@@ -169,6 +171,12 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'model_path', default_value='warehouse_dqn.pt',
             description='Modele DQN (.pt), entraine avec --n-agents = robot_count'),
+        DeclareLaunchArgument(
+            'obs_version', default_value='v1',
+            description="'v1' : modele train_drl ; 'v2' : modele train_drl_v2 (toute flotte)"),
+        DeclareLaunchArgument(
+            'bias_weight', default_value='1.0',
+            description='v2 hybrid : poids du biais calibre'),
         DeclareLaunchArgument(
             'use_rfid_inventory', default_value='true',
             description='Picking selon la croyance RFID (true) ou le WMS seul (false)'),
