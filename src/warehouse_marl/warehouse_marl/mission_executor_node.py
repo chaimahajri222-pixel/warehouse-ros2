@@ -66,6 +66,14 @@ class MissionExecutorNode(Node):
         self.declare_parameter('route_model', '')
         self.declare_parameter('robot_start_nodes', [''])
         self.declare_parameter('robot_speed', 0.5)
+        # Point d'attente d'un robot inoccupe (protocole v4, drl_idle, en ROS) :
+        #   stay   : reste sur place (comportement historique) ;
+        #   centre : centre_de_demande (demande observee en ligne, Laplace +1) ;
+        #   drl    : politique drl_idle (idle_model .pt).
+        # Le trajet vers le point d'attente est un NavigateToPose, annule des
+        # qu'une mission arrive pour ce robot (il reste attribuable).
+        self.declare_parameter('idle_mode', 'stay')
+        self.declare_parameter('idle_model', '')
 
         self.robot_names = list(self.get_parameter('robot_names').value)
         self.max_retries = int(self.get_parameter('max_retries').value)
@@ -86,6 +94,21 @@ class MissionExecutorNode(Node):
             model = str(self.get_parameter('route_model').value)
             self.route_agent = load_v4_model(model, 'route')
             self.get_logger().info(f'Politique drl_route chargee : {model}')
+        self.idle_mode = str(self.get_parameter('idle_mode').value)
+        if self.idle_mode not in ('stay', 'centre', 'drl'):
+            raise ValueError(f'idle_mode inconnu : {self.idle_mode}')
+        self.idle_agent = None
+        if self.idle_mode == 'drl':
+            from warehouse_marl.drl.v4_dqn import load_v4_model
+            model = str(self.get_parameter('idle_model').value)
+            self.idle_agent = load_v4_model(model, 'idle')
+            self.get_logger().info(f'Politique drl_idle chargee : {model}')
+        self._demand_counts: Dict[str, int] = {}
+        self._park_target = {robot: None for robot in self.robot_names}
+        self._park_handle = {robot: None for robot in self.robot_names}
+        self._park_cancel_sent = {robot: False for robot in self.robot_names}
+        self._need_idle = {robot: False for robot in self.robot_names}
+        self.idle_pub = self.create_publisher(String, '/warehouse/idle_points', 10)
         starts = [s for s in self.get_parameter('robot_start_nodes').value if s]
         self._robot_node = {
             robot: (starts[i] if i < len(starts) else 'charging_dock')
@@ -216,6 +239,9 @@ class MissionExecutorNode(Node):
         try:
             data = json.loads(msg.data)
             self._task_metadata[data['task_id']] = data
+            target = data.get('target_node')
+            if target in self.graph.G:      # demande observee (idle_mode centre|drl)
+                self._demand_counts[target] = self._demand_counts.get(target, 0) + 1
         except (json.JSONDecodeError, KeyError):
             self.get_logger().warn('Tache JSON mal formee; ignoree.')
 
@@ -289,10 +315,93 @@ class MissionExecutorNode(Node):
         if not self._nav_busy[robot_id]:
             self._cancel_sent[robot_id] = False
 
+    # ----- point d'attente (idle_mode) ------------------------------------ #
+    def _is_idle(self, robot_id: str) -> bool:
+        return self._active[robot_id] is None and not self._queues[robot_id]
+
+    def _park(self, robot_id: str):
+        """Decision d'attente d'un robot qui vient de devenir inoccupe, puis
+        NavigateToPose vers le noeud choisi (rien si c'est sa position)."""
+        from warehouse_marl.idle_planner import choose_idle_point
+        robots = {r: {'node': self._robot_node[r], 'park': self._park_target[r],
+                      'idle': self._is_idle(r)} for r in self.robot_names}
+        n_open = len(self._pending_claims) + sum(len(q) for q in self._queues.values())
+        park, info = choose_idle_point(
+            self.graph, robot_id, robots, self.idle_mode, agent=self.idle_agent,
+            speed=self.robot_speed, demand_counts=self._demand_counts, n_open=n_open)
+        info.update({'robot_id': robot_id, 'depuis': self._robot_node[robot_id]})
+        self.idle_pub.publish(String(data=json.dumps(info)))
+        self.get_logger().info(
+            f'{robot_id} inoccupe en {self._robot_node[robot_id]} : attente '
+            f'{self.idle_mode} -> {park}.')
+        if park == self._robot_node[robot_id]:
+            return
+        client = self._nav_clients[robot_id]
+        if not client.server_is_ready():
+            self.get_logger().warn(f'{robot_id}: navigate_to_pose absent, reste sur place.')
+            return
+        node = self.graph.G.nodes[park]
+        goal = NavigateToPose.Goal()
+        goal.pose.header.frame_id = 'map'
+        goal.pose.header.stamp = self.get_clock().now().to_msg()
+        goal.pose.pose.position.x = float(node['x'])
+        goal.pose.pose.position.y = float(node['y'])
+        goal.pose.pose.orientation.w = 1.0
+        self._park_target[robot_id] = park
+        self._park_handle[robot_id] = 'en_attente'      # reponse du serveur pas encore recue
+        self._park_cancel_sent[robot_id] = False
+        future = client.send_goal_async(goal)
+        future.add_done_callback(lambda f, r=robot_id, p=park: self._on_park_response(f, r, p))
+        self._publish_mission_state()
+
+    def _on_park_response(self, future, robot_id: str, park: str):
+        try:
+            handle = future.result()
+        except Exception as exc:
+            self.get_logger().warn(f'{robot_id}: envoi vers {park} en erreur : {exc}')
+            handle = None
+        if handle is None or not handle.accepted:
+            self._park_handle[robot_id] = None
+            self._publish_mission_state()
+            return
+        self._park_handle[robot_id] = handle
+        handle.get_result_async().add_done_callback(
+            lambda f, r=robot_id, p=park: self._on_park_result(f, r, p))
+
+    def _on_park_result(self, future, robot_id: str, park: str):
+        try:
+            status = int(future.result().status)
+        except Exception:
+            status = GoalStatus.STATUS_UNKNOWN
+        self._park_handle[robot_id] = None
+        if status == GoalStatus.STATUS_SUCCEEDED:
+            self._robot_node[robot_id] = park
+            self.get_logger().info(f'{robot_id} arrive au point d attente {park}.')
+        else:
+            # Interrompu (mission arrivee) : la position reste le dernier noeud
+            # atteint ; limite connue, le robot est quelque part sur le trajet.
+            self.get_logger().info(f'{robot_id}: trajet vers {park} interrompu (statut {status}).')
+        self._publish_mission_state()
+
     def _dispatch(self):
         self._resolve_claims()
+        if self.idle_mode != 'stay':
+            for robot_id in self.robot_names:
+                if self._need_idle[robot_id] and self._is_idle(robot_id):
+                    self._need_idle[robot_id] = False
+                    self._park(robot_id)
         for robot_id in self.robot_names:
             if self._active[robot_id] is not None or not self._queues[robot_id]:
+                continue
+            if self._park_handle[robot_id] is not None:
+                # Mission arrivee pendant le trajet d'attente : on l'annule et
+                # on attend la fin de l'annulation avant d'envoyer la mission.
+                handle = self._park_handle[robot_id]
+                if not isinstance(handle, str) and not self._park_cancel_sent[robot_id]:
+                    handle.cancel_goal_async()
+                    self._park_cancel_sent[robot_id] = True
+                    self.get_logger().info(
+                        f'{robot_id}: annule le trajet d attente pour la mission.')
                 continue
             client = (self._wp_clients[robot_id] if self.route_mode != 'direct'
                       else self._nav_clients[robot_id])
@@ -435,6 +544,7 @@ class MissionExecutorNode(Node):
     def _finish(self, mission: Mission, state: str, nav_status: int):
         self._emit_status(mission, state, nav_status=nav_status)
         self._active[mission.robot_id] = None
+        self._need_idle[mission.robot_id] = True     # decision d'attente si la file est vide
         self._task_metadata.pop(mission.task_id, None)
         self._publish_mission_state()
 
@@ -483,7 +593,8 @@ class MissionExecutorNode(Node):
 
     def _publish_mission_state(self, force: bool = False):
         active = any(self._queues.values()) or any(
-            mission is not None for mission in self._active.values())
+            mission is not None for mission in self._active.values()) or any(
+            h is not None for h in self._park_handle.values())
         if not self.pause_exploration:
             active = False
         if not force and active == self._missions_active:

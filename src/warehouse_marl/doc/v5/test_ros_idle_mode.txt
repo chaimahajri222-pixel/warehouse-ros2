@@ -1,0 +1,400 @@
+# Test ROS idle_mode, 2026-11-15T20:39:54+01:00, ROS_DOMAIN_ID=88, LOCALHOST, sans Gazebo (faux serveur NavigateToPose pour robot1)
+# Modele drl : /home/chchch/warehouse_ws/drl_v4/idle/selected_idle.pt (= drl_v4/idle/ckpt_seed0_t100.pt, retenu sur la validation)
+
+## mode stay, cible de t0 = shelf_4_2
+{
+ "idle_mode": "stay",
+ "cible_t0": "shelf_4_2",
+ "decisions": [],
+ "buts_nav2": [
+  {
+   "type": "mission",
+   "xy": [
+    8.5,
+    -4.2
+   ],
+   "t": 1794771598.63
+  },
+  {
+   "type": "mission",
+   "xy": [
+    1.5,
+    6.3
+   ],
+   "t": 1794771602.89
+  }
+ ],
+ "annulations": 0,
+ "etats_t0": [
+  "queued",
+  "navigating",
+  "succeeded"
+ ],
+ "etats_t1": [
+  "queued",
+  "navigating",
+  "succeeded"
+ ],
+ "verifications": {
+  "t0_reussie_une_fois": true,
+  "t1_reussie_une_fois": true,
+  "aucun_but_attente": true
+ },
+ "reussi": true
+}
+--- journal du noeud (stay) ---
+[INFO] [1794771596.151466625] [mission_executor_node]: MissionExecutorNode pret pour ['robot1']; cibles Nav2 dans frame map.
+[INFO] [1794771598.625421014] [mission_executor_node]: t0 en file pour robot1 -> shelf_4_2.
+[INFO] [1794771598.633523771] [mission_executor_node]: robot1 execute t0 -> (8.50, -4.20).
+[INFO] [1794771598.641530460] [mission_executor_node]: robot1 a termine t0.
+[INFO] [1794771602.875425412] [mission_executor_node]: t1 en file pour robot1 -> shelf_0_0.
+[INFO] [1794771602.885321738] [mission_executor_node]: robot1 execute t1 -> (1.50, 6.30).
+[INFO] [1794771602.895070257] [mission_executor_node]: robot1 a termine t1.
+RC=0
+
+## mode centre, cible de t0 = shelf_4_2
+{
+ "idle_mode": "centre",
+ "cible_t0": "shelf_4_2",
+ "decisions": [
+  {
+   "mode": "centre",
+   "centre": "shelf_3_1",
+   "demande_vue": 7,
+   "choix": "shelf_3_1",
+   "robot_id": "robot1",
+   "depuis": "shelf_4_2"
+  },
+  {
+   "mode": "centre",
+   "centre": "shelf_3_1",
+   "demande_vue": 8,
+   "choix": "shelf_3_1",
+   "robot_id": "robot1",
+   "depuis": "shelf_0_0"
+  }
+ ],
+ "buts_nav2": [
+  {
+   "type": "mission",
+   "xy": [
+    8.5,
+    -4.2
+   ],
+   "t": 1794771606.83
+  },
+  {
+   "type": "attente",
+   "xy": [
+    5.0,
+    -4.2
+   ],
+   "t": 1794771607.09,
+   "annule": true
+  },
+  {
+   "type": "mission",
+   "xy": [
+    1.5,
+    6.3
+   ],
+   "t": 1794771608.59
+  },
+  {
+   "type": "attente",
+   "xy": [
+    5.0,
+    -4.2
+   ],
+   "t": 1794771608.85
+  }
+ ],
+ "annulations": 1,
+ "etats_t0": [
+  "queued",
+  "navigating",
+  "succeeded"
+ ],
+ "etats_t1": [
+  "queued",
+  "navigating",
+  "succeeded"
+ ],
+ "verifications": {
+  "t0_reussie_une_fois": true,
+  "t1_reussie_une_fois": true,
+  "decision_publiee": true,
+  "but_attente_au_noeud_choisi": true,
+  "trajet_annule_par_t1": true,
+  "seconde_decision_apres_t1": true
+ },
+ "reussi": true
+}
+--- journal du noeud (centre) ---
+[INFO] [1794771606.116112855] [mission_executor_node]: MissionExecutorNode pret pour ['robot1']; cibles Nav2 dans frame map.
+[INFO] [1794771606.829837669] [mission_executor_node]: t0 en file pour robot1 -> shelf_4_2.
+[INFO] [1794771606.834668655] [mission_executor_node]: robot1 execute t0 -> (8.50, -4.20).
+[INFO] [1794771606.839180887] [mission_executor_node]: robot1 a termine t0.
+[INFO] [1794771607.083748590] [mission_executor_node]: robot1 inoccupe en shelf_4_2 : attente centre -> shelf_3_1.
+[INFO] [1794771608.330289084] [mission_executor_node]: t1 en file pour robot1 -> shelf_0_0.
+[INFO] [1794771608.332833230] [mission_executor_node]: robot1: annule le trajet d attente pour la mission.
+[INFO] [1794771608.349115166] [mission_executor_node]: robot1: trajet vers shelf_3_1 interrompu (statut 5).
+[INFO] [1794771608.587544301] [mission_executor_node]: robot1 execute t1 -> (1.50, 6.30).
+[INFO] [1794771608.600433165] [mission_executor_node]: robot1 a termine t1.
+[INFO] [1794771608.832711023] [mission_executor_node]: robot1 inoccupe en shelf_0_0 : attente centre -> shelf_3_1.
+RC=0
+
+## mode drl, cible de t0 = shelf_4_2
+{
+ "idle_mode": "drl",
+ "cible_t0": "shelf_4_2",
+ "decisions": [
+  {
+   "mode": "drl",
+   "centre": "shelf_3_1",
+   "demande_vue": 7,
+   "candidats": [
+    "shelf_4_2",
+    "charging_dock",
+    "shelf_3_1",
+    "shelf_4_1",
+    "shelf_3_2",
+    "shelf_2_1"
+   ],
+   "q": [
+    -0.6573,
+    -1.3321,
+    -1.2182,
+    -0.9491,
+    -0.9852,
+    -1.4465
+   ],
+   "a_priori": [
+    -0.1939,
+    -0.3461,
+    -0.1823,
+    -0.1833,
+    -0.1939,
+    -0.2057
+   ],
+   "choix": "shelf_4_2",
+   "robot_id": "robot1",
+   "depuis": "shelf_4_2"
+  },
+  {
+   "mode": "drl",
+   "centre": "shelf_3_1",
+   "demande_vue": 8,
+   "candidats": [
+    "shelf_0_0",
+    "charging_dock",
+    "shelf_3_1",
+    "shelf_4_1",
+    "shelf_3_2",
+    "shelf_4_2"
+   ],
+   "q": [
+    -1.0547,
+    -1.4088,
+    -1.3514,
+    -1.0944,
+    -1.2652,
+    -1.2652
+   ],
+   "a_priori": [
+    -0.3725,
+    -0.3447,
+    -0.1946,
+    -0.1956,
+    -0.2108,
+    -0.2108
+   ],
+   "choix": "shelf_0_0",
+   "robot_id": "robot1",
+   "depuis": "shelf_0_0"
+  }
+ ],
+ "buts_nav2": [
+  {
+   "type": "mission",
+   "xy": [
+    8.5,
+    -4.2
+   ],
+   "t": 1794771621.69
+  },
+  {
+   "type": "mission",
+   "xy": [
+    1.5,
+    6.3
+   ],
+   "t": 1794771626.2
+  }
+ ],
+ "annulations": 0,
+ "etats_t0": [
+  "queued",
+  "navigating",
+  "succeeded"
+ ],
+ "etats_t1": [
+  "queued",
+  "navigating",
+  "succeeded"
+ ],
+ "verifications": {
+  "t0_reussie_une_fois": true,
+  "t1_reussie_une_fois": true,
+  "decision_publiee": true,
+  "but_attente_au_noeud_choisi": true,
+  "trajet_annule_par_t1": null,
+  "seconde_decision_apres_t1": true
+ },
+ "reussi": true
+}
+--- journal du noeud (drl) ---
+[INFO] [1794771619.146429765] [mission_executor_node]: Politique drl_idle chargee : /home/chchch/warehouse_ws/drl_v4/idle/selected_idle.pt
+[INFO] [1794771619.177002393] [mission_executor_node]: MissionExecutorNode pret pour ['robot1']; cibles Nav2 dans frame map.
+[INFO] [1794771621.679524166] [mission_executor_node]: t0 en file pour robot1 -> shelf_4_2.
+[INFO] [1794771621.691201926] [mission_executor_node]: robot1 execute t0 -> (8.50, -4.20).
+[INFO] [1794771621.702686297] [mission_executor_node]: robot1 a termine t0.
+[INFO] [1794771621.937584560] [mission_executor_node]: robot1 inoccupe en shelf_4_2 : attente drl -> shelf_4_2.
+[INFO] [1794771626.179191454] [mission_executor_node]: t1 en file pour robot1 -> shelf_0_0.
+[INFO] [1794771626.202025077] [mission_executor_node]: robot1 execute t1 -> (1.50, 6.30).
+[INFO] [1794771626.206386693] [mission_executor_node]: robot1 a termine t1.
+[INFO] [1794771626.432854687] [mission_executor_node]: robot1 inoccupe en shelf_0_0 : attente drl -> shelf_0_0.
+RC=0
+
+## mode drl, cible de t0 = charging_dock
+{
+ "idle_mode": "drl",
+ "cible_t0": "charging_dock",
+ "decisions": [
+  {
+   "mode": "drl",
+   "centre": "shelf_3_1",
+   "demande_vue": 7,
+   "candidats": [
+    "charging_dock",
+    "shelf_3_1",
+    "shelf_4_1",
+    "shelf_3_2",
+    "shelf_4_2",
+    "shelf_2_1"
+   ],
+   "q": [
+    -1.4109,
+    -1.258,
+    -1.0287,
+    -1.1944,
+    -1.1944,
+    -1.4134
+   ],
+   "a_priori": [
+    -0.3414,
+    -0.1854,
+    -0.1864,
+    -0.2031,
+    -0.2031,
+    -0.204
+   ],
+   "choix": "shelf_4_1",
+   "robot_id": "robot1",
+   "depuis": "charging_dock"
+  },
+  {
+   "mode": "drl",
+   "centre": "shelf_3_1",
+   "demande_vue": 8,
+   "candidats": [
+    "shelf_0_0",
+    "charging_dock",
+    "shelf_3_1",
+    "shelf_4_1",
+    "shelf_2_1",
+    "shelf_3_2"
+   ],
+   "q": [
+    -1.0393,
+    -1.4143,
+    -1.332,
+    -1.1565,
+    -1.5086,
+    -1.3287
+   ],
+   "a_priori": [
+    -0.363,
+    -0.3402,
+    -0.1982,
+    -0.1992,
+    -0.2104,
+    -0.2204
+   ],
+   "choix": "shelf_0_0",
+   "robot_id": "robot1",
+   "depuis": "shelf_0_0"
+  }
+ ],
+ "buts_nav2": [
+  {
+   "type": "mission",
+   "xy": [
+    -0.65,
+    1.0
+   ],
+   "t": 1794771637.09
+  },
+  {
+   "type": "attente",
+   "xy": [
+    5.0,
+    -4.2
+   ],
+   "t": 1794771637.35,
+   "annule": true
+  },
+  {
+   "type": "mission",
+   "xy": [
+    1.5,
+    6.3
+   ],
+   "t": 1794771638.84
+  }
+ ],
+ "annulations": 1,
+ "etats_t0": [
+  "queued",
+  "navigating",
+  "succeeded"
+ ],
+ "etats_t1": [
+  "queued",
+  "navigating",
+  "succeeded"
+ ],
+ "verifications": {
+  "t0_reussie_une_fois": true,
+  "t1_reussie_une_fois": true,
+  "decision_publiee": true,
+  "but_attente_au_noeud_choisi": true,
+  "trajet_annule_par_t1": true,
+  "seconde_decision_apres_t1": true
+ },
+ "reussi": true
+}
+--- journal du noeud (drl) ---
+[INFO] [1794771634.556596985] [mission_executor_node]: Politique drl_idle chargee : /home/chchch/warehouse_ws/drl_v4/idle/selected_idle.pt
+[INFO] [1794771634.588665211] [mission_executor_node]: MissionExecutorNode pret pour ['robot1']; cibles Nav2 dans frame map.
+[INFO] [1794771637.088866158] [mission_executor_node]: t0 en file pour robot1 -> charging_dock.
+[INFO] [1794771637.093041140] [mission_executor_node]: robot1 execute t0 -> (-0.65, 1.00).
+[INFO] [1794771637.097389635] [mission_executor_node]: robot1 a termine t0.
+[INFO] [1794771637.346761367] [mission_executor_node]: robot1 inoccupe en charging_dock : attente drl -> shelf_4_1.
+[INFO] [1794771638.589871615] [mission_executor_node]: t1 en file pour robot1 -> shelf_0_0.
+[INFO] [1794771638.591837858] [mission_executor_node]: robot1: annule le trajet d attente pour la mission.
+[INFO] [1794771638.610913769] [mission_executor_node]: robot1: trajet vers shelf_4_1 interrompu (statut 5).
+[INFO] [1794771638.842614088] [mission_executor_node]: robot1 execute t1 -> (1.50, 6.30).
+[INFO] [1794771638.849173830] [mission_executor_node]: robot1 a termine t1.
+[INFO] [1794771639.092711555] [mission_executor_node]: robot1 inoccupe en shelf_0_0 : attente drl -> shelf_0_0.
+RC=0
