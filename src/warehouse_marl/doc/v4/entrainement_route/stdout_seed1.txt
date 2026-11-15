@@ -1,0 +1,37 @@
+[route graine 1] t=   0.0 min ep=    0 val=35.080 s (meilleur 35.080) (9 s de validation)
+[route graine 1] t=  10.0 min ep=  147 val=37.889 s (meilleur 35.080) (9 s de validation)
+[route graine 1] t=  20.0 min ep=  290 val=34.675 s (meilleur 34.675) (11 s de validation)
+[route graine 1] t=  30.1 min ep=  419 val=40.859 s (meilleur 34.675) (15 s de validation)
+[route graine 1] t=  40.2 min ep=  569 val=35.004 s (meilleur 34.675) (11 s de validation)
+[route graine 1] t=  50.0 min ep=  725 val=42.032 s (meilleur 34.675) (13 s de validation)
+[route graine 1] t=  60.0 min ep=  868 val=33.872 s (meilleur 33.872) (9 s de validation)
+[route graine 1] t=  70.1 min ep= 1002 val=36.610 s (meilleur 33.872) (10 s de validation)
+[route graine 1] t=  80.2 min ep= 1171 val=35.004 s (meilleur 33.872) (12 s de validation)
+[route graine 1] t=  90.0 min ep= 1299 val=35.018 s (meilleur 33.872) (8 s de validation)
+[route graine 1] t= 100.1 min ep= 1502 val=34.220 s (meilleur 33.872) (11 s de validation)
+[route graine 1] t= 110.0 min ep= 1689 val=34.244 s (meilleur 33.872) (6 s de validation)
+[route graine 1] t= 115.1 min ep= 1796 val=34.037 s (meilleur 33.872) (14 s de validation)
+[route graine 1] fin : 1796 episodes, meilleur val 33.872 s (/home/chchch/warehouse_ws/drl_v4/route/ckpt_seed1_t60.pt)
+	Command being timed: "/home/chchch/warehouse-ros2/.venv/bin/python -m warehouse_marl.drl.train_v4 --kind route --seed 1 --budget-min 115 --val-every-min 10 --out-dir /home/chchch/warehouse_ws/drl_v4/route"
+	User time (seconds): 6566.23
+	System time (seconds): 15.79
+	Percent of CPU this job got: 94%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:55:29
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 854932
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 8023
+	Minor (reclaiming a frame) page faults: 185670
+	Voluntary context switches: 8744
+	Involuntary context switches: 1275797
+	Swaps: 0
+	File system inputs: 156104
+	File system outputs: 2464
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
