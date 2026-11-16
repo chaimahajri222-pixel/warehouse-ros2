@@ -46,7 +46,7 @@ point. Certains ne servent pas au monde « entrepôt », mais le package
 ```bash
 mkdir -p ~/warehouse_ws/src
 cd ~/warehouse_ws/src
-git clone -b drl-v4 https://github.com/yassinejelassi2002/warehouse-ros2.git
+git clone -b drl-v4 https://github.com/chaimahajri222-pixel/warehouse-ros2.git
 ```
 
 Le dossier doit s'appeler exactement `~/warehouse_ws/src/warehouse-ros2` : les
