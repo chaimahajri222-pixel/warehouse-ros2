@@ -427,3 +427,32 @@ Les 4 conditions dataset (vagues de test), sans capacité de segment. Méthodes 
      | A grand | 60 min |
      | B | 60 min (au lieu de 90) |
      | C | 45 min (au lieu de 60) |
+4. **Défaut de récompense de `drl_idle6`, corrigé pour le modèle grand**
+   (16/11/2026, 12 h 05). Cet écart est décidé **avant tout essai de test**.
+   - **Constat.** Le modèle grand dédié se dégrade aussi en validation : +31,4 % à
+     t = 10 min (graine 0), contre +0,00 % à t = 0.
+   - **Diagnostic.** Il est fait sur 2 fenêtres train_fit avec des graines
+     d'exploration (900 001 000 et 900 001 001), jamais la validation ni le test.
+     Le modèle envoie une grande partie des robots inoccupés au **dépôt** :
+     40 choix sur 79 dans un des deux essais.
+   - **Cause.** Une décision d'attente qui n'est suivie d'**aucune tâche** avant la
+     fin de l'épisode (ou qui est suivie d'une tâche échouée) reçoit une
+     récompense de **0**, en transition terminale. C'est le code v4 repris tel
+     quel. Toutes les autres récompenses sont négatives (−approche). Avec
+     20 robots, un robot garé loin n'est presque jamais choisi par l'allocation,
+     donc il touche ce 0 : le réseau apprend que se garer loin « rapporte ».
+     Sur un épisode d'entraînement à 20 robots, 19 transitions sur 67 étaient de
+     ce type. Avec 3 robots, il y en a ≈ 3 sur 100. C'est très probablement aussi
+     l'origine de la défaite v4 à 150 racks.
+   - **Correction pour le modèle grand :** ces décisions ne produisent plus de
+     transition. L'épisode est traité comme **tronqué**, sans 0 terminal (option
+     `--idle6-sans-tache ignorer`). Le reste est inchangé.
+   - **Le modèle petit n'est pas réentraîné.** Il a été entraîné et sélectionné
+     avec l'ancienne règle (`zero`), et l'effet y est faible (≈ 3 transitions sur
+     100). Ce choix tient compte du temps disponible. On le rapporte comme une
+     limite : les deux modèles de `drl_idle6` n'ont pas exactement la même règle
+     de récompense.
+   - **Lancement interrompu.** Le lancement grand de 11 h 51 a été arrêté à
+     t ≈ 12 min. Ses fichiers sont dans
+     `~/warehouse_ws/drl_v6/idle6_grand_interrompu_1205/` et ne servent ni à la
+     sélection ni au test. Le modèle grand est relancé de zéro (3 × 60 min).

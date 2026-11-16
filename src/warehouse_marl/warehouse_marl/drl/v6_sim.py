@@ -107,6 +107,10 @@ class BenchmarkV6(BenchmarkV4):
         self.route6_agent, self.idle6_agent = route6_agent, idle6_agent
         self.on_route6_transition = on_route6_transition
         self.on_idle6_transition = on_idle6_transition
+        # Ecart 4 (PROTOCOLE_V6.md) : decision d'attente non suivie d'une tache
+        # (fin d'episode, ou tache echouee) : 'zero' = recompense 0 (modele
+        # petit, comme la v4) ; 'ignorer' = transition non apprise (tronquee).
+        self.idle6_unrewarded = 'zero'
         self.node_mat = node_matrix(graph)
         self.n_shelves = len(self.shelf_list)
         self.mean_speed = float(np.mean([r.speed for r in self.robots]))
@@ -555,7 +559,9 @@ class BenchmarkV6(BenchmarkV4):
                 pend = getattr(r, 'idle6_pending', None)
                 if pend is not None:
                     f0, _, rew = pend
-                    self.on_idle6_transition(f0, rew if rew is not None else 0.0, feats, False)
+                    if rew is not None or self.idle6_unrewarded == 'zero':
+                        self.on_idle6_transition(f0, rew if rew is not None else 0.0, feats,
+                                                 False)
                 r.idle6_pending = [feats[j], self.t, None]
             return cands[j]
         return super()._choose_park(r)
@@ -627,9 +633,10 @@ class BenchmarkV6(BenchmarkV4):
                 pend = getattr(r, 'idle6_pending', None)
                 if pend is not None:
                     f0, _, rew = pend
-                    self.on_idle6_transition(f0, rew if rew is not None else 0.0,
-                                             np.zeros((0, N_IDLE6_FEATURES), dtype=np.float32),
-                                             True)
+                    if rew is not None or self.idle6_unrewarded == 'zero':
+                        self.on_idle6_transition(
+                            f0, rew if rew is not None else 0.0,
+                            np.zeros((0, N_IDLE6_FEATURES), dtype=np.float32), True)
                     r.idle6_pending = None
         for r in self.robots:
             self._route6_close(r, terminal=True)

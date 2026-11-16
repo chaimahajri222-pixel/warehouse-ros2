@@ -273,6 +273,9 @@ def main(argv=None):
     p.add_argument('--threads', type=int, default=2)
     p.add_argument('--taille', choices=['tous', 'petit', 'grand'], default='tous',
                    help='idle6 : modele petit (15/40 racks) ou grand (150 racks), ecart 3')
+    p.add_argument('--idle6-sans-tache', choices=['zero', 'ignorer'], default='zero',
+                   help='idle6 : decision non suivie d une tache -> recompense 0 ou '
+                        'transition ignoree (ecart 4)')
     p.add_argument('--out-dir', required=True)
     args = p.parse_args(argv)
     torch.set_num_threads(args.threads)
@@ -298,7 +301,8 @@ def main(argv=None):
                   'reward': {'idle6': '-approche / (diametre / vitesse moyenne)',
                              'route6': '-duree / 60 s',
                              'alloc6': '-(attente des taches ouvertes + service) / 60 s'}[kind],
-                  'train_every': args.train_every, 'taille': args.taille}
+                  'train_every': args.train_every, 'taille': args.taille,
+                  'idle6_sans_tache': args.idle6_sans_tache}
     stream = SeedStream(seed)
     ep, consumed, best, next_val, n_resume = 0, 0.0, (float('inf'), None), 0.0, 0
     if os.path.isfile(state_path):
@@ -393,6 +397,8 @@ def main(argv=None):
         stats.update(loss=[], corr=[], n=0)
         sim = make_sim6(sc, drl_mode(kind), agent, epsilon=eps, cb=cb, explore_seed=sim_seed)
         sim.horizon = min(sim.horizon, sim.arrivals[-1].created + 1800.0)
+        if kind == 'idle6':
+            sim.idle6_unrewarded = args.idle6_sans_tache
         m = sim.run()
         ep += 1
         tw.writerow([seed, ep, round(elapsed() / 60.0, 2), round(eps, 4), stats['n'],
