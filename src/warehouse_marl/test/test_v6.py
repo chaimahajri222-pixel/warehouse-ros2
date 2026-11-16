@@ -114,6 +114,24 @@ def test_alloc6_rewards_sum_to_total_time():
     assert sum(rewards) == pytest.approx(-total / 60.0, rel=0.02)
 
 
+def test_idle6_team_reward():
+    """Ecart 5 : recompense d'equipe, transitions non positives, pas de 0
+    terminal ; meme trajectoire que la recompense individuelle."""
+    from warehouse_marl.drl.train_v6 import SeedStream, make_sim6, train_scenario
+    agent = V4DQN('idle6', N_IDLE6_FEATURES, gamma=0.9)
+    s, rng = SeedStream(5).next()
+    sc = train_scenario('idle6', s, rng, 'grand')
+    out = {}
+    for rw in ('individuelle', 'equipe'):
+        tr = []
+        sim = make_sim6(sc, 'drl_idle6', agent, epsilon=0.3, explore_seed=s,
+                        cb=lambda f, r, n, d: tr.append((r, d)))
+        sim.idle6_unrewarded, sim.idle6_reward = 'ignorer', rw
+        out[rw] = (sim.run()['temps_traitement_moy_s'], tr)
+    assert out['equipe'][0] == out['individuelle'][0]
+    assert out['equipe'][1] and all(r <= 0 and not d for r, d in out['equipe'][1])
+
+
 def test_seed_sets_disjoint():
     assert not set(TEST6_SEEDS) & set(VAL6_SEEDS)
     st = SeedStream(0)

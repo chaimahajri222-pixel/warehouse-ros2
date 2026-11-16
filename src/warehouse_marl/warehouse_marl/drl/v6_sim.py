@@ -111,6 +111,13 @@ class BenchmarkV6(BenchmarkV4):
         # (fin d'episode, ou tache echouee) : 'zero' = recompense 0 (modele
         # petit, comme la v4) ; 'ignorer' = transition non apprise (tronquee).
         self.idle6_unrewarded = 'zero'
+        # Ecart 5 : 'individuelle' (approche des taches du robot) ou 'equipe'
+        # (approches de TOUTES les taches attribuees dans la fenetre de la
+        # decision, / R) ; en 'equipe', les decisions sans decision suivante du
+        # meme robot sont tronquees (non apprises).
+        self.idle6_reward = 'individuelle'
+        self._team_open: Dict[str, dict] = {}
+        self._team_wait: List[dict] = []
         self.node_mat = node_matrix(graph)
         self.n_shelves = len(self.shelf_list)
         self.mean_speed = float(np.mean([r.speed for r in self.robots]))
@@ -555,7 +562,14 @@ class BenchmarkV6(BenchmarkV4):
                 j = self.rng_explore.randrange(len(cands))
             else:
                 j = int(np.argmax(self.idle6_agent.scores(feats)))
-            if self.on_idle6_transition is not None:
+            if self.on_idle6_transition is not None and self.idle6_reward == 'equipe':
+                rec = self._team_open.pop(r.rid, None)
+                if rec is not None:
+                    rec['next'] = feats
+                    self._team_wait.append(rec)
+                self._team_open[r.rid] = {'feat': feats[j], 'tasks': [], 'next': None}
+                self._team_finalize(False)
+            elif self.on_idle6_transition is not None:
                 pend = getattr(r, 'idle6_pending', None)
                 if pend is not None:
                     f0, _, rew = pend
@@ -565,6 +579,33 @@ class BenchmarkV6(BenchmarkV4):
                 r.idle6_pending = [feats[j], self.t, None]
             return cands[j]
         return super()._choose_park(r)
+
+    # ----- recompense d'equipe (ecart 5) --------------------------------- #
+    def assign(self, task, r):
+        super().assign(task, r)
+        if self.idle6_reward == 'equipe' and self.on_idle6_transition is not None:
+            for rec in self._team_open.values():
+                rec['tasks'].append(task)
+
+    def _team_approach(self, k, over):
+        if getattr(k, 'arrived', None) is not None:
+            return k.arrived - k.assigned
+        if k.done is not None:                    # echouee
+            return k.done - k.assigned
+        return (self.t - k.assigned) if over else None
+
+    def _team_finalize(self, over):
+        """Transitions dont toutes les taches de la fenetre sont arrivees :
+        recompense -(somme des approches) / (R x T_ref)."""
+        keep = []
+        scale = len(self.robots) * self.reward_scale_s()
+        for rec in self._team_wait:
+            appr = [self._team_approach(k, over) for k in rec['tasks']]
+            if any(a is None for a in appr):
+                keep.append(rec)
+                continue
+            self.on_idle6_transition(rec['feat'], -sum(appr) / scale, rec['next'], False)
+        self._team_wait = keep
 
     def reward_scale_s(self):
         """Temps de reference de la recompense de drl_idle6 : diametre / vitesse
@@ -628,7 +669,10 @@ class BenchmarkV6(BenchmarkV4):
     # ================================================================== #
     def run(self):
         out = super().run()
-        if self.on_idle6_transition is not None:
+        if self.on_idle6_transition is not None and self.idle6_reward == 'equipe':
+            self._team_finalize(True)
+            self._team_open.clear()
+        elif self.on_idle6_transition is not None:
             for r in self.robots:
                 pend = getattr(r, 'idle6_pending', None)
                 if pend is not None:

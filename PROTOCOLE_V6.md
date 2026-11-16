@@ -456,3 +456,45 @@ Les 4 conditions dataset (vagues de test), sans capacité de segment. Méthodes 
      t ≈ 12 min. Ses fichiers sont dans
      `~/warehouse_ws/drl_v6/idle6_grand_interrompu_1205/` et ne servent ni à la
      sélection ni au test. Le modèle grand est relancé de zéro (3 × 60 min).
+5. **Récompense d'équipe pour le modèle grand** (16/11/2026, 13 h 30, choix de
+   l'utilisatrice). Cet écart est décidé **avant tout essai de test**.
+   - **Constat, en validation seulement.** Avec la correction de l'écart 4, le
+     modèle grand reste moins bon que la couverture :
+
+     | Graine | Instant | Écart relatif |
+     |---|---|---|
+     | 0 | 10 min | +12,8 % |
+     | 0 | 20 min | +9,3 % |
+     | 0 | 30 min | +8,5 % |
+     | 0 | 40 min | +9,6 % |
+     | 0 | 50 min | +8,6 % |
+     | 0 | 60 min | +7,1 % |
+     | 1 | 10 min | +13,8 % |
+
+     Le meilleur point de la graine 0 est l'instant 0. Sur 2 fenêtres train_fit
+     avec des graines d'exploration, le modèle de t = 10 min envoie encore
+     14 et 19 robots au dépôt.
+   - **Cause.** La récompense est **individuelle** : chaque robot n'est jugé que
+     sur l'approche de ses propres tâches, cumulée sur ses tâches futures. Un
+     robot qui fait moins de tâches accumule donc moins de pénalités, et le coût
+     que son placement impose aux autres robots n'est pas compté.
+   - **Correction pour le modèle grand.** On suit la décision d'attente du robot r
+     à t₀ jusqu'à sa décision d'attente suivante t₁. Sa récompense vaut
+     −(somme des temps d'approche de **toutes** les tâches attribuées entre t₀ et
+     t₁, à n'importe quel robot) / (R × diamètre / vitesse moyenne). C'est une
+     récompense d'équipe, alignée sur l'objectif.
+     - Si une tâche n'est pas arrivée à la fin de l'épisode, on compte l'approche
+       jusqu'à la fin. Si elle a échoué, on compte l'approche jusqu'à l'échec.
+     - La dernière décision de chaque robot (sans décision suivante) est
+       **tronquée**, donc non apprise.
+     - γ = 0,9 et le reste sont inchangés, avec l'écart 4 (`ignorer`).
+     - Option : `--idle6-recompense equipe`.
+   - **Inchangés :** la validation (12 scénarios grand) et la règle de sélection
+     (§5 et écart 2, instant 0 inclus). Le modèle petit reste celui déjà retenu.
+   - **Lancement interrompu.** Le lancement grand de 12 h 05 a continué pendant
+     qu'on attendait cette décision. La graine 0 est allée au bout de ses 60 min,
+     et la graine 1 a été arrêtée vers 13 h 24. Ses fichiers sont dans
+     `~/warehouse_ws/drl_v6/idle6_grand_interrompu_1324/` et ne servent ni à la
+     sélection ni au test.
+   - **Ordre de relance :** A grand (3 × 60 min), puis B (3 × 60 min), puis C
+     (3 × 45 min), à la suite.

@@ -21,6 +21,7 @@ for s in $SEEDS; do
     PYTHONPATH="$SRC" "$PY" -u -m warehouse_marl.drl.train_v6 --kind "$KIND" --seed "$s" \
       --budget-min "$BUDGET" --threads 2 --train-every "$TRAIN_EVERY" --taille "${TAILLE:-tous}" \
       --idle6-sans-tache "${SANS_TACHE:-zero}" \
+      --idle6-recompense "${RECOMPENSE:-individuelle}" \
       --out-dir "$OUT"
     rc=$?
     echo "[$(date '+%F %T')] $KIND graine $s, code de sortie $rc"
