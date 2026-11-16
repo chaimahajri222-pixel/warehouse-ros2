@@ -54,6 +54,8 @@ assert not set(TEST6_SEEDS) & (TEST_SEEDS_V4 | set(VAL_SEEDS_V4))
 
 IDLE_HEURISTICS = ('rester_sur_place', 'retour_au_depot', 'centre_de_demande')
 ROUTE_HEURISTICS = ('dijkstra_statique', 'dijkstra_dynamique', 'dijkstra_congestion')
+ALLOC_HEURISTICS = ('greedy_pair', 'greedy_time')
+HEURISTICS = {'idle6': IDLE_HEURISTICS, 'route6': ROUTE_HEURISTICS, 'alloc6': ALLOC_HEURISTICS}
 
 # conditions du banc de routage avec congestion (phase B)
 ROUTE6_TRAIN_FLEETS = [(10, (10, 8)), (20, (10, 8)), (20, (15, 10))]
@@ -92,6 +94,9 @@ def make_sim6(sc, mode, agent=None, epsilon=0.0, cb=None, explore_seed=None, pha
     """BenchmarkV6 d'un scenario. ``mode`` : methode d'attente (phase A) ou
     de routage (phase B)."""
     phase = phase or sc.get('phase', 'A')
+    if phase == 'C':
+        from warehouse_marl.drl.alloc6 import make_alloc_sim
+        return make_alloc_sim(sc, mode, agent, epsilon=epsilon, cb=cb, explore_seed=explore_seed)
     dims, R = sc['dims'], sc['robots']
     g = build_grid_warehouse(*dims)
     speeds = sc.get('speeds')
@@ -140,6 +145,14 @@ def val_scenarios(kind):
                                     start=ds.evenly_spaced_start('train_val', 150, s, nwin)))
                     i += 1
         return out
+    if kind == 'alloc6':
+        for cfg in DATASET_CONFIGS:
+            for s in range(3):
+                out.append(dict(cfg, phase='C', tasks=150, alloc='-', seed=VAL6_SEEDS[200 + i],
+                                split='train_val',
+                                start=ds.evenly_spaced_start('train_val', 150, s, 3)))
+                i += 1
+        return out
     for cond in ROUTE6_CONDITIONS:
         for s in range(3):
             sc = dict(phase='B', robots=cond['robots'], dims=cond['dims'], rho=cond['rho'],
@@ -155,6 +168,10 @@ def val_scenarios(kind):
 def train_scenario(kind, sim_seed, rng):
     ds = dataset()
     starts = ds.window_starts('train_fit', 100)
+    if kind == 'alloc6':
+        cfg = rng.choice(DATASET_CONFIGS)
+        return dict(cfg, phase='C', tasks=100, alloc='-', seed=sim_seed, split='train_fit',
+                    start=rng.choice(starts))
     if kind == 'idle6':
         cfg = rng.choice(DATASET_CONFIGS)
         return dict(cfg, phase='A', tasks=100, alloc=rng.choice(['greedy_pair', 'greedy_time']),
@@ -168,7 +185,7 @@ def train_scenario(kind, sim_seed, rng):
 
 
 def drl_mode(kind):
-    return 'drl_idle6' if kind == 'idle6' else 'drl_route6'
+    return {'idle6': 'drl_idle6', 'route6': 'drl_route6', 'alloc6': 'drl_alloc6'}[kind]
 
 
 def evaluate(kind, agent, scenarios):
@@ -179,7 +196,7 @@ def evaluate(kind, agent, scenarios):
 def reference(kind, scenarios, out_dir):
     """Heuristiques concurrentes sur la validation (calculees une fois)."""
     path = os.path.join(out_dir, 'val_ref.csv')
-    heur = IDLE_HEURISTICS if kind == 'idle6' else ROUTE_HEURISTICS
+    heur = HEURISTICS[kind]
     if os.path.isfile(path):
         with open(path, newline='') as f:
             rows = list(csv.DictReader(f))
@@ -227,7 +244,7 @@ def _truncate_csv(path, max_episode):
 
 def main(argv=None):
     p = argparse.ArgumentParser()
-    p.add_argument('--kind', choices=['idle6', 'route6'], required=True)
+    p.add_argument('--kind', choices=['idle6', 'route6', 'alloc6'], required=True)
     p.add_argument('--seed', type=int, required=True)
     p.add_argument('--budget-min', type=float, default=90.0)
     p.add_argument('--val-every-min', type=float, default=10.0)
@@ -243,8 +260,10 @@ def main(argv=None):
     if os.path.isfile(done_path):
         print(f'[{kind} graine {seed}] deja fini ({done_path})', flush=True)
         return
-    nf = N_IDLE6_FEATURES if kind == 'idle6' else N_ROUTE6_FEATURES
-    gamma = 0.9 if kind == 'idle6' else 1.0
+    from warehouse_marl.drl.alloc6 import N_ALLOC6_FEATURES
+    nf = {'idle6': N_IDLE6_FEATURES, 'route6': N_ROUTE6_FEATURES,
+          'alloc6': N_ALLOC6_FEATURES}[kind]
+    gamma = {'idle6': 0.9, 'route6': 1.0, 'alloc6': 0.95}[kind]
     val_sc = val_scenarios(kind)
     ref = reference(kind, val_sc, args.out_dir)
     budget = args.budget_min * 60.0
@@ -254,8 +273,9 @@ def main(argv=None):
 
     agent = V4DQN(kind, nf, gamma=gamma, seed=seed)
     agent.meta = {'train_seed': seed, 'version': 'v6',
-                  'reward': ('-approche / (diametre / vitesse moyenne)' if kind == 'idle6'
-                             else '-duree / 60 s'),
+                  'reward': {'idle6': '-approche / (diametre / vitesse moyenne)',
+                             'route6': '-duree / 60 s',
+                             'alloc6': '-(attente des taches ouvertes + service) / 60 s'}[kind],
                   'train_every': args.train_every}
     stream = SeedStream(seed)
     ep, consumed, best, next_val, n_resume = 0, 0.0, (float('inf'), None), 0.0, 0

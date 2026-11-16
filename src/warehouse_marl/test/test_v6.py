@@ -80,6 +80,40 @@ def test_capacity_one_robot_per_segment(mode):
     assert seen_queue
 
 
+@pytest.mark.parametrize('cfg_i', [0, 2, 3])
+def test_untrained_alloc6_equals_greedy_pair(cfg_i):
+    from warehouse_marl.drl.alloc6 import N_ALLOC6_FEATURES
+    from warehouse_marl.drl.train_v4 import DATASET_CONFIGS, dataset
+    from warehouse_marl.drl.train_v6 import make_sim6
+    agent = V4DQN('alloc6', N_ALLOC6_FEATURES, gamma=0.95)
+    st = dataset().window_starts('train_fit', 100)
+    sc = dict(DATASET_CONFIGS[cfg_i], phase='C', tasks=100, alloc='-', seed=123_456_789,
+              split='train_fit', start=st[5])
+    a = make_sim6(sc, 'greedy_pair').run()
+    b = make_sim6(sc, 'drl_alloc6', agent).run()
+    for k in KEYS:
+        assert a[k] == pytest.approx(b[k], abs=1e-9), k
+    assert b['attentes_allocation'] == 0
+
+
+def test_alloc6_rewards_sum_to_total_time():
+    """Somme des recompenses = -(somme des temps de traitement) / 60 quand
+    toutes les taches finissent (pas d'exploration)."""
+    from warehouse_marl.drl.alloc6 import N_ALLOC6_FEATURES
+    from warehouse_marl.drl.train_v4 import DATASET_CONFIGS, dataset
+    from warehouse_marl.drl.train_v6 import make_sim6
+    agent = V4DQN('alloc6', N_ALLOC6_FEATURES, gamma=0.95)
+    st = dataset().window_starts('train_fit', 60)
+    sc = dict(DATASET_CONFIGS[0], phase='C', tasks=60, alloc='-', seed=223_456_789,
+              split='train_fit', start=st[9])
+    rewards = []
+    sim = make_sim6(sc, 'drl_alloc6', agent, cb=lambda f, r, n, d: rewards.append(r))
+    m = sim.run()
+    assert m['taches_echouees'] == 0 and m['taches_non_finies'] == 0
+    total = sum(k.done - k.created for k in sim.tasks)
+    assert sum(rewards) == pytest.approx(-total / 60.0, rel=0.02)
+
+
 def test_seed_sets_disjoint():
     assert not set(TEST6_SEEDS) & set(VAL6_SEEDS)
     st = SeedStream(0)

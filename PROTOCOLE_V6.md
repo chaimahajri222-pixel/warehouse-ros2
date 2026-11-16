@@ -336,4 +336,23 @@ Les 4 conditions dataset (vagues de test), sans capacité de segment. Méthodes 
 
 ## Écarts
 
-(aucun à la date de rédaction)
+1. **Précisions d'implémentation de la phase C** (16/11/2026, 09 h 45). Elles sont
+   écrites pendant l'entraînement A, avant tout entraînement C et avant tout essai
+   de test. Code : `drl/alloc6.py`.
+   - « Attendre un pas » dure 1 s. Le robot est exclu de l'allocation pendant 1 s,
+     puis il est de nouveau candidat.
+   - γ = 0,95, comme le v3. La pénalité d'échec ou de tâche non finie vaut 120 s,
+     comme le v3.
+   - 9 entrées d'anticipation sont ajoutées aux 18 entrées v3 :
+     - l'indicateur d'attente ;
+     - la prévision dans la zone du robot et dans celle de la cible ;
+     - le temps prévu avant la prochaine arrivée dans la zone du robot ;
+     - les arrivées par traversée du diamètre ;
+     - le coût par rapport à la distance attendue d'une tâche future ;
+     - le meilleur coût du robot ;
+     - les robots libres dans la zone ;
+     - les attentes consécutives.
+   - La validation C utilise les graines de validation v6 d'indice 200 et plus,
+     pour ne pas réutiliser celles de A et de B.
+   - L'équivalence f_θ = 0 → `greedy_pair` est vérifiée par
+     `test/test_v6.py::test_untrained_alloc6_equals_greedy_pair`.
