@@ -60,7 +60,8 @@ def section_selection(L, out, name, kind):
     d = os.path.join(out, f'entrainement_{name}')
     path = os.path.join(d, f'selection_{kind}.csv')
     if not os.path.isfile(path):
-        L.append(f'*Pas de selection pour {name} (entrainement non fait).*\n')
+        L.append(f'*Pas de selection pour {name} : entrainement arrete, aucun modele retenu '
+                 f'(ecart 8 de PROTOCOLE_V6.md).*\n')
         return
     rows = read(path)
     fname = f'entrainement_{name}/selection_{kind}.csv'
@@ -203,7 +204,19 @@ def main():
     section_principal(L, out, 'route6')
     L += ['## 4. Phase C : drl_alloc6 contre la meilleure de greedy_pair et greedy_time '
           '(famille C, 4 tests, Holm)', '']
-    section_principal(L, out, 'alloc6')
+    if not section_principal(L, out, 'alloc6'):
+        vl = 'lancements_interrompus/alloc6_interrompu_2104/val_log_seed0.csv'
+        path = os.path.join(out, vl)
+        L.append('**Phase C : apprentissage echoue, non testee** (ecart 8). Validations du '
+                 'lancement arrete (ecart relatif a la meilleure de greedy_pair et greedy_time) :\n')
+        if os.path.isfile(path):
+            L.append('| graine | instant (min) | episode | temps de validation (s) | ecart relatif | source |')
+            L.append('|---|---|---|---|---|---|')
+            for i, r in enumerate(read(path)):
+                L.append(f"| {r['graine']} | {r['temps_min']} | {r['episode']} | "
+                         f"{r['val_temps_traitement_moy_s']} | "
+                         f"{100 * float(r['val_ecart_rel_moy']):+.2f} % | {ref(vl, i)} |")
+            L.append('')
     L += ['## 5. Metriques secondaires (moyenne et IC 95 %, toutes methodes)', '',
           'Tests DRL contre chaque concurrent et par metrique (Holm par famille) : '
           '`secondaire_<etape>.csv`.', '', '### Phase A', '']

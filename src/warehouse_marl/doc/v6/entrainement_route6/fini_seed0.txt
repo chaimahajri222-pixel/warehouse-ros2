@@ -1,0 +1,3 @@
+episodes 549
+meilleur ecart rel 0.006019263384978652
+/home/chchch/warehouse_ws/drl_v6/route6/ckpt_seed0_t0.pt

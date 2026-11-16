@@ -1,0 +1,3 @@
+[2026-11-16 16:28:04] route6 graine 0, lancement 1
+[route6 graine 0] t=   0.0 min ep=    0 val=45.511 s ecart rel +0.60 % (meilleur +0.60 %) (46 s de validation)
+[route6 graine 0] t=  10.3 min ep=   14 val=563.769 s ecart rel +1262.62 % (meilleur +0.60 %) (702 s de validation)

@@ -1,0 +1,239 @@
+etape,experience,condition,allocation,methode_drl,concurrent,type_comparaison,n_essais,drl_moyenne_s,drl_ic95_bas,drl_ic95_haut,conc_moyenne_s,conc_ic95_bas,conc_ic95_haut,ecart_moyen_s,ecart_ic95_bas,ecart_ic95_haut,gain_pct,drl_gagne,egalites,echecs_drl,echecs_conc,p_wilcoxon,famille,p_holm,verdict,metrique,drl_moyenne,conc_moyenne,ecart_moyen,p_holm_famille
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle6,rester_sur_place,contre chaque concurrent,20,27.274,25.098,29.547,28.999,26.617,31.545,-1.726,-2.396,-1.064,5.95,18/20,0,0,0,0.00021,temps_traitement_moy_s contre chaque concurrent,0.006504,victoire,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle6,retour_au_depot,contre chaque concurrent,20,27.274,25.098,29.547,35.735,33.621,37.907,-8.461,-9.099,-7.818,23.68,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle6,centre_de_demande,contre chaque concurrent,20,27.274,25.098,29.547,28.939,26.583,31.414,-1.666,-2.53,-0.906,5.76,17/20,0,0,0,0.000322,temps_traitement_moy_s contre chaque concurrent,0.009026,victoire,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle6,couverture,contre chaque concurrent,20,27.274,25.098,29.547,28.458,26.286,30.764,-1.184,-1.814,-0.587,4.16,16/20,0,0,0,0.001017,temps_traitement_moy_s contre chaque concurrent,0.021349,victoire,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle6,rester_sur_place,contre chaque concurrent,20,27.274,25.098,29.547,28.999,26.617,31.545,-1.726,-2.396,-1.064,5.95,18/20,0,0,0,0.00021,temps_traitement_moy_s contre chaque concurrent,0.006504,victoire,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle6,retour_au_depot,contre chaque concurrent,20,27.274,25.098,29.547,35.735,33.621,37.907,-8.461,-9.099,-7.818,23.68,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle6,centre_de_demande,contre chaque concurrent,20,27.274,25.098,29.547,28.939,26.583,31.414,-1.666,-2.53,-0.906,5.76,17/20,0,0,0,0.000322,temps_traitement_moy_s contre chaque concurrent,0.009026,victoire,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle6,couverture,contre chaque concurrent,20,27.274,25.098,29.547,28.458,26.286,30.764,-1.184,-1.814,-0.587,4.16,16/20,0,0,0,0.001017,temps_traitement_moy_s contre chaque concurrent,0.021349,victoire,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle6,rester_sur_place,contre chaque concurrent,20,37.485,32.832,42.957,40.41,35.499,46.13,-2.925,-3.827,-2.091,7.24,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle6,retour_au_depot,contre chaque concurrent,20,37.485,32.832,42.957,45.961,41.563,51.152,-8.476,-9.442,-7.529,18.44,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle6,centre_de_demande,contre chaque concurrent,20,37.485,32.832,42.957,39.094,34.407,45.016,-1.61,-2.513,-0.803,4.12,15/20,0,0,0,0.000708,temps_traitement_moy_s contre chaque concurrent,0.016983,victoire,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle6,couverture,contre chaque concurrent,20,37.485,32.832,42.957,38.996,34.215,44.732,-1.512,-2.725,-0.473,3.88,15/20,0,0,0,0.00639,temps_traitement_moy_s contre chaque concurrent,0.095844,egalite,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle6,rester_sur_place,contre chaque concurrent,20,37.485,32.832,42.957,40.41,35.499,46.13,-2.925,-3.827,-2.091,7.24,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle6,retour_au_depot,contre chaque concurrent,20,37.485,32.832,42.957,45.961,41.563,51.152,-8.476,-9.442,-7.529,18.44,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle6,centre_de_demande,contre chaque concurrent,20,37.485,32.832,42.957,39.094,34.407,45.016,-1.61,-2.513,-0.803,4.12,15/20,0,0,0,0.000708,temps_traitement_moy_s contre chaque concurrent,0.016983,victoire,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle6,couverture,contre chaque concurrent,20,37.485,32.832,42.957,38.996,34.215,44.732,-1.512,-2.725,-0.473,3.88,15/20,0,0,0,0.00639,temps_traitement_moy_s contre chaque concurrent,0.095844,egalite,,,,,
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle6,rester_sur_place,contre chaque concurrent,20,45.052,38.636,53.168,49.864,43.131,58.086,-4.812,-6.21,-3.404,9.65,18/20,0,0,0,2.7e-05,temps_traitement_moy_s contre chaque concurrent,0.000908,victoire,,,,,
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle6,retour_au_depot,contre chaque concurrent,20,45.052,38.636,53.168,58.164,50.84,66.948,-13.112,-15.151,-11.407,22.54,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle6,centre_de_demande,contre chaque concurrent,20,45.052,38.636,53.168,50.195,43.394,58.721,-5.143,-6.639,-3.843,10.25,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle6,couverture,contre chaque concurrent,20,45.052,38.636,53.168,45.92,38.616,55.749,-0.869,-2.989,0.81,1.89,13/20,0,0,0,0.498009,temps_traitement_moy_s contre chaque concurrent,1.0,egalite,,,,,
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle6,rester_sur_place,contre chaque concurrent,20,44.433,37.72,52.708,48.654,41.89,57.289,-4.221,-5.589,-2.847,8.68,18/20,0,0,0,3.6e-05,temps_traitement_moy_s contre chaque concurrent,0.00116,victoire,,,,,
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle6,retour_au_depot,contre chaque concurrent,20,44.433,37.72,52.708,56.59,49.255,65.47,-12.157,-14.542,-10.077,21.48,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle6,centre_de_demande,contre chaque concurrent,20,44.433,37.72,52.708,46.94,40.612,54.608,-2.506,-3.835,-1.21,5.34,14/20,0,0,0,0.004221,temps_traitement_moy_s contre chaque concurrent,0.071756,egalite,,,,,
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle6,couverture,contre chaque concurrent,20,44.433,37.72,52.708,45.057,38.607,52.831,-0.624,-1.912,0.695,1.39,10/20,0,0,0,0.329983,temps_traitement_moy_s contre chaque concurrent,1.0,egalite,,,,,
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle6,rester_sur_place,contre chaque concurrent,20,56.819,41.635,81.21,69.23,51.419,97.955,-12.411,-17.183,-9.064,17.93,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle6,retour_au_depot,contre chaque concurrent,20,56.819,41.635,81.21,77.353,60.575,103.798,-20.534,-22.898,-18.647,26.55,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle6,centre_de_demande,contre chaque concurrent,20,56.819,41.635,81.21,67.678,53.214,90.917,-10.86,-12.378,-9.008,16.05,19/20,0,0,0,4e-06,temps_traitement_moy_s contre chaque concurrent,0.000137,victoire,,,,,
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle6,couverture,contre chaque concurrent,20,56.819,41.635,81.21,57.475,41.792,82.399,-0.656,-1.89,0.513,1.14,13/20,0,0,0,0.368277,temps_traitement_moy_s contre chaque concurrent,1.0,egalite,,,,,
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle6,rester_sur_place,contre chaque concurrent,20,56.819,41.635,81.21,69.23,51.419,97.955,-12.411,-17.183,-9.064,17.93,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle6,retour_au_depot,contre chaque concurrent,20,56.819,41.635,81.21,77.353,60.575,103.798,-20.534,-22.898,-18.647,26.55,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle6,centre_de_demande,contre chaque concurrent,20,56.819,41.635,81.21,67.678,53.214,90.917,-10.86,-12.378,-9.008,16.05,19/20,0,0,0,4e-06,temps_traitement_moy_s contre chaque concurrent,0.000137,victoire,,,,,
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle6,couverture,contre chaque concurrent,20,56.819,41.635,81.21,57.475,41.792,82.399,-0.656,-1.89,0.513,1.14,13/20,0,0,0,0.368277,temps_traitement_moy_s contre chaque concurrent,1.0,egalite,,,,,
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle6,rester_sur_place,contre chaque concurrent,20,29.23,28.047,30.403,26.899,26.147,27.701,2.331,1.204,3.443,-8.67,5/20,0,0,0,0.00169,temps_traitement_moy_s contre chaque concurrent,0.030418,defaite,,,,,
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle6,retour_au_depot,contre chaque concurrent,20,29.23,28.047,30.403,37.27,36.594,37.997,-8.04,-8.852,-7.277,21.57,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle6,centre_de_demande,contre chaque concurrent,20,29.23,28.047,30.403,32.056,31.424,32.618,-2.826,-3.649,-1.993,8.82,18/20,0,0,0,2.7e-05,temps_traitement_moy_s contre chaque concurrent,0.000908,victoire,,,,,
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle6,couverture,contre chaque concurrent,20,29.23,28.047,30.403,27.731,27.098,28.387,1.498,0.516,2.48,-5.4,7/20,0,0,0,0.032768,temps_traitement_moy_s contre chaque concurrent,0.425987,egalite,,,,,
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle6,rester_sur_place,contre chaque concurrent,20,28.684,27.782,29.557,26.827,26.065,27.616,1.856,0.952,2.797,-6.92,5/20,0,0,0,0.000851,temps_traitement_moy_s contre chaque concurrent,0.018715,defaite,,,,,
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle6,retour_au_depot,contre chaque concurrent,20,28.684,27.782,29.557,36.203,35.512,36.928,-7.519,-8.068,-6.978,20.77,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle6,centre_de_demande,contre chaque concurrent,20,28.684,27.782,29.557,30.777,30.122,31.404,-2.093,-2.833,-1.241,6.8,18/20,0,0,0,0.000395,temps_traitement_moy_s contre chaque concurrent,0.010265,victoire,,,,,
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle6,couverture,contre chaque concurrent,20,28.684,27.782,29.557,27.658,26.818,28.467,1.026,0.176,1.872,-3.71,4/20,0,0,0,0.00486,temps_traitement_moy_s contre chaque concurrent,0.077759,egalite,,,,,
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle6,rester_sur_place,contre chaque concurrent,20,29.355,28.333,30.392,28.798,27.649,29.998,0.556,-0.468,1.579,-1.93,8/20,0,0,0,0.368277,temps_traitement_moy_s contre chaque concurrent,1.0,egalite,,,,,
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle6,retour_au_depot,contre chaque concurrent,20,29.355,28.333,30.392,37.972,37.132,38.846,-8.617,-9.592,-7.626,22.69,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle6,centre_de_demande,contre chaque concurrent,20,29.355,28.333,30.392,33.503,32.056,34.893,-4.148,-5.094,-3.284,12.38,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle6,couverture,contre chaque concurrent,20,29.355,28.333,30.392,29.092,28.055,30.061,0.263,-0.856,1.208,-0.9,10/20,0,0,0,0.728506,temps_traitement_moy_s contre chaque concurrent,1.0,egalite,,,,,
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle6,rester_sur_place,contre chaque concurrent,20,29.165,27.925,30.363,28.424,27.143,29.701,0.74,-0.307,1.785,-2.6,8/20,0,0,0,0.261099,temps_traitement_moy_s contre chaque concurrent,1.0,egalite,,,,,
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle6,retour_au_depot,contre chaque concurrent,20,29.165,27.925,30.363,35.838,34.943,36.74,-6.674,-7.689,-5.61,18.62,20/20,0,0,0,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle6,centre_de_demande,contre chaque concurrent,20,29.165,27.925,30.363,31.724,30.121,33.297,-2.559,-3.708,-1.365,8.07,16/20,0,0,0,0.001017,temps_traitement_moy_s contre chaque concurrent,0.021349,victoire,,,,,
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle6,couverture,contre chaque concurrent,20,29.165,27.925,30.363,29.168,28.013,30.275,-0.004,-0.907,0.963,0.01,12/20,0,0,0,0.647655,temps_traitement_moy_s contre chaque concurrent,1.0,egalite,,,,,
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle6,rester_sur_place,contre chaque concurrent,20,29.379,27.997,30.824,29.527,28.067,30.998,-0.148,-1.637,1.323,0.5,9/20,0,0,0,0.927279,temps_traitement_moy_s contre chaque concurrent,1.0,egalite,,,,,
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle6,retour_au_depot,contre chaque concurrent,20,29.379,27.997,30.824,38.594,37.282,39.958,-9.214,-10.836,-7.557,23.87,20/20,0,0,2,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle6,centre_de_demande,contre chaque concurrent,20,29.379,27.997,30.824,34.388,32.665,36.321,-5.009,-7.176,-2.87,14.57,17/20,0,0,2,0.000483,temps_traitement_moy_s contre chaque concurrent,0.012064,victoire,,,,,
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle6,couverture,contre chaque concurrent,20,29.379,27.997,30.824,29.479,28.39,30.575,-0.099,-1.393,1.26,0.34,11/20,0,0,2,0.701181,temps_traitement_moy_s contre chaque concurrent,1.0,egalite,,,,,
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle6,rester_sur_place,contre chaque concurrent,20,27.472,25.581,29.436,28.14,26.665,29.774,-0.668,-2.014,0.851,2.37,13/20,0,2,2,0.277355,temps_traitement_moy_s contre chaque concurrent,1.0,egalite,,,,,
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle6,retour_au_depot,contre chaque concurrent,20,27.472,25.581,29.436,36.232,35.07,37.295,-8.76,-10.658,-6.921,24.18,20/20,0,2,2,2e-06,temps_traitement_moy_s contre chaque concurrent,0.000107,victoire,,,,,
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle6,centre_de_demande,contre chaque concurrent,20,27.472,25.581,29.436,30.833,29.239,32.356,-3.361,-4.655,-2.012,10.9,16/20,0,2,2,0.000261,temps_traitement_moy_s contre chaque concurrent,0.007578,victoire,,,,,
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle6,couverture,contre chaque concurrent,20,27.472,25.581,29.436,28.639,27.399,30.028,-1.167,-2.434,0.125,4.08,14/20,0,2,2,0.089695,temps_traitement_moy_s contre chaque concurrent,1.0,egalite,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle6,drl_idle,contre drl_idle,20,27.274,25.098,29.547,26.825,24.774,29.011,0.449,0.05,0.97,-1.67,6/20,0,0,0,0.089695,temps_traitement_moy_s contre drl_idle,0.573503,egalite,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle6,drl_idle,contre drl_idle,20,27.274,25.098,29.547,26.825,24.774,29.011,0.449,0.05,0.97,-1.67,6/20,0,0,0,0.089695,temps_traitement_moy_s contre drl_idle,0.573503,egalite,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle6,drl_idle,contre drl_idle,20,37.485,32.832,42.957,36.962,32.287,42.403,0.523,0.117,1.001,-1.42,8/20,0,0,0,0.063723,temps_traitement_moy_s contre drl_idle,0.573503,egalite,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle6,drl_idle,contre drl_idle,20,37.485,32.832,42.957,36.962,32.287,42.403,0.523,0.117,1.001,-1.42,8/20,0,0,0,0.063723,temps_traitement_moy_s contre drl_idle,0.573503,egalite,,,,,
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle6,drl_idle,contre drl_idle,20,45.052,38.636,53.168,45.135,38.54,53.258,-0.083,-1.486,1.437,0.18,13/20,0,0,0,0.621513,temps_traitement_moy_s contre drl_idle,1.0,egalite,,,,,
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle6,drl_idle,contre drl_idle,20,44.433,37.72,52.708,44.72,38.164,52.933,-0.287,-1.515,1.008,0.64,12/20,0,0,0,0.621513,temps_traitement_moy_s contre drl_idle,1.0,egalite,,,,,
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle6,drl_idle,contre drl_idle,20,56.819,41.635,81.21,75.218,57.649,102.878,-18.399,-22.351,-15.547,24.46,20/20,0,0,0,2e-06,temps_traitement_moy_s contre drl_idle,2.7e-05,victoire,,,,,
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle6,drl_idle,contre drl_idle,20,56.819,41.635,81.21,75.218,57.649,102.878,-18.399,-22.351,-15.547,24.46,20/20,0,0,0,2e-06,temps_traitement_moy_s contre drl_idle,2.7e-05,victoire,,,,,
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle6,drl_idle,contre drl_idle,20,29.23,28.047,30.403,27.24,26.432,28.033,1.99,0.898,3.081,-7.3,4/20,0,0,0,0.00486,temps_traitement_moy_s contre drl_idle,0.058319,egalite,,,,,
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle6,drl_idle,contre drl_idle,20,28.684,27.782,29.557,27.382,26.45,28.489,1.301,0.363,2.257,-4.75,7/20,0,0,0,0.017181,temps_traitement_moy_s contre drl_idle,0.171814,egalite,,,,,
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle6,drl_idle,contre drl_idle,20,29.355,28.333,30.392,30.667,29.251,32.141,-1.313,-2.444,-0.201,4.28,15/20,0,0,0,0.075851,temps_traitement_moy_s contre drl_idle,0.573503,egalite,,,,,
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle6,drl_idle,contre drl_idle,20,29.165,27.925,30.363,29.558,28.371,30.794,-0.393,-1.273,0.526,1.33,12/20,0,0,0,0.368277,temps_traitement_moy_s contre drl_idle,1.0,egalite,,,,,
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle6,drl_idle,contre drl_idle,20,29.379,27.997,30.824,30.207,28.719,31.739,-0.827,-2.677,0.855,2.74,11/20,0,0,2,0.474905,temps_traitement_moy_s contre drl_idle,1.0,egalite,,,,,
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle6,drl_idle,contre drl_idle,20,27.472,25.581,29.436,30.154,28.491,31.805,-2.682,-4.37,-1.029,8.89,15/20,0,2,2,0.008308,temps_traitement_moy_s contre drl_idle,0.091393,egalite,,,,,
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,8.2e-05,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4027,2.8032,-0.4005,0.001968
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4027,4.7574,-2.3548,0.000107
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,4e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4027,3.0995,-0.6968,0.000134
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,,couverture,,,,,,,,,,,,,,,,,4e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4027,2.743,-0.3403,0.000134
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,8.2e-05,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4027,2.8032,-0.4005,0.001968
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4027,4.7574,-2.3548,0.000107
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,4e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4027,3.0995,-0.6968,0.000134
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,,couverture,,,,,,,,,,,,,,,,,4e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4027,2.743,-0.3403,0.000134
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,4e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4889,2.9144,-0.4255,0.000134
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4889,4.0141,-1.5252,0.000107
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,0.000261,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4889,2.7845,-0.2956,0.005487
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,,couverture,,,,,,,,,,,,,,,,,0.001017,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4889,2.6665,-0.1776,0.016266
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,4e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4889,2.9144,-0.4255,0.000134
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4889,4.0141,-1.5252,0.000107
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,0.000261,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4889,2.7845,-0.2956,0.005487
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,,couverture,,,,,,,,,,,,,,,,,0.001017,approche_moy_s contre chaque concurrent,,,approche_moy_s,2.4889,2.6665,-0.1776,0.016266
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,4e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,4.7135,5.746,-1.0325,0.000134
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,4.7135,8.2438,-3.5303,0.000107
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,4.7135,5.97,-1.2565,0.000107
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,,couverture,,,,,,,,,,,,,,,,,0.898317,approche_moy_s contre chaque concurrent,,,approche_moy_s,4.7135,4.6796,0.0339,1.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,1e-05,approche_moy_s contre chaque concurrent,,,approche_moy_s,4.4948,5.534,-1.0392,0.000267
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,4.4948,7.6765,-3.1817,0.000107
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,4.8e-05,approche_moy_s contre chaque concurrent,,,approche_moy_s,4.4948,5.2536,-0.7588,0.001192
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,,couverture,,,,,,,,,,,,,,,,,0.756166,approche_moy_s contre chaque concurrent,,,approche_moy_s,4.4948,4.5197,-0.0248,1.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,6.2367,9.9249,-3.6883,0.000107
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,6.2367,13.902,-7.6653,0.000107
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,6.2367,10.6873,-4.4507,0.000107
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,,couverture,,,,,,,,,,,,,,,,,0.985435,approche_moy_s contre chaque concurrent,,,approche_moy_s,6.2367,6.1296,0.1071,1.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,6.2367,9.9249,-3.6883,0.000107
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,6.2367,13.902,-7.6653,0.000107
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,6.2367,10.6873,-4.4507,0.000107
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,,couverture,,,,,,,,,,,,,,,,,0.985435,approche_moy_s contre chaque concurrent,,,approche_moy_s,6.2367,6.1296,0.1071,1.0
+idle6,zipf,facile (s=0.5),greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,0.000851,approche_moy_s contre chaque concurrent,,,approche_moy_s,17.2507,15.1408,2.1099,0.015312
+idle6,zipf,facile (s=0.5),greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,17.2507,23.8893,-6.6387,0.000107
+idle6,zipf,facile (s=0.5),greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,1.3e-05,approche_moy_s contre chaque concurrent,,,approche_moy_s,17.2507,19.8149,-2.5642,0.00036
+idle6,zipf,facile (s=0.5),greedy_pair,,couverture,,,,,,,,,,,,,,,,,0.036385,approche_moy_s contre chaque concurrent,,,approche_moy_s,17.2507,16.0452,1.2054,0.40024
+idle6,zipf,facile (s=0.5),greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,0.000851,approche_moy_s contre chaque concurrent,,,approche_moy_s,16.7982,15.0996,1.6987,0.015312
+idle6,zipf,facile (s=0.5),greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,16.7982,23.1087,-6.3104,0.000107
+idle6,zipf,facile (s=0.5),greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,0.000134,approche_moy_s contre chaque concurrent,,,approche_moy_s,16.7982,18.7819,-1.9837,0.002937
+idle6,zipf,facile (s=0.5),greedy_time,,couverture,,,,,,,,,,,,,,,,,0.003654,approche_moy_s contre chaque concurrent,,,approche_moy_s,16.7982,15.8167,0.9816,0.051163
+idle6,zipf,moyen (s=1.0),greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,0.105398,approche_moy_s contre chaque concurrent,,,approche_moy_s,14.6909,14.0162,0.6747,1.0
+idle6,zipf,moyen (s=1.0),greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,14.6909,20.5203,-5.8293,0.000107
+idle6,zipf,moyen (s=1.0),greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,14.6909,17.2928,-2.6018,0.000107
+idle6,zipf,moyen (s=1.0),greedy_pair,,couverture,,,,,,,,,,,,,,,,,0.956329,approche_moy_s contre chaque concurrent,,,approche_moy_s,14.6909,14.6527,0.0382,1.0
+idle6,zipf,moyen (s=1.0),greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,0.026642,approche_moy_s contre chaque concurrent,,,approche_moy_s,14.5913,13.587,1.0043,0.319702
+idle6,zipf,moyen (s=1.0),greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,14.5913,19.3743,-4.7831,0.000107
+idle6,zipf,moyen (s=1.0),greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,0.000586,approche_moy_s contre chaque concurrent,,,approche_moy_s,14.5913,16.0652,-1.474,0.011126
+idle6,zipf,moyen (s=1.0),greedy_time,,couverture,,,,,,,,,,,,,,,,,0.903908,approche_moy_s contre chaque concurrent,,,approche_moy_s,14.5913,14.4287,0.1626,1.0
+idle6,zipf,difficile (s=1.5),greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,0.294252,approche_moy_s contre chaque concurrent,,,approche_moy_s,9.7561,9.2587,0.4973,1.0
+idle6,zipf,difficile (s=1.5),greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,9.7561,14.6935,-4.9374,0.000107
+idle6,zipf,difficile (s=1.5),greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,9.7561,12.1204,-2.3643,0.000107
+idle6,zipf,difficile (s=1.5),greedy_pair,,couverture,,,,,,,,,,,,,,,,,0.498009,approche_moy_s contre chaque concurrent,,,approche_moy_s,9.7561,9.8931,-0.137,1.0
+idle6,zipf,difficile (s=1.5),greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,0.756166,approche_moy_s contre chaque concurrent,,,approche_moy_s,8.6863,8.5453,0.141,1.0
+idle6,zipf,difficile (s=1.5),greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,approche_moy_s contre chaque concurrent,,,approche_moy_s,8.6863,13.3549,-4.6685,0.000107
+idle6,zipf,difficile (s=1.5),greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,2.7e-05,approche_moy_s contre chaque concurrent,,,approche_moy_s,8.6863,10.6681,-1.9818,0.000694
+idle6,zipf,difficile (s=1.5),greedy_time,,couverture,,,,,,,,,,,,,,,,,0.023951,approche_moy_s contre chaque concurrent,,,approche_moy_s,8.6863,9.4455,-0.7591,0.311357
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,,couverture,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,,couverture,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,,couverture,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,,couverture,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,,couverture,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,,couverture,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,,couverture,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,,couverture,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,facile (s=0.5),greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,facile (s=0.5),greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,facile (s=0.5),greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,facile (s=0.5),greedy_pair,,couverture,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,facile (s=0.5),greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,facile (s=0.5),greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,facile (s=0.5),greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,facile (s=0.5),greedy_time,,couverture,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,moyen (s=1.0),greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,moyen (s=1.0),greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,moyen (s=1.0),greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,moyen (s=1.0),greedy_pair,,couverture,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,moyen (s=1.0),greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,moyen (s=1.0),greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,moyen (s=1.0),greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,moyen (s=1.0),greedy_time,,couverture,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,difficile (s=1.5),greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.0,0.0,1.0
+idle6,zipf,difficile (s=1.5),greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,0.317311,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.1,-0.1,1.0
+idle6,zipf,difficile (s=1.5),greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,0.317311,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.1,-0.1,1.0
+idle6,zipf,difficile (s=1.5),greedy_pair,,couverture,,,,,,,,,,,,,,,,,0.317311,taches_echouees contre chaque concurrent,,,taches_echouees,0.0,0.1,-0.1,1.0
+idle6,zipf,difficile (s=1.5),greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.1,0.1,0.0,1.0
+idle6,zipf,difficile (s=1.5),greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.1,0.1,0.0,1.0
+idle6,zipf,difficile (s=1.5),greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.1,0.1,0.0,1.0
+idle6,zipf,difficile (s=1.5),greedy_time,,couverture,,,,,,,,,,,,,,,,,1.0,taches_echouees contre chaque concurrent,,,taches_echouees,0.1,0.1,0.0,1.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,0.000708,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,14.8712,16.1962,-1.325,0.022644
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,14.8712,20.9773,-6.1061,0.000107
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,0.017181,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,14.8712,15.8399,-0.9687,0.377991
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,,couverture,,,,,,,,,,,,,,,,,0.013617,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,14.8712,15.7148,-0.8436,0.354031
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,0.000708,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,14.8712,16.1962,-1.325,0.022644
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,14.8712,20.9773,-6.1061,0.000107
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,0.017181,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,14.8712,15.8399,-0.9687,0.377991
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,,couverture,,,,,,,,,,,,,,,,,0.013617,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,14.8712,15.7148,-0.8436,0.354031
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,4e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,24.9959,27.4959,-2.4999,0.00016
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,24.9959,31.9471,-6.9512,0.000107
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,0.002325,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,24.9959,26.3099,-1.314,0.069752
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,,couverture,,,,,,,,,,,,,,,,,0.012079,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,24.9959,26.3299,-1.334,0.338219
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,4e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,24.9959,27.4959,-2.4999,0.00016
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,24.9959,31.9471,-6.9512,0.000107
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,0.002325,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,24.9959,26.3099,-1.314,0.069752
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,,couverture,,,,,,,,,,,,,,,,,0.012079,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,24.9959,26.3299,-1.334,0.338219
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,4.8e-05,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,30.3383,34.1177,-3.7794,0.001717
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,30.3383,39.9202,-9.5819,0.000107
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,2e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,30.3383,34.225,-3.8867,0.000107
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,,couverture,,,,,,,,,,,,,,,,,0.521673,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,30.3383,31.2408,-0.9025,1.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,0.000105,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,29.9383,33.1199,-3.1816,0.003672
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,29.9383,38.9137,-8.9753,0.000107
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,0.015312,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,29.9383,31.6861,-1.7477,0.354031
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,,couverture,,,,,,,,,,,,,,,,,0.34881,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,29.9383,30.5377,-0.5993,1.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,2e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,40.5819,49.3048,-8.7229,0.000107
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,40.5819,53.4507,-12.8687,0.000107
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,4e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,40.5819,46.9911,-6.4092,0.00016
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,,couverture,,,,,,,,,,,,,,,,,0.230513,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,40.5819,41.345,-0.7631,1.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,2e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,40.5819,49.3048,-8.7229,0.000107
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,40.5819,53.4507,-12.8687,0.000107
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,4e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,40.5819,46.9911,-6.4092,0.00016
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,,couverture,,,,,,,,,,,,,,,,,0.230513,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,40.5819,41.345,-0.7631,1.0
+idle6,zipf,facile (s=0.5),greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,0.123093,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,1.9792,1.7582,0.2211,1.0
+idle6,zipf,facile (s=0.5),greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,1.9792,3.3807,-1.4015,0.000107
+idle6,zipf,facile (s=0.5),greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,0.019234,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,1.9792,2.2414,-0.2622,0.384674
+idle6,zipf,facile (s=0.5),greedy_pair,,couverture,,,,,,,,,,,,,,,,,0.058258,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,1.9792,1.6862,0.293,0.990387
+idle6,zipf,facile (s=0.5),greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,0.216167,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,1.8854,1.7276,0.1578,1.0
+idle6,zipf,facile (s=0.5),greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,1.8854,3.0943,-1.2089,0.000107
+idle6,zipf,facile (s=0.5),greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,0.368277,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,1.8854,1.995,-0.1096,1.0
+idle6,zipf,facile (s=0.5),greedy_time,,couverture,,,,,,,,,,,,,,,,,0.812355,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,1.8854,1.8411,0.0443,1.0
+idle6,zipf,moyen (s=1.0),greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,0.647655,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,4.6637,4.7822,-0.1185,1.0
+idle6,zipf,moyen (s=1.0),greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,4e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,4.6637,7.4516,-2.7879,0.00016
+idle6,zipf,moyen (s=1.0),greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,0.000395,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,4.6637,6.21,-1.5463,0.013029
+idle6,zipf,moyen (s=1.0),greedy_pair,,couverture,,,,,,,,,,,,,,,,,0.294252,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,4.6637,4.4393,0.2244,1.0
+idle6,zipf,moyen (s=1.0),greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,0.452375,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,4.5736,4.8375,-0.2639,1.0
+idle6,zipf,moyen (s=1.0),greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,1.3e-05,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,4.5736,6.4641,-1.8905,0.000494
+idle6,zipf,moyen (s=1.0),greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,0.013617,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,4.5736,5.6586,-1.0851,0.354031
+idle6,zipf,moyen (s=1.0),greedy_time,,couverture,,,,,,,,,,,,,,,,,0.545876,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,4.5736,4.7398,-0.1662,1.0
+idle6,zipf,difficile (s=1.5),greedy_pair,,rester_sur_place,,,,,,,,,,,,,,,,,0.311794,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,9.6234,10.2684,-0.645,1.0
+idle6,zipf,difficile (s=1.5),greedy_pair,,retour_au_depot,,,,,,,,,,,,,,,,,0.000261,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,9.6234,13.9,-4.2767,0.008884
+idle6,zipf,difficile (s=1.5),greedy_pair,,centre_de_demande,,,,,,,,,,,,,,,,,0.023951,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,9.6234,12.2677,-2.6443,0.455061
+idle6,zipf,difficile (s=1.5),greedy_pair,,couverture,,,,,,,,,,,,,,,,,0.985435,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,9.6234,9.5854,0.038,1.0
+idle6,zipf,difficile (s=1.5),greedy_time,,rester_sur_place,,,,,,,,,,,,,,,,,0.123093,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,8.7855,9.5945,-0.809,1.0
+idle6,zipf,difficile (s=1.5),greedy_time,,retour_au_depot,,,,,,,,,,,,,,,,,2e-06,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,8.7855,12.8767,-4.0912,0.000107
+idle6,zipf,difficile (s=1.5),greedy_time,,centre_de_demande,,,,,,,,,,,,,,,,,0.023951,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,8.7855,10.1647,-1.3791,0.455061
+idle6,zipf,difficile (s=1.5),greedy_time,,couverture,,,,,,,,,,,,,,,,,0.368277,attente_attribution_moy_s contre chaque concurrent,,,attente_attribution_moy_s,8.7855,9.1938,-0.4082,1.0

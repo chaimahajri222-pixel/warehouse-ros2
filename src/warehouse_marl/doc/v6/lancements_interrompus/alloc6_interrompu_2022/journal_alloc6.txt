@@ -1,0 +1,3 @@
+[2026-11-16 19:59:04] alloc6 graine 0, lancement 1
+[alloc6 graine 0] t=   0.0 min ep=    0 val=55.131 s ecart rel +0.11 % (meilleur +0.11 %) (8 s de validation)
+[alloc6 graine 0] t=  10.0 min ep=   80 val=nan s ecart rel +nan % (meilleur +0.11 %) (645 s de validation)

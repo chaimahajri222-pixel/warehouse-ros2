@@ -1,0 +1,4 @@
+[2026-11-16 09:27:08] idle6 graine 0, lancement 1
+[idle6 graine 0] t=   0.0 min ep=    0 val=51.016 s ecart rel -6.00 % (meilleur -6.00 %) (15 s de validation)
+[idle6 graine 0] t=  10.0 min ep= 1185 val=55.232 s ecart rel +0.62 % (meilleur -6.00 %) (13 s de validation)
+[idle6 graine 0] t=  20.0 min ep= 2398 val=55.553 s ecart rel +1.37 % (meilleur -6.00 %) (16 s de validation)

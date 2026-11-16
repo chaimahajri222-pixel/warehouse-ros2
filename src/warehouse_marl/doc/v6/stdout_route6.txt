@@ -1,0 +1,16 @@
+320 essais de test (route6), modele /home/chchch/warehouse_ws/test_v6/selected_route6.pt
+/home/chchch/warehouse_ws/test_v6/essais_route6.csv (1183 s)
+congestion B1 10 r., 80 racks, rho=0.9          greedy_pair  DRL   34.36 vs dijkstra_statique      34.61  ecart  -0.252 [-1.102;+0.690]  14/20  p=0.2122 holm=1  egalite
+congestion B1 10 r., 80 racks, rho=0.9          greedy_pair  DRL   34.36 vs dijkstra_dynamique     34.78  ecart  -0.421 [-1.082;+0.378]  13/20  p=0.04863 holm=0.389  egalite
+congestion B1 10 r., 80 racks, rho=0.9          greedy_pair  DRL   34.36 vs dijkstra_congestion    34.50  ecart  -0.143 [-0.839;+0.649]  13/20  p=0.3683 holm=1  egalite
+congestion B2 20 r., 80 racks, rho=0.9          greedy_pair  DRL   33.59 vs dijkstra_statique      34.16  ecart  -0.565 [-1.003;-0.178]  14/20  p=0.03277 holm=0.2949  egalite
+congestion B2 20 r., 80 racks, rho=0.9          greedy_pair  DRL   33.59 vs dijkstra_dynamique     33.84  ecart  -0.249 [-0.534;+0.013]  13/20  p=0.1054 holm=0.7378  egalite
+congestion B2 20 r., 80 racks, rho=0.9          greedy_pair  DRL   33.59 vs dijkstra_congestion    33.57  ecart  +0.024 [-0.406;+0.412]   8/20  p=0.6477 holm=1  egalite
+congestion B3 20 r., 150 racks, rho=0.9         greedy_pair  DRL   40.74 vs dijkstra_statique      40.94  ecart  -0.195 [-0.909;+0.535]  11/20  p=0.6477 holm=1  egalite
+congestion B3 20 r., 150 racks, rho=0.9         greedy_pair  DRL   40.74 vs dijkstra_dynamique     41.25  ecart  -0.508 [-1.518;+0.450]  14/20  p=0.2024 holm=1  egalite
+congestion B3 20 r., 150 racks, rho=0.9         greedy_pair  DRL   40.74 vs dijkstra_congestion    41.25  ecart  -0.507 [-1.325;+0.337]  12/20  p=0.3488 holm=1  egalite
+congestion B4 20 r., 150 racks, rho=0.7, vagues greedy_pair  DRL   69.03 vs dijkstra_statique      69.69  ecart  -0.665 [-1.188;-0.253]  17/20  p=0.000837 holm=0.01005  victoire
+congestion B4 20 r., 150 racks, rho=0.7, vagues greedy_pair  DRL   69.03 vs dijkstra_dynamique     69.32  ecart  -0.291 [-0.651;-0.034]  16/20  p=0.01226 holm=0.1226  egalite
+congestion B4 20 r., 150 racks, rho=0.7, vagues greedy_pair  DRL   69.03 vs dijkstra_congestion    69.30  ecart  -0.270 [-0.632;-0.001]  16/20  p=0.005684 holm=0.06253  egalite
+Figure : /home/chchch/warehouse_ws/test_v6/fig_route6_congestion_v6.png
+Figure : /home/chchch/warehouse_ws/test_v6/fig_route6_ecarts_v6.png

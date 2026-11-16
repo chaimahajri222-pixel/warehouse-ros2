@@ -1,0 +1,6 @@
+[2026-11-16 20:22:48] alloc6 graine 0, lancement 1
+[alloc6 graine 0] t=   0.0 min ep=    0 val=55.131 s ecart rel +0.11 % (meilleur +0.11 %) (7 s de validation)
+[alloc6 graine 0] t=  10.1 min ep=  135 val=161.479 s ecart rel +167.76 % (meilleur +0.11 %) (20 s de validation)
+[alloc6 graine 0] t=  20.1 min ep=  271 val=214.643 s ecart rel +289.46 % (meilleur +0.11 %) (23 s de validation)
+[alloc6 graine 0] t=  30.1 min ep=  387 val=165.055 s ecart rel +182.60 % (meilleur +0.11 %) (23 s de validation)
+[alloc6 graine 0] t=  40.1 min ep=  476 val=184.919 s ecart rel +219.69 % (meilleur +0.11 %) (26 s de validation)

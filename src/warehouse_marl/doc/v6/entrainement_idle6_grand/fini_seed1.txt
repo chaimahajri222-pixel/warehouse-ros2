@@ -1,0 +1,3 @@
+episodes 3469
+meilleur ecart rel -0.015026995109279895
+/home/chchch/warehouse_ws/drl_v6/idle6_grand/ckpt_seed1_t30.pt

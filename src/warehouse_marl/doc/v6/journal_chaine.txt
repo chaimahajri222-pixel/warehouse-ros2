@@ -1,0 +1,5 @@
+[2026-11-16 13:26:07] lancement A grand
+[2026-11-16 16:28:04] lancement B route6
+[2026-11-16 16:54:46] lancement B route6
+[2026-11-16 19:59:04] lancement C alloc6
+[2026-11-16 20:22:48] lancement C alloc6 (ecart 7)

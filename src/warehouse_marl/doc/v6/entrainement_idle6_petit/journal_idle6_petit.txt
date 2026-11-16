@@ -1,0 +1,25 @@
+[2026-11-16 09:50:34] idle6 graine 0, lancement 1
+[idle6 graine 0] t=   0.0 min ep=    0 val=42.759 s ecart rel +1.49 % (meilleur +1.49 %) (5 s de validation)
+[idle6 graine 0] t=  10.0 min ep= 1930 val=43.441 s ecart rel +2.90 % (meilleur +1.49 %) (6 s de validation)
+[idle6 graine 0] t=  20.0 min ep= 3760 val=42.063 s ecart rel +0.07 % (meilleur +0.07 %) (7 s de validation)
+[idle6 graine 0] t=  30.0 min ep= 5632 val=41.778 s ecart rel -0.78 % (meilleur -0.78 %) (7 s de validation)
+[idle6 graine 0] t=  40.0 min ep= 7514 val=41.818 s ecart rel -0.85 % (meilleur -0.85 %) (7 s de validation)
+[idle6 graine 0] fin : 7514 episodes, meilleur ecart rel -0.85 % (/home/chchch/warehouse_ws/drl_v6/idle6_petit/ckpt_seed0_t40.pt)
+[2026-11-16 10:31:09] idle6 graine 0, code de sortie 0
+[2026-11-16 10:31:09] idle6 graine 1, lancement 1
+[idle6 graine 1] t=   0.0 min ep=    0 val=42.759 s ecart rel +1.49 % (meilleur +1.49 %) (5 s de validation)
+[idle6 graine 1] t=  10.0 min ep= 2009 val=41.897 s ecart rel -0.23 % (meilleur -0.23 %) (6 s de validation)
+[idle6 graine 1] t=  20.0 min ep= 3935 val=42.354 s ecart rel +0.57 % (meilleur -0.23 %) (7 s de validation)
+[idle6 graine 1] t=  30.0 min ep= 5854 val=42.017 s ecart rel +0.21 % (meilleur -0.23 %) (7 s de validation)
+[idle6 graine 1] t=  40.0 min ep= 7728 val=41.812 s ecart rel -0.05 % (meilleur -0.23 %) (7 s de validation)
+[idle6 graine 1] fin : 7728 episodes, meilleur ecart rel -0.23 % (/home/chchch/warehouse_ws/drl_v6/idle6_petit/ckpt_seed1_t10.pt)
+[2026-11-16 11:11:22] idle6 graine 1, code de sortie 0
+[2026-11-16 11:11:22] idle6 graine 2, lancement 1
+[idle6 graine 2] t=   0.0 min ep=    0 val=42.759 s ecart rel +1.49 % (meilleur +1.49 %) (5 s de validation)
+[idle6 graine 2] t=  10.0 min ep= 2009 val=41.893 s ecart rel +0.33 % (meilleur +0.33 %) (6 s de validation)
+[idle6 graine 2] t=  20.0 min ep= 3907 val=42.333 s ecart rel +0.82 % (meilleur +0.33 %) (7 s de validation)
+[idle6 graine 2] t=  30.0 min ep= 5788 val=41.750 s ecart rel -0.40 % (meilleur -0.40 %) (7 s de validation)
+[idle6 graine 2] t=  40.0 min ep= 7651 val=42.978 s ecart rel +2.05 % (meilleur -0.40 %) (7 s de validation)
+[idle6 graine 2] fin : 7651 episodes, meilleur ecart rel -0.40 % (/home/chchch/warehouse_ws/drl_v6/idle6_petit/ckpt_seed2_t30.pt)
+[2026-11-16 11:51:35] idle6 graine 2, code de sortie 0
+[2026-11-16 11:51:35] idle6 : toutes les graines terminees

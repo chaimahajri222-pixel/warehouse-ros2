@@ -1,0 +1,31 @@
+dataset    15 racks, 3 r., rho=0.7              greedy_pair  DRL   27.27 vs centre_de_demande      28.94  ecart  -1.666 [-2.530;-0.906]  17/20  p=0.000322 holm=0.008059  victoire
+dataset    15 racks, 3 r., rho=0.7              greedy_pair  DRL   27.27 vs couverture             28.46  ecart  -1.184 [-1.814;-0.587]  16/20  p=0.001017 holm=0.02033  victoire
+dataset    15 racks, 3 r., rho=0.7              greedy_time  DRL   27.27 vs centre_de_demande      28.94  ecart  -1.666 [-2.530;-0.906]  17/20  p=0.000322 holm=0.008059  victoire
+dataset    15 racks, 3 r., rho=0.7              greedy_time  DRL   27.27 vs couverture             28.46  ecart  -1.184 [-1.814;-0.587]  16/20  p=0.001017 holm=0.02033  victoire
+dataset    15 racks, 3 r., rho=0.9              greedy_pair  DRL   37.48 vs centre_de_demande      39.09  ecart  -1.610 [-2.513;-0.803]  15/20  p=0.000708 holm=0.01628  victoire
+dataset    15 racks, 3 r., rho=0.9              greedy_pair  DRL   37.48 vs couverture             39.00  ecart  -1.512 [-2.725;-0.473]  15/20  p=0.00639 holm=0.09584  egalite
+dataset    15 racks, 3 r., rho=0.9              greedy_time  DRL   37.48 vs centre_de_demande      39.09  ecart  -1.610 [-2.513;-0.803]  15/20  p=0.000708 holm=0.01628  victoire
+dataset    15 racks, 3 r., rho=0.9              greedy_time  DRL   37.48 vs couverture             39.00  ecart  -1.512 [-2.725;-0.473]  15/20  p=0.00639 holm=0.09584  egalite
+dataset    40 racks, 6 r., vit. var.            greedy_pair  DRL   45.05 vs rester_sur_place       49.86  ecart  -4.812 [-6.210;-3.404]  18/20  p=2.7e-05 holm=0.000694  victoire
+dataset    40 racks, 6 r., vit. var.            greedy_pair  DRL   45.05 vs couverture             45.92  ecart  -0.869 [-2.989;+0.810]  13/20  p=0.498 holm=1  egalite
+dataset    40 racks, 6 r., vit. var.            greedy_time  DRL   44.43 vs centre_de_demande      46.94  ecart  -2.506 [-3.835;-1.210]  14/20  p=0.004221 holm=0.07176  egalite
+dataset    40 racks, 6 r., vit. var.            greedy_time  DRL   44.43 vs couverture             45.06  ecart  -0.624 [-1.912;+0.695]  10/20  p=0.33 holm=1  egalite
+dataset    150 racks, 20 r., rho=0.7            greedy_pair  DRL   56.82 vs centre_de_demande      67.68  ecart -10.860 [-12.378;-9.008]  19/20  p=4e-06 holm=0.000107  victoire
+dataset    150 racks, 20 r., rho=0.7            greedy_pair  DRL   56.82 vs couverture             57.48  ecart  -0.656 [-1.890;+0.513]  13/20  p=0.3683 holm=1  egalite
+dataset    150 racks, 20 r., rho=0.7            greedy_time  DRL   56.82 vs centre_de_demande      67.68  ecart -10.860 [-12.378;-9.008]  19/20  p=4e-06 holm=0.000107  victoire
+dataset    150 racks, 20 r., rho=0.7            greedy_time  DRL   56.82 vs couverture             57.48  ecart  -0.656 [-1.890;+0.513]  13/20  p=0.3683 holm=1  egalite
+zipf       facile (s=0.5)                       greedy_pair  DRL   29.23 vs rester_sur_place       26.90  ecart  +2.331 [+1.204;+3.443]   5/20  p=0.00169 holm=0.03042  defaite
+zipf       facile (s=0.5)                       greedy_pair  DRL   29.23 vs couverture             27.73  ecart  +1.498 [+0.516;+2.480]   7/20  p=0.03277 holm=0.426  egalite
+zipf       facile (s=0.5)                       greedy_time  DRL   28.68 vs rester_sur_place       26.83  ecart  +1.856 [+0.952;+2.797]   5/20  p=0.000851 holm=0.01786  defaite
+zipf       facile (s=0.5)                       greedy_time  DRL   28.68 vs couverture             27.66  ecart  +1.026 [+0.176;+1.872]   4/20  p=0.00486 holm=0.07776  egalite
+zipf       moyen (s=1.0)                        greedy_pair  DRL   29.36 vs rester_sur_place       28.80  ecart  +0.556 [-0.468;+1.579]   8/20  p=0.3683 holm=1  egalite
+zipf       moyen (s=1.0)                        greedy_pair  DRL   29.36 vs couverture             29.09  ecart  +0.263 [-0.856;+1.208]  10/20  p=0.7285 holm=1  egalite
+zipf       moyen (s=1.0)                        greedy_time  DRL   29.16 vs rester_sur_place       28.42  ecart  +0.740 [-0.307;+1.785]   8/20  p=0.2611 holm=1  egalite
+zipf       moyen (s=1.0)                        greedy_time  DRL   29.16 vs couverture             29.17  ecart  -0.004 [-0.907;+0.963]  12/20  p=0.6477 holm=1  egalite
+zipf       difficile (s=1.5)                    greedy_pair  DRL   29.38 vs rester_sur_place       29.53  ecart  -0.148 [-1.637;+1.323]   9/20  p=0.9273 holm=1  egalite
+zipf       difficile (s=1.5)                    greedy_pair  DRL   29.38 vs couverture             29.48  ecart  -0.099 [-1.393;+1.260]  11/20  p=0.7012 holm=1  egalite
+zipf       difficile (s=1.5)                    greedy_time  DRL   27.47 vs rester_sur_place       28.14  ecart  -0.668 [-2.014;+0.851]  13/20  p=0.2774 holm=1  egalite
+zipf       difficile (s=1.5)                    greedy_time  DRL   27.47 vs couverture             28.64  ecart  -1.167 [-2.434;+0.125]  14/20  p=0.08969 holm=1  egalite
+Figure : /home/chchch/warehouse_ws/test_v6/fig_idle6_dataset_v6.png
+Figure : /home/chchch/warehouse_ws/test_v6/fig_idle6_zipf_v6.png
+Figure : /home/chchch/warehouse_ws/test_v6/fig_idle6_ecarts_v6.png

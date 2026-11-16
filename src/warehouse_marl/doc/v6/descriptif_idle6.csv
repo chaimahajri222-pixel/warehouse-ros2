@@ -1,0 +1,673 @@
+etape,experience,condition,allocation,methode,metrique,n,moyenne,ic95_bas,ic95_haut
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,rester_sur_place,temps_traitement_moy_s,20,28.9994,26.6167,31.5453
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,rester_sur_place,approche_moy_s,20,2.8032,2.4269,3.1775
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,rester_sur_place,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,rester_sur_place,attente_attribution_moy_s,20,16.1962,13.6792,18.8061
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,rester_sur_place,ms_par_decision_route,20,0.0247,0.0231,0.0268
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,rester_sur_place,ms_par_decision_attente,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,rester_sur_place,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,rester_sur_place,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,retour_au_depot,temps_traitement_moy_s,20,35.7347,33.6209,37.9074
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,retour_au_depot,approche_moy_s,20,4.7574,4.1825,5.2878
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,retour_au_depot,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,retour_au_depot,attente_attribution_moy_s,20,20.9773,18.4663,23.5212
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,retour_au_depot,ms_par_decision_route,20,0.0285,0.026,0.0324
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,retour_au_depot,ms_par_decision_attente,20,0.0014,0.0013,0.0016
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,retour_au_depot,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,retour_au_depot,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,centre_de_demande,temps_traitement_moy_s,20,28.9394,26.5827,31.414
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,centre_de_demande,approche_moy_s,20,3.0995,2.7783,3.4178
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,centre_de_demande,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,centre_de_demande,attente_attribution_moy_s,20,15.8399,13.3953,18.451
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,centre_de_demande,ms_par_decision_route,20,0.0248,0.0237,0.0261
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,centre_de_demande,ms_par_decision_attente,20,0.0337,0.0324,0.0354
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,centre_de_demande,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,centre_de_demande,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,couverture,temps_traitement_moy_s,20,28.4578,26.2862,30.7644
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,couverture,approche_moy_s,20,2.743,2.4493,3.0297
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,couverture,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,couverture,attente_attribution_moy_s,20,15.7148,13.3974,18.1774
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,couverture,ms_par_decision_route,20,0.0191,0.0182,0.0201
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,couverture,ms_par_decision_attente,20,0.0677,0.0659,0.07
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,couverture,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,couverture,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle,temps_traitement_moy_s,20,26.8249,24.7742,29.0109
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle,approche_moy_s,20,2.3547,2.0212,2.6833
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle,attente_attribution_moy_s,20,14.4702,12.315,16.7405
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle,ms_par_decision_route,20,0.0215,0.0207,0.0223
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle,ms_par_decision_attente,20,0.3874,0.3759,0.4027
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle6,temps_traitement_moy_s,20,27.2739,25.0981,29.547
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle6,approche_moy_s,20,2.4027,2.0872,2.7155
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle6,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle6,attente_attribution_moy_s,20,14.8712,12.5737,17.2876
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle6,ms_par_decision_route,20,0.0217,0.0208,0.0227
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle6,ms_par_decision_attente,20,0.5237,0.5181,0.5292
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle6,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_pair,drl_idle6,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,rester_sur_place,temps_traitement_moy_s,20,28.9994,26.6167,31.5453
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,rester_sur_place,approche_moy_s,20,2.8032,2.4269,3.1775
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,rester_sur_place,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,rester_sur_place,attente_attribution_moy_s,20,16.1962,13.6792,18.8061
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,rester_sur_place,ms_par_decision_route,20,0.0231,0.0222,0.0241
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,rester_sur_place,ms_par_decision_attente,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,rester_sur_place,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,rester_sur_place,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,retour_au_depot,temps_traitement_moy_s,20,35.7347,33.6209,37.9074
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,retour_au_depot,approche_moy_s,20,4.7574,4.1825,5.2878
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,retour_au_depot,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,retour_au_depot,attente_attribution_moy_s,20,20.9773,18.4663,23.5212
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,retour_au_depot,ms_par_decision_route,20,0.0266,0.0257,0.0276
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,retour_au_depot,ms_par_decision_attente,20,0.0013,0.0013,0.0014
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,retour_au_depot,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,retour_au_depot,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,centre_de_demande,temps_traitement_moy_s,20,28.9394,26.5827,31.414
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,centre_de_demande,approche_moy_s,20,3.0995,2.7783,3.4178
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,centre_de_demande,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,centre_de_demande,attente_attribution_moy_s,20,15.8399,13.3953,18.451
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,centre_de_demande,ms_par_decision_route,20,0.0243,0.0235,0.025
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,centre_de_demande,ms_par_decision_attente,20,0.033,0.0318,0.0344
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,centre_de_demande,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,centre_de_demande,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,couverture,temps_traitement_moy_s,20,28.4578,26.2862,30.7644
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,couverture,approche_moy_s,20,2.743,2.4493,3.0297
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,couverture,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,couverture,attente_attribution_moy_s,20,15.7148,13.3974,18.1774
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,couverture,ms_par_decision_route,20,0.019,0.0181,0.0201
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,couverture,ms_par_decision_attente,20,0.0662,0.065,0.0677
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,couverture,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,couverture,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle,temps_traitement_moy_s,20,26.8249,24.7742,29.0109
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle,approche_moy_s,20,2.3547,2.0212,2.6833
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle,attente_attribution_moy_s,20,14.4702,12.315,16.7405
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle,ms_par_decision_route,20,0.0212,0.0205,0.0219
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle,ms_par_decision_attente,20,0.3837,0.3771,0.3905
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle6,temps_traitement_moy_s,20,27.2739,25.0981,29.547
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle6,approche_moy_s,20,2.4027,2.0872,2.7155
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle6,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle6,attente_attribution_moy_s,20,14.8712,12.5737,17.2876
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle6,ms_par_decision_route,20,0.0217,0.0209,0.0226
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle6,ms_par_decision_attente,20,0.5272,0.5203,0.5359
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle6,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.7",greedy_time,drl_idle6,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,rester_sur_place,temps_traitement_moy_s,20,40.4103,35.4991,46.1298
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,rester_sur_place,approche_moy_s,20,2.9144,2.5082,3.3248
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,rester_sur_place,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,rester_sur_place,attente_attribution_moy_s,20,27.4959,22.2203,33.4983
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,rester_sur_place,ms_par_decision_route,20,0.024,0.023,0.0251
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,rester_sur_place,ms_par_decision_attente,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,rester_sur_place,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,rester_sur_place,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,retour_au_depot,temps_traitement_moy_s,20,45.9612,41.5631,51.1521
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,retour_au_depot,approche_moy_s,20,4.0141,3.4108,4.5332
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,retour_au_depot,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,retour_au_depot,attente_attribution_moy_s,20,31.9471,27.1497,37.5649
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,retour_au_depot,ms_par_decision_route,20,0.0279,0.0269,0.0289
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,retour_au_depot,ms_par_decision_attente,20,0.0014,0.0013,0.0014
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,retour_au_depot,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,retour_au_depot,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,centre_de_demande,temps_traitement_moy_s,20,39.0944,34.4069,45.0162
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,centre_de_demande,approche_moy_s,20,2.7845,2.3763,3.1712
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,centre_de_demande,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,centre_de_demande,attente_attribution_moy_s,20,26.3099,21.2515,32.4435
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,centre_de_demande,ms_par_decision_route,20,0.0248,0.024,0.0256
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,centre_de_demande,ms_par_decision_attente,20,0.0356,0.0342,0.0371
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,centre_de_demande,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,centre_de_demande,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,couverture,temps_traitement_moy_s,20,38.9964,34.2153,44.7321
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,couverture,approche_moy_s,20,2.6665,2.2659,3.0388
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,couverture,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,couverture,attente_attribution_moy_s,20,26.3299,21.2492,32.3378
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,couverture,ms_par_decision_route,20,0.0211,0.0202,0.0221
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,couverture,ms_par_decision_attente,20,0.0691,0.067,0.0716
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,couverture,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,couverture,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle,temps_traitement_moy_s,20,36.9618,32.2872,42.4031
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle,approche_moy_s,20,2.4217,2.0257,2.8089
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle,attente_attribution_moy_s,20,24.54,19.5836,30.2425
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle,ms_par_decision_route,20,0.0231,0.0216,0.0247
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle,ms_par_decision_attente,20,0.4049,0.3893,0.424
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle6,temps_traitement_moy_s,20,37.4849,32.8319,42.9568
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle6,approche_moy_s,20,2.4889,2.104,2.8734
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle6,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle6,attente_attribution_moy_s,20,24.9959,20.0587,30.6767
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle6,ms_par_decision_route,20,0.0227,0.0216,0.0239
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle6,ms_par_decision_attente,20,0.5458,0.5349,0.5614
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle6,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_pair,drl_idle6,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,rester_sur_place,temps_traitement_moy_s,20,40.4103,35.4991,46.1298
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,rester_sur_place,approche_moy_s,20,2.9144,2.5082,3.3248
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,rester_sur_place,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,rester_sur_place,attente_attribution_moy_s,20,27.4959,22.2203,33.4983
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,rester_sur_place,ms_par_decision_route,20,0.0244,0.0232,0.0261
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,rester_sur_place,ms_par_decision_attente,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,rester_sur_place,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,rester_sur_place,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,retour_au_depot,temps_traitement_moy_s,20,45.9612,41.5631,51.1521
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,retour_au_depot,approche_moy_s,20,4.0141,3.4108,4.5332
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,retour_au_depot,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,retour_au_depot,attente_attribution_moy_s,20,31.9471,27.1497,37.5649
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,retour_au_depot,ms_par_decision_route,20,0.0278,0.0268,0.029
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,retour_au_depot,ms_par_decision_attente,20,0.0015,0.0014,0.0015
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,retour_au_depot,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,retour_au_depot,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,centre_de_demande,temps_traitement_moy_s,20,39.0944,34.4069,45.0162
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,centre_de_demande,approche_moy_s,20,2.7845,2.3763,3.1712
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,centre_de_demande,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,centre_de_demande,attente_attribution_moy_s,20,26.3099,21.2515,32.4435
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,centre_de_demande,ms_par_decision_route,20,0.0265,0.0245,0.0293
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,centre_de_demande,ms_par_decision_attente,20,0.0399,0.0363,0.0443
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,centre_de_demande,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,centre_de_demande,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,couverture,temps_traitement_moy_s,20,38.9964,34.2153,44.7321
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,couverture,approche_moy_s,20,2.6665,2.2659,3.0388
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,couverture,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,couverture,attente_attribution_moy_s,20,26.3299,21.2492,32.3378
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,couverture,ms_par_decision_route,20,0.0216,0.0208,0.0223
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,couverture,ms_par_decision_attente,20,0.0739,0.0709,0.0772
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,couverture,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,couverture,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle,temps_traitement_moy_s,20,36.9618,32.2872,42.4031
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle,approche_moy_s,20,2.4217,2.0257,2.8089
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle,attente_attribution_moy_s,20,24.54,19.5836,30.2425
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle,ms_par_decision_route,20,0.0223,0.0214,0.0232
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle,ms_par_decision_attente,20,0.4019,0.3921,0.4124
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle6,temps_traitement_moy_s,20,37.4849,32.8319,42.9568
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle6,approche_moy_s,20,2.4889,2.104,2.8734
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle6,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle6,attente_attribution_moy_s,20,24.9959,20.0587,30.6767
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle6,ms_par_decision_route,20,0.0244,0.0228,0.0263
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle6,ms_par_decision_attente,20,0.5949,0.565,0.6324
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle6,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"15 racks, 3 r., rho=0.9",greedy_time,drl_idle6,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,rester_sur_place,temps_traitement_moy_s,20,49.8637,43.1314,58.0862
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,rester_sur_place,approche_moy_s,20,5.746,4.9855,6.5251
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,rester_sur_place,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,rester_sur_place,attente_attribution_moy_s,20,34.1177,27.0978,42.5613
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,rester_sur_place,ms_par_decision_route,20,0.0522,0.0469,0.0582
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,rester_sur_place,ms_par_decision_attente,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,rester_sur_place,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,rester_sur_place,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,retour_au_depot,temps_traitement_moy_s,20,58.1641,50.8404,66.9484
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,retour_au_depot,approche_moy_s,20,8.2438,7.3392,9.0938
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,retour_au_depot,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,retour_au_depot,attente_attribution_moy_s,20,39.9202,32.0436,49.5152
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,retour_au_depot,ms_par_decision_route,20,0.0581,0.055,0.0617
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,retour_au_depot,ms_par_decision_attente,20,0.0016,0.0015,0.0017
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,retour_au_depot,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,retour_au_depot,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,centre_de_demande,temps_traitement_moy_s,20,50.195,43.3936,58.7211
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,centre_de_demande,approche_moy_s,20,5.97,5.2038,6.7655
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,centre_de_demande,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,centre_de_demande,attente_attribution_moy_s,20,34.225,26.8593,43.2405
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,centre_de_demande,ms_par_decision_route,20,0.0441,0.0418,0.0464
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,centre_de_demande,ms_par_decision_attente,20,0.0401,0.0379,0.0424
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,centre_de_demande,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,centre_de_demande,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,couverture,temps_traitement_moy_s,20,45.9204,38.6158,55.7486
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,couverture,approche_moy_s,20,4.6796,3.9737,5.462
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,couverture,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,couverture,attente_attribution_moy_s,20,31.2408,23.5359,41.2364
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,couverture,ms_par_decision_route,20,0.0413,0.0384,0.0445
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,couverture,ms_par_decision_attente,20,0.0993,0.0962,0.1024
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,couverture,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,couverture,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle,temps_traitement_moy_s,20,45.1352,38.5397,53.2582
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle,approche_moy_s,20,4.7525,3.9245,5.6148
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle,attente_attribution_moy_s,20,30.3827,23.6244,38.8487
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle,ms_par_decision_route,20,0.0491,0.0446,0.0539
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle,ms_par_decision_attente,20,0.5114,0.4919,0.534
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle6,temps_traitement_moy_s,20,45.0518,38.6361,53.1678
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle6,approche_moy_s,20,4.7135,3.9605,5.5165
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle6,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle6,attente_attribution_moy_s,20,30.3383,23.6883,38.6766
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle6,ms_par_decision_route,20,0.0495,0.046,0.053
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle6,ms_par_decision_attente,20,0.7171,0.702,0.7308
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle6,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_pair,drl_idle6,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,rester_sur_place,temps_traitement_moy_s,20,48.6539,41.8896,57.2891
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,rester_sur_place,approche_moy_s,20,5.534,4.7531,6.4119
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,rester_sur_place,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,rester_sur_place,attente_attribution_moy_s,20,33.1199,25.9733,41.8435
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,rester_sur_place,ms_par_decision_route,20,0.0636,0.059,0.0688
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,rester_sur_place,ms_par_decision_attente,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,rester_sur_place,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,rester_sur_place,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,retour_au_depot,temps_traitement_moy_s,20,56.5902,49.2555,65.4698
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,retour_au_depot,approche_moy_s,20,7.6765,6.7745,8.5116
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,retour_au_depot,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,retour_au_depot,attente_attribution_moy_s,20,38.9137,30.9123,48.5674
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,retour_au_depot,ms_par_decision_route,20,0.0822,0.0725,0.0925
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,retour_au_depot,ms_par_decision_attente,20,0.0022,0.002,0.0024
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,retour_au_depot,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,retour_au_depot,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,centre_de_demande,temps_traitement_moy_s,20,46.9397,40.6116,54.6075
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,centre_de_demande,approche_moy_s,20,5.2536,4.5038,6.0577
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,centre_de_demande,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,centre_de_demande,attente_attribution_moy_s,20,31.6861,24.8191,39.9109
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,centre_de_demande,ms_par_decision_route,20,0.0476,0.0452,0.0501
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,centre_de_demande,ms_par_decision_attente,20,0.0533,0.0517,0.0552
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,centre_de_demande,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,centre_de_demande,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,couverture,temps_traitement_moy_s,20,45.0573,38.6074,52.8312
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,couverture,approche_moy_s,20,4.5197,3.7758,5.3643
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,couverture,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,couverture,attente_attribution_moy_s,20,30.5377,23.7103,38.6989
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,couverture,ms_par_decision_route,20,0.0553,0.0485,0.0638
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,couverture,ms_par_decision_attente,20,0.1207,0.1129,0.1286
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,couverture,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,couverture,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle,temps_traitement_moy_s,20,44.7202,38.164,52.9332
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle,approche_moy_s,20,4.5423,3.7287,5.4123
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle,attente_attribution_moy_s,20,30.178,23.3557,38.7199
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle,ms_par_decision_route,20,0.0605,0.0512,0.0704
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle,ms_par_decision_attente,20,0.5369,0.4946,0.5831
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle6,temps_traitement_moy_s,20,44.4332,37.7202,52.708
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle6,approche_moy_s,20,4.4948,3.6836,5.4232
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle6,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle6,attente_attribution_moy_s,20,29.9383,23.0481,38.5076
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle6,ms_par_decision_route,20,0.046,0.0428,0.0495
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle6,ms_par_decision_attente,20,0.6511,0.6334,0.671
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle6,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"40 racks, 6 r., vit. var.",greedy_time,drl_idle6,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,rester_sur_place,temps_traitement_moy_s,20,69.2297,51.4192,97.9552
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,rester_sur_place,approche_moy_s,20,9.9249,8.8035,10.9751
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,rester_sur_place,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,rester_sur_place,attente_attribution_moy_s,20,49.3048,30.9393,78.6425
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,rester_sur_place,ms_par_decision_route,20,0.1619,0.1439,0.1803
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,rester_sur_place,ms_par_decision_attente,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,rester_sur_place,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,rester_sur_place,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,retour_au_depot,temps_traitement_moy_s,20,77.3527,60.5746,103.798
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,retour_au_depot,approche_moy_s,20,13.902,12.1941,15.5107
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,retour_au_depot,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,retour_au_depot,attente_attribution_moy_s,20,53.4507,35.4859,81.4888
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,retour_au_depot,ms_par_decision_route,20,0.1679,0.1533,0.1841
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,retour_au_depot,ms_par_decision_attente,20,0.0016,0.0015,0.0017
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,retour_au_depot,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,retour_au_depot,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,centre_de_demande,temps_traitement_moy_s,20,67.6784,53.2137,90.9171
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,centre_de_demande,approche_moy_s,20,10.6873,9.2516,12.0841
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,centre_de_demande,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,centre_de_demande,attente_attribution_moy_s,20,46.9911,31.5699,71.4
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,centre_de_demande,ms_par_decision_route,20,0.1215,0.1134,0.1302
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,centre_de_demande,ms_par_decision_attente,20,0.0928,0.0903,0.0953
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,centre_de_demande,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,centre_de_demande,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,couverture,temps_traitement_moy_s,20,57.4746,41.7919,82.3985
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,couverture,approche_moy_s,20,6.1296,5.142,7.2509
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,couverture,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,couverture,attente_attribution_moy_s,20,41.345,25.0472,67.0635
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,couverture,ms_par_decision_route,20,0.1248,0.1034,0.1485
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,couverture,ms_par_decision_attente,20,0.2149,0.2048,0.2255
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,couverture,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,couverture,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle,temps_traitement_moy_s,20,75.2177,57.6489,102.8781
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle,approche_moy_s,20,12.3703,10.8782,13.8961
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle,attente_attribution_moy_s,20,52.8474,34.5771,81.8714
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle,ms_par_decision_route,20,0.1421,0.1296,0.157
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle,ms_par_decision_attente,20,0.5509,0.5414,0.5611
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle6,temps_traitement_moy_s,20,56.8186,41.6347,81.2104
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle6,approche_moy_s,20,6.2367,5.2743,7.3528
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle6,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle6,attente_attribution_moy_s,20,40.5819,24.9579,65.5198
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle6,ms_par_decision_route,20,0.0964,0.0832,0.1118
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle6,ms_par_decision_attente,20,0.8675,0.854,0.8822
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle6,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_pair,drl_idle6,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,rester_sur_place,temps_traitement_moy_s,20,69.2297,51.4192,97.9552
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,rester_sur_place,approche_moy_s,20,9.9249,8.8035,10.9751
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,rester_sur_place,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,rester_sur_place,attente_attribution_moy_s,20,49.3048,30.9393,78.6425
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,rester_sur_place,ms_par_decision_route,20,0.1405,0.1281,0.1552
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,rester_sur_place,ms_par_decision_attente,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,rester_sur_place,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,rester_sur_place,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,retour_au_depot,temps_traitement_moy_s,20,77.3527,60.5746,103.798
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,retour_au_depot,approche_moy_s,20,13.902,12.1941,15.5107
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,retour_au_depot,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,retour_au_depot,attente_attribution_moy_s,20,53.4507,35.4859,81.4888
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,retour_au_depot,ms_par_decision_route,20,0.1653,0.1518,0.1802
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,retour_au_depot,ms_par_decision_attente,20,0.0016,0.0016,0.0017
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,retour_au_depot,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,retour_au_depot,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,centre_de_demande,temps_traitement_moy_s,20,67.6784,53.2137,90.9171
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,centre_de_demande,approche_moy_s,20,10.6873,9.2516,12.0841
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,centre_de_demande,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,centre_de_demande,attente_attribution_moy_s,20,46.9911,31.5699,71.4
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,centre_de_demande,ms_par_decision_route,20,0.1176,0.1111,0.1246
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,centre_de_demande,ms_par_decision_attente,20,0.0919,0.0882,0.0977
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,centre_de_demande,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,centre_de_demande,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,couverture,temps_traitement_moy_s,20,57.4746,41.7919,82.3985
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,couverture,approche_moy_s,20,6.1296,5.142,7.2509
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,couverture,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,couverture,attente_attribution_moy_s,20,41.345,25.0472,67.0635
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,couverture,ms_par_decision_route,20,0.0925,0.0811,0.1048
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,couverture,ms_par_decision_attente,20,0.1831,0.18,0.1857
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,couverture,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,couverture,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle,temps_traitement_moy_s,20,75.2177,57.6489,102.8781
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle,approche_moy_s,20,12.3703,10.8782,13.8961
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle,attente_attribution_moy_s,20,52.8474,34.5771,81.8714
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle,ms_par_decision_route,20,0.1429,0.1305,0.1566
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle,ms_par_decision_attente,20,0.5483,0.5375,0.5601
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle,attentes_choisies,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle6,temps_traitement_moy_s,20,56.8186,41.6347,81.2104
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle6,approche_moy_s,20,6.2367,5.2743,7.3528
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle6,taches_echouees,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle6,attente_attribution_moy_s,20,40.5819,24.9579,65.5198
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle6,ms_par_decision_route,20,0.0952,0.0829,0.1086
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle6,ms_par_decision_attente,20,0.8584,0.8472,0.8705
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle6,replis_route6,20,0.0,0.0,0.0
+idle6,dataset,"150 racks, 20 r., rho=0.7",greedy_time,drl_idle6,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,rester_sur_place,temps_traitement_moy_s,20,26.8989,26.1471,27.7009
+idle6,zipf,facile (s=0.5),greedy_pair,rester_sur_place,approche_moy_s,20,15.1408,14.5315,15.8082
+idle6,zipf,facile (s=0.5),greedy_pair,rester_sur_place,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,rester_sur_place,attente_attribution_moy_s,20,1.7582,1.4869,2.0362
+idle6,zipf,facile (s=0.5),greedy_pair,rester_sur_place,ms_par_decision_route,20,0.0554,0.0508,0.0625
+idle6,zipf,facile (s=0.5),greedy_pair,rester_sur_place,ms_par_decision_attente,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,rester_sur_place,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,rester_sur_place,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,retour_au_depot,temps_traitement_moy_s,20,37.2701,36.5944,37.9973
+idle6,zipf,facile (s=0.5),greedy_pair,retour_au_depot,approche_moy_s,20,23.8893,23.3654,24.4166
+idle6,zipf,facile (s=0.5),greedy_pair,retour_au_depot,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,retour_au_depot,attente_attribution_moy_s,20,3.3807,2.9083,3.8816
+idle6,zipf,facile (s=0.5),greedy_pair,retour_au_depot,ms_par_decision_route,20,0.06,0.0547,0.066
+idle6,zipf,facile (s=0.5),greedy_pair,retour_au_depot,ms_par_decision_attente,20,0.0016,0.0015,0.0017
+idle6,zipf,facile (s=0.5),greedy_pair,retour_au_depot,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,retour_au_depot,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,centre_de_demande,temps_traitement_moy_s,20,32.0563,31.4245,32.6183
+idle6,zipf,facile (s=0.5),greedy_pair,centre_de_demande,approche_moy_s,20,19.8149,19.2855,20.2744
+idle6,zipf,facile (s=0.5),greedy_pair,centre_de_demande,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,centre_de_demande,attente_attribution_moy_s,20,2.2414,1.9292,2.5581
+idle6,zipf,facile (s=0.5),greedy_pair,centre_de_demande,ms_par_decision_route,20,0.0869,0.0857,0.088
+idle6,zipf,facile (s=0.5),greedy_pair,centre_de_demande,ms_par_decision_attente,20,0.0713,0.0704,0.072
+idle6,zipf,facile (s=0.5),greedy_pair,centre_de_demande,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,centre_de_demande,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,couverture,temps_traitement_moy_s,20,27.7315,27.0976,28.3866
+idle6,zipf,facile (s=0.5),greedy_pair,couverture,approche_moy_s,20,16.0452,15.4403,16.6338
+idle6,zipf,facile (s=0.5),greedy_pair,couverture,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,couverture,attente_attribution_moy_s,20,1.6862,1.467,1.9321
+idle6,zipf,facile (s=0.5),greedy_pair,couverture,ms_par_decision_route,20,0.061,0.0551,0.067
+idle6,zipf,facile (s=0.5),greedy_pair,couverture,ms_par_decision_attente,20,0.1227,0.1133,0.1312
+idle6,zipf,facile (s=0.5),greedy_pair,couverture,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,couverture,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle,temps_traitement_moy_s,20,27.2403,26.4319,28.0333
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle,approche_moy_s,20,15.4909,14.8489,16.099
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle,attente_attribution_moy_s,20,1.7494,1.4389,2.0853
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle,ms_par_decision_route,20,0.0451,0.0432,0.047
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle,ms_par_decision_attente,20,0.4271,0.424,0.4307
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle6,temps_traitement_moy_s,20,29.2299,28.0465,30.4032
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle6,approche_moy_s,20,17.2507,16.2162,18.1875
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle6,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle6,attente_attribution_moy_s,20,1.9792,1.6334,2.3433
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle6,ms_par_decision_route,20,0.0475,0.0454,0.0494
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle6,ms_par_decision_attente,20,0.604,0.5976,0.613
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle6,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_pair,drl_idle6,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,rester_sur_place,temps_traitement_moy_s,20,26.8272,26.0649,27.6162
+idle6,zipf,facile (s=0.5),greedy_time,rester_sur_place,approche_moy_s,20,15.0996,14.5283,15.7003
+idle6,zipf,facile (s=0.5),greedy_time,rester_sur_place,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,rester_sur_place,attente_attribution_moy_s,20,1.7276,1.4156,2.0838
+idle6,zipf,facile (s=0.5),greedy_time,rester_sur_place,ms_par_decision_route,20,0.044,0.0423,0.0458
+idle6,zipf,facile (s=0.5),greedy_time,rester_sur_place,ms_par_decision_attente,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,rester_sur_place,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,rester_sur_place,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,retour_au_depot,temps_traitement_moy_s,20,36.203,35.5123,36.9275
+idle6,zipf,facile (s=0.5),greedy_time,retour_au_depot,approche_moy_s,20,23.1087,22.5505,23.6687
+idle6,zipf,facile (s=0.5),greedy_time,retour_au_depot,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,retour_au_depot,attente_attribution_moy_s,20,3.0943,2.6978,3.5284
+idle6,zipf,facile (s=0.5),greedy_time,retour_au_depot,ms_par_decision_route,20,0.0549,0.0535,0.0561
+idle6,zipf,facile (s=0.5),greedy_time,retour_au_depot,ms_par_decision_attente,20,0.0014,0.0014,0.0015
+idle6,zipf,facile (s=0.5),greedy_time,retour_au_depot,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,retour_au_depot,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,centre_de_demande,temps_traitement_moy_s,20,30.7769,30.1224,31.4039
+idle6,zipf,facile (s=0.5),greedy_time,centre_de_demande,approche_moy_s,20,18.7819,18.2302,19.2967
+idle6,zipf,facile (s=0.5),greedy_time,centre_de_demande,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,centre_de_demande,attente_attribution_moy_s,20,1.995,1.7226,2.2766
+idle6,zipf,facile (s=0.5),greedy_time,centre_de_demande,ms_par_decision_route,20,0.052,0.0511,0.053
+idle6,zipf,facile (s=0.5),greedy_time,centre_de_demande,ms_par_decision_attente,20,0.0455,0.045,0.046
+idle6,zipf,facile (s=0.5),greedy_time,centre_de_demande,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,centre_de_demande,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,couverture,temps_traitement_moy_s,20,27.6577,26.8176,28.4667
+idle6,zipf,facile (s=0.5),greedy_time,couverture,approche_moy_s,20,15.8167,15.0837,16.5144
+idle6,zipf,facile (s=0.5),greedy_time,couverture,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,couverture,attente_attribution_moy_s,20,1.8411,1.5811,2.1304
+idle6,zipf,facile (s=0.5),greedy_time,couverture,ms_par_decision_route,20,0.0467,0.043,0.0512
+idle6,zipf,facile (s=0.5),greedy_time,couverture,ms_par_decision_attente,20,0.0974,0.0923,0.1043
+idle6,zipf,facile (s=0.5),greedy_time,couverture,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,couverture,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle,temps_traitement_moy_s,20,27.3824,26.4502,28.4886
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle,approche_moy_s,20,15.5928,14.8575,16.4144
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle,attente_attribution_moy_s,20,1.7896,1.449,2.2102
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle,ms_par_decision_route,20,0.0775,0.0745,0.081
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle,ms_par_decision_attente,20,0.6303,0.6155,0.6534
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle6,temps_traitement_moy_s,20,28.6837,27.7817,29.5572
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle6,approche_moy_s,20,16.7982,16.0027,17.5407
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle6,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle6,attente_attribution_moy_s,20,1.8854,1.6057,2.1729
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle6,ms_par_decision_route,20,0.0651,0.0578,0.0719
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle6,ms_par_decision_attente,20,0.7596,0.6876,0.8208
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle6,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,facile (s=0.5),greedy_time,drl_idle6,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,rester_sur_place,temps_traitement_moy_s,20,28.7984,27.6489,29.998
+idle6,zipf,moyen (s=1.0),greedy_pair,rester_sur_place,approche_moy_s,20,14.0162,13.277,14.8298
+idle6,zipf,moyen (s=1.0),greedy_pair,rester_sur_place,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,rester_sur_place,attente_attribution_moy_s,20,4.7822,4.1133,5.4299
+idle6,zipf,moyen (s=1.0),greedy_pair,rester_sur_place,ms_par_decision_route,20,0.0516,0.0458,0.0581
+idle6,zipf,moyen (s=1.0),greedy_pair,rester_sur_place,ms_par_decision_attente,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,rester_sur_place,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,rester_sur_place,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,retour_au_depot,temps_traitement_moy_s,20,37.9719,37.1319,38.8459
+idle6,zipf,moyen (s=1.0),greedy_pair,retour_au_depot,approche_moy_s,20,20.5203,20.1831,20.8202
+idle6,zipf,moyen (s=1.0),greedy_pair,retour_au_depot,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,retour_au_depot,attente_attribution_moy_s,20,7.4516,6.5846,8.3467
+idle6,zipf,moyen (s=1.0),greedy_pair,retour_au_depot,ms_par_decision_route,20,0.0728,0.0668,0.0794
+idle6,zipf,moyen (s=1.0),greedy_pair,retour_au_depot,ms_par_decision_attente,20,0.0019,0.0018,0.002
+idle6,zipf,moyen (s=1.0),greedy_pair,retour_au_depot,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,retour_au_depot,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,centre_de_demande,temps_traitement_moy_s,20,33.5027,32.0558,34.8929
+idle6,zipf,moyen (s=1.0),greedy_pair,centre_de_demande,approche_moy_s,20,17.2928,16.7055,17.857
+idle6,zipf,moyen (s=1.0),greedy_pair,centre_de_demande,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,centre_de_demande,attente_attribution_moy_s,20,6.21,5.0707,7.4492
+idle6,zipf,moyen (s=1.0),greedy_pair,centre_de_demande,ms_par_decision_route,20,0.0607,0.0594,0.062
+idle6,zipf,moyen (s=1.0),greedy_pair,centre_de_demande,ms_par_decision_attente,20,0.0562,0.0554,0.0571
+idle6,zipf,moyen (s=1.0),greedy_pair,centre_de_demande,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,centre_de_demande,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,couverture,temps_traitement_moy_s,20,29.092,28.0552,30.0615
+idle6,zipf,moyen (s=1.0),greedy_pair,couverture,approche_moy_s,20,14.6527,14.0127,15.2513
+idle6,zipf,moyen (s=1.0),greedy_pair,couverture,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,couverture,attente_attribution_moy_s,20,4.4393,3.9438,4.9182
+idle6,zipf,moyen (s=1.0),greedy_pair,couverture,ms_par_decision_route,20,0.053,0.0508,0.0552
+idle6,zipf,moyen (s=1.0),greedy_pair,couverture,ms_par_decision_attente,20,0.1084,0.1072,0.1095
+idle6,zipf,moyen (s=1.0),greedy_pair,couverture,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,couverture,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle,temps_traitement_moy_s,20,30.6671,29.2513,32.1415
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle,approche_moy_s,20,15.0567,14.4441,15.6647
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle,attente_attribution_moy_s,20,5.6105,4.591,6.7172
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle,ms_par_decision_route,20,0.0575,0.0556,0.0596
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle,ms_par_decision_attente,20,0.4945,0.4918,0.4972
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle6,temps_traitement_moy_s,20,29.3546,28.3334,30.3919
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle6,approche_moy_s,20,14.6909,14.0812,15.2995
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle6,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle6,attente_attribution_moy_s,20,4.6637,4.0231,5.3331
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle6,ms_par_decision_route,20,0.0564,0.0546,0.0582
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle6,ms_par_decision_attente,20,0.6985,0.6943,0.7042
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle6,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_pair,drl_idle6,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,rester_sur_place,temps_traitement_moy_s,20,28.4245,27.1433,29.7012
+idle6,zipf,moyen (s=1.0),greedy_time,rester_sur_place,approche_moy_s,20,13.587,12.8547,14.2956
+idle6,zipf,moyen (s=1.0),greedy_time,rester_sur_place,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,rester_sur_place,attente_attribution_moy_s,20,4.8375,4.0675,5.6894
+idle6,zipf,moyen (s=1.0),greedy_time,rester_sur_place,ms_par_decision_route,20,0.0588,0.0562,0.0612
+idle6,zipf,moyen (s=1.0),greedy_time,rester_sur_place,ms_par_decision_attente,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,rester_sur_place,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,rester_sur_place,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,retour_au_depot,temps_traitement_moy_s,20,35.8384,34.9432,36.7403
+idle6,zipf,moyen (s=1.0),greedy_time,retour_au_depot,approche_moy_s,20,19.3743,19.0018,19.7563
+idle6,zipf,moyen (s=1.0),greedy_time,retour_au_depot,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,retour_au_depot,attente_attribution_moy_s,20,6.4641,5.6818,7.2975
+idle6,zipf,moyen (s=1.0),greedy_time,retour_au_depot,ms_par_decision_route,20,0.0664,0.0612,0.0742
+idle6,zipf,moyen (s=1.0),greedy_time,retour_au_depot,ms_par_decision_attente,20,0.0017,0.0016,0.0018
+idle6,zipf,moyen (s=1.0),greedy_time,retour_au_depot,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,retour_au_depot,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,centre_de_demande,temps_traitement_moy_s,20,31.7239,30.1206,33.2966
+idle6,zipf,moyen (s=1.0),greedy_time,centre_de_demande,approche_moy_s,20,16.0652,15.3289,16.8195
+idle6,zipf,moyen (s=1.0),greedy_time,centre_de_demande,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,centre_de_demande,attente_attribution_moy_s,20,5.6586,4.6057,6.8022
+idle6,zipf,moyen (s=1.0),greedy_time,centre_de_demande,ms_par_decision_route,20,0.063,0.0616,0.0644
+idle6,zipf,moyen (s=1.0),greedy_time,centre_de_demande,ms_par_decision_attente,20,0.0562,0.0553,0.0572
+idle6,zipf,moyen (s=1.0),greedy_time,centre_de_demande,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,centre_de_demande,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,couverture,temps_traitement_moy_s,20,29.1685,28.0127,30.2746
+idle6,zipf,moyen (s=1.0),greedy_time,couverture,approche_moy_s,20,14.4287,13.7246,15.1449
+idle6,zipf,moyen (s=1.0),greedy_time,couverture,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,couverture,attente_attribution_moy_s,20,4.7398,4.0607,5.4575
+idle6,zipf,moyen (s=1.0),greedy_time,couverture,ms_par_decision_route,20,0.0567,0.055,0.0584
+idle6,zipf,moyen (s=1.0),greedy_time,couverture,ms_par_decision_attente,20,0.1085,0.1077,0.1093
+idle6,zipf,moyen (s=1.0),greedy_time,couverture,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,couverture,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle,temps_traitement_moy_s,20,29.5576,28.3709,30.7936
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle,approche_moy_s,20,14.5534,13.9803,15.0968
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle,attente_attribution_moy_s,20,5.0041,4.1904,5.9097
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle,ms_par_decision_route,20,0.0616,0.0598,0.0634
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle,ms_par_decision_attente,20,0.4921,0.4901,0.4941
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle6,temps_traitement_moy_s,20,29.1648,27.9246,30.3631
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle6,approche_moy_s,20,14.5913,13.8003,15.3835
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle6,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle6,attente_attribution_moy_s,20,4.5736,3.9709,5.1886
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle6,ms_par_decision_route,20,0.0605,0.0584,0.0625
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle6,ms_par_decision_attente,20,0.6983,0.6903,0.7085
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle6,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,moyen (s=1.0),greedy_time,drl_idle6,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,rester_sur_place,temps_traitement_moy_s,20,29.5271,28.0671,30.9978
+idle6,zipf,difficile (s=1.5),greedy_pair,rester_sur_place,approche_moy_s,20,9.2587,8.636,9.8598
+idle6,zipf,difficile (s=1.5),greedy_pair,rester_sur_place,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,rester_sur_place,attente_attribution_moy_s,20,10.2684,8.9082,11.6326
+idle6,zipf,difficile (s=1.5),greedy_pair,rester_sur_place,ms_par_decision_route,20,0.0733,0.0602,0.0917
+idle6,zipf,difficile (s=1.5),greedy_pair,rester_sur_place,ms_par_decision_attente,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,rester_sur_place,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,rester_sur_place,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,retour_au_depot,temps_traitement_moy_s,20,38.5936,37.2819,39.958
+idle6,zipf,difficile (s=1.5),greedy_pair,retour_au_depot,approche_moy_s,20,14.6935,14.2463,15.1199
+idle6,zipf,difficile (s=1.5),greedy_pair,retour_au_depot,taches_echouees,20,0.1,0.0,0.3
+idle6,zipf,difficile (s=1.5),greedy_pair,retour_au_depot,attente_attribution_moy_s,20,13.9,12.5776,15.3997
+idle6,zipf,difficile (s=1.5),greedy_pair,retour_au_depot,ms_par_decision_route,20,0.0874,0.0765,0.102
+idle6,zipf,difficile (s=1.5),greedy_pair,retour_au_depot,ms_par_decision_attente,20,0.0023,0.0021,0.0024
+idle6,zipf,difficile (s=1.5),greedy_pair,retour_au_depot,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,retour_au_depot,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,centre_de_demande,temps_traitement_moy_s,20,34.3881,32.6652,36.3207
+idle6,zipf,difficile (s=1.5),greedy_pair,centre_de_demande,approche_moy_s,20,12.1204,11.6595,12.5744
+idle6,zipf,difficile (s=1.5),greedy_pair,centre_de_demande,taches_echouees,20,0.1,0.0,0.3
+idle6,zipf,difficile (s=1.5),greedy_pair,centre_de_demande,attente_attribution_moy_s,20,12.2677,10.7259,14.1701
+idle6,zipf,difficile (s=1.5),greedy_pair,centre_de_demande,ms_par_decision_route,20,0.0656,0.0605,0.0741
+idle6,zipf,difficile (s=1.5),greedy_pair,centre_de_demande,ms_par_decision_attente,20,0.0615,0.0605,0.0626
+idle6,zipf,difficile (s=1.5),greedy_pair,centre_de_demande,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,centre_de_demande,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,couverture,temps_traitement_moy_s,20,29.4785,28.3902,30.5746
+idle6,zipf,difficile (s=1.5),greedy_pair,couverture,approche_moy_s,20,9.8931,9.3791,10.3945
+idle6,zipf,difficile (s=1.5),greedy_pair,couverture,taches_echouees,20,0.1,0.0,0.3
+idle6,zipf,difficile (s=1.5),greedy_pair,couverture,attente_attribution_moy_s,20,9.5854,8.4589,10.7817
+idle6,zipf,difficile (s=1.5),greedy_pair,couverture,ms_par_decision_route,20,0.0553,0.0496,0.0649
+idle6,zipf,difficile (s=1.5),greedy_pair,couverture,ms_par_decision_attente,20,0.1135,0.112,0.115
+idle6,zipf,difficile (s=1.5),greedy_pair,couverture,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,couverture,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle,temps_traitement_moy_s,20,30.2067,28.7194,31.7389
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle,approche_moy_s,20,10.4287,9.9228,10.9512
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle,taches_echouees,20,0.1,0.0,0.3
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle,attente_attribution_moy_s,20,9.778,8.5273,11.1847
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle,ms_par_decision_route,20,0.0499,0.0458,0.057
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle,ms_par_decision_attente,20,0.4077,0.4031,0.4125
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle6,temps_traitement_moy_s,20,29.3795,27.9965,30.8245
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle6,approche_moy_s,20,9.7561,9.2509,10.3333
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle6,taches_echouees,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle6,attente_attribution_moy_s,20,9.6234,8.4868,10.7441
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle6,ms_par_decision_route,20,0.0461,0.0444,0.0479
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle6,ms_par_decision_attente,20,0.5753,0.5691,0.5816
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle6,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_pair,drl_idle6,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_time,rester_sur_place,temps_traitement_moy_s,20,28.1399,26.6648,29.7736
+idle6,zipf,difficile (s=1.5),greedy_time,rester_sur_place,approche_moy_s,20,8.5453,8.0016,9.0576
+idle6,zipf,difficile (s=1.5),greedy_time,rester_sur_place,taches_echouees,20,0.1,0.0,0.3
+idle6,zipf,difficile (s=1.5),greedy_time,rester_sur_place,attente_attribution_moy_s,20,9.5945,8.078,11.237
+idle6,zipf,difficile (s=1.5),greedy_time,rester_sur_place,ms_par_decision_route,20,0.0542,0.05,0.061
+idle6,zipf,difficile (s=1.5),greedy_time,rester_sur_place,ms_par_decision_attente,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_time,rester_sur_place,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_time,rester_sur_place,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_time,retour_au_depot,temps_traitement_moy_s,20,36.2316,35.0698,37.2952
+idle6,zipf,difficile (s=1.5),greedy_time,retour_au_depot,approche_moy_s,20,13.3549,12.8183,13.878
+idle6,zipf,difficile (s=1.5),greedy_time,retour_au_depot,taches_echouees,20,0.1,0.0,0.3
+idle6,zipf,difficile (s=1.5),greedy_time,retour_au_depot,attente_attribution_moy_s,20,12.8767,11.6617,14.0961
+idle6,zipf,difficile (s=1.5),greedy_time,retour_au_depot,ms_par_decision_route,20,0.057,0.0531,0.0633
+idle6,zipf,difficile (s=1.5),greedy_time,retour_au_depot,ms_par_decision_attente,20,0.0014,0.0013,0.0014
+idle6,zipf,difficile (s=1.5),greedy_time,retour_au_depot,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_time,retour_au_depot,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_time,centre_de_demande,temps_traitement_moy_s,20,30.8328,29.2394,32.3556
+idle6,zipf,difficile (s=1.5),greedy_time,centre_de_demande,approche_moy_s,20,10.6681,10.0666,11.2439
+idle6,zipf,difficile (s=1.5),greedy_time,centre_de_demande,taches_echouees,20,0.1,0.0,0.3
+idle6,zipf,difficile (s=1.5),greedy_time,centre_de_demande,attente_attribution_moy_s,20,10.1647,8.8771,11.5705
+idle6,zipf,difficile (s=1.5),greedy_time,centre_de_demande,ms_par_decision_route,20,0.055,0.0507,0.0621
+idle6,zipf,difficile (s=1.5),greedy_time,centre_de_demande,ms_par_decision_attente,20,0.0454,0.044,0.047
+idle6,zipf,difficile (s=1.5),greedy_time,centre_de_demande,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_time,centre_de_demande,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_time,couverture,temps_traitement_moy_s,20,28.6393,27.3991,30.0285
+idle6,zipf,difficile (s=1.5),greedy_time,couverture,approche_moy_s,20,9.4455,8.8126,10.0964
+idle6,zipf,difficile (s=1.5),greedy_time,couverture,taches_echouees,20,0.1,0.0,0.3
+idle6,zipf,difficile (s=1.5),greedy_time,couverture,attente_attribution_moy_s,20,9.1938,8.232,10.3078
+idle6,zipf,difficile (s=1.5),greedy_time,couverture,ms_par_decision_route,20,0.05,0.0457,0.0573
+idle6,zipf,difficile (s=1.5),greedy_time,couverture,ms_par_decision_attente,20,0.0905,0.0892,0.0919
+idle6,zipf,difficile (s=1.5),greedy_time,couverture,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_time,couverture,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle,temps_traitement_moy_s,20,30.1536,28.4913,31.805
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle,approche_moy_s,20,9.94,9.2922,10.5947
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle,taches_echouees,20,0.1,0.0,0.3
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle,attente_attribution_moy_s,20,10.2137,8.896,11.6927
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle,ms_par_decision_route,20,0.0542,0.05,0.0611
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle,ms_par_decision_attente,20,0.4133,0.4085,0.4182
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle,attentes_choisies,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle6,temps_traitement_moy_s,20,27.4719,25.5806,29.4364
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle6,approche_moy_s,20,8.6863,7.8756,9.495
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle6,taches_echouees,20,0.1,0.0,0.3
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle6,attente_attribution_moy_s,20,8.7855,7.5124,10.1606
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle6,ms_par_decision_route,20,0.0521,0.0468,0.0603
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle6,ms_par_decision_attente,20,0.581,0.5763,0.5854
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle6,replis_route6,20,0.0,0.0,0.0
+idle6,zipf,difficile (s=1.5),greedy_time,drl_idle6,attentes_choisies,20,0.0,0.0,0.0

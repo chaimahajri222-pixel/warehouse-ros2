@@ -1,0 +1,13 @@
+scenario,robots,racks,rho,allocation,graine,source,debut,dijkstra_statique,dijkstra_dynamique,dijkstra_congestion
+0,10,80,0.9,greedy_pair,3000017,synth,,28.7218,28.7218,28.7534
+1,10,80,0.9,greedy_pair,3001036,synth,,31.7575,31.7225,31.6858
+2,10,80,0.9,greedy_pair,3002055,synth,,36.1077,34.5927,34.211
+3,20,80,0.9,greedy_pair,3003074,synth,,40.8993,42.6227,43.221
+4,20,80,0.9,greedy_pair,3004093,synth,,35.4455,35.4222,34.5855
+5,20,80,0.9,greedy_pair,3005112,synth,,35.7674,34.2724,34.689
+6,20,150,0.9,greedy_pair,3006131,synth,,44.9845,44.9445,43.4045
+7,20,150,0.9,greedy_pair,3007150,synth,,38.1274,38.1207,37.7974
+8,20,150,0.9,greedy_pair,3008169,synth,,36.9961,35.5411,35.3561
+9,20,150,0.7,greedy_pair,3009188,train_val,0,40.7463,40.5696,40.6296
+10,20,150,0.7,greedy_pair,3010207,train_val,5809,50.7419,50.5685,50.6052
+11,20,150,0.7,greedy_pair,3011226,train_val,11619,131.4012,131.1928,131.1928

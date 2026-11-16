@@ -1,0 +1,13 @@
+[2026-11-16 12:05:42] idle6 graine 0, lancement 1
+[idle6 graine 0] t=   0.0 min ep=    0 val=54.963 s ecart rel +0.00 % (meilleur +0.00 %) (16 s de validation)
+[idle6 graine 0] t=  10.0 min ep=  728 val=60.517 s ecart rel +12.81 % (meilleur +0.00 %) (12 s de validation)
+[idle6 graine 0] t=  20.0 min ep= 1405 val=59.225 s ecart rel +9.30 % (meilleur +0.00 %) (14 s de validation)
+[idle6 graine 0] t=  30.0 min ep= 2056 val=59.648 s ecart rel +8.48 % (meilleur +0.00 %) (15 s de validation)
+[idle6 graine 0] t=  40.0 min ep= 2725 val=59.378 s ecart rel +9.59 % (meilleur +0.00 %) (15 s de validation)
+[idle6 graine 0] t=  50.0 min ep= 3380 val=59.090 s ecart rel +8.60 % (meilleur +0.00 %) (15 s de validation)
+[idle6 graine 0] t=  60.0 min ep= 4044 val=58.173 s ecart rel +7.11 % (meilleur +0.00 %) (16 s de validation)
+[idle6 graine 0] fin : 4044 episodes, meilleur ecart rel +0.00 % (/home/chchch/warehouse_ws/drl_v6/idle6_grand/ckpt_seed0_t0.pt)
+[2026-11-16 13:06:50] idle6 graine 0, code de sortie 0
+[2026-11-16 13:06:50] idle6 graine 1, lancement 1
+[idle6 graine 1] t=   0.0 min ep=    0 val=54.963 s ecart rel +0.00 % (meilleur +0.00 %) (18 s de validation)
+[idle6 graine 1] t=  10.0 min ep=  653 val=61.041 s ecart rel +13.81 % (meilleur +0.00 %) (14 s de validation)

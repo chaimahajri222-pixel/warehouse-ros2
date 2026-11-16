@@ -559,3 +559,40 @@ Les 4 conditions dataset (vagues de test), sans capacité de segment. Méthodes 
    - **Lancement interrompu.** Le lancement de 19 h 59 a été arrêté vers
      20 h 20. Ses fichiers sont dans `~/warehouse_ws/drl_v6/alloc6_interrompu_2022/`
      et ne servent ni à la sélection ni au test.
+8. **Arrêt de l'entraînement C, sans test C** (16/11/2026, 21 h 04, à la demande de
+   l'utilisatrice). Aucun essai de test C n'a été lancé.
+   - **Validations du lancement de 20 h 22,** graine 0, après l'écart 7 (écart
+     relatif à la meilleure de `greedy_pair` et `greedy_time`) :
+
+     | Instant | Écart relatif |
+     |---|---|
+     | t = 0 (`greedy_pair` seul) | +0,11 % |
+     | t = 10 min | +167,76 % |
+     | t = 20 min | +289,46 % |
+     | t = 30 min | +182,60 % |
+     | t = 40 min | +219,69 % |
+
+     L'entraînement est arrêté vers t ≈ 42 min sur 45. Les graines 1 et 2 ne sont
+     pas lancées.
+   - **Diagnostic.** Il est fait avec une graine d'exploration (900 003 001), sur
+     60 tâches train_fit, avec le point de contrôle de t = 10 min. La politique
+     choisit « attendre un pas » **361 fois** pour 60 attributions (29 identiques
+     à `greedy_pair`, 31 autres). Elle fait 48,7 s de temps de traitement moyen,
+     contre 21,9 s pour `greedy_pair` :
+     - attente avant attribution : 28,9 s contre 7,9 s ;
+     - approche : 9,7 s contre 4,0 s.
+
+     Le garde-fou de l'écart 7 empêche désormais le blocage complet, mais pas la
+     dégradation.
+   - **Cause probable.** Le défaut est structurel au DQN appliqué à cette action.
+     Une attente mène à un état presque identique (mêmes tâches, même robot
+     libre une seconde plus tard) et ne coûte qu'un pas très court. Sa valeur Q
+     vaut donc presque celle de la meilleure attribution, et la moindre erreur
+     d'approximation la rend préférée. Corriger cela demanderait une autre
+     formulation (semi-MDP, coût minimal de l'attente, ou valeur d'avantage) ;
+     ce n'est pas fait en v6.
+   - **Conclusion rapportée :** phase C = **apprentissage échoué, non testée**.
+     La famille C (4 tests) n'est pas calculée. Aucun modèle C n'est
+     sélectionné.
+   - Les fichiers sont dans `~/warehouse_ws/drl_v6/alloc6_interrompu_2104/` (avec
+     `val_ref.csv` et `val_log_seed0.csv`).
