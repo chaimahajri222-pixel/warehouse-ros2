@@ -1,4 +1,4 @@
-# Lancer la simulation de l'entrepôt (branche `drl-v4`)
+# Lancer la simulation de l'entrepôt (branche `drl-v6`)
 
 Ce guide explique comment installer le projet, lancer la simulation Gazebo et
 faire trois expériences, puis renvoyer les résultats. Il ne suppose aucune
