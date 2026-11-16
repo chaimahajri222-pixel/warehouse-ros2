@@ -498,3 +498,35 @@ Les 4 conditions dataset (vagues de test), sans capacité de segment. Méthodes 
      sélection ni au test.
    - **Ordre de relance :** A grand (3 × 60 min), puis B (3 × 60 min), puis C
      (3 × 45 min), à la suite.
+6. **Échappatoires de la récompense de `drl_route6`** (16/11/2026, 17 h 00). Cet
+   écart est décidé **avant tout essai de test de la phase B**. Les tests de la
+   phase A étaient déjà faits, à 16 h 43, et ne sont pas concernés.
+   - **Constat.** Le premier lancement B (16 h 28) se dégrade aussitôt. La
+     graine 0 ne fait que 14 épisodes en 10 min, et la validation donne 564 s,
+     soit +1 263 %.
+   - **Diagnostic.** Il est fait avec une graine d'exploration (900 002 001), à
+     10 r. / 80 racks, sur 60 tâches. Le point de contrôle de t = 10 min choisit
+     d'attendre 1 477 fois, fait échouer 13 tâches et passe 85,6 s par tâche en
+     file, contre 1,1 s et 0 échec pour `dijkstra_congestion`.
+   - **Cause.** Deux échappatoires sont reprises du code v4 (`drl_route`) :
+     - un échec à 90 s sans chemin termine la tâche **sans pénalité** ;
+     - le garde-fou anti-boucle **ferme** la transition en terminale, si bien que
+       le reste du trajet en repli n'est plus compté.
+
+     Attendre jusqu'à l'échec ou jusqu'au repli coûte donc moins cher qu'un long
+     trajet.
+   - **Correction.**
+     - Un échec, ou une tâche non finie à la fin de l'épisode, ajoute une
+       **pénalité de 300 s** au dernier pas.
+     - En repli, la dernière transition DRL reste ouverte jusqu'à l'arrivée, et
+       tout le temps restant est compté.
+
+     Vérification : avec f_θ = 0 et sans échec, la somme des récompenses d'un
+     épisode est égale à −(somme des temps de trajet)/60 (−31,1708 des deux
+     côtés).
+   - **Inchangés :** les entrées, γ = 1, la validation (12 scénarios), la règle
+     de sélection (instant 0 inclus) et le budget (3 × 60 min).
+   - **Lancement interrompu.** Le lancement de 16 h 28 a été arrêté vers 16 h 50.
+     Ses fichiers sont dans `~/warehouse_ws/drl_v6/route6_interrompu_1650/` et ne
+     servent ni à la sélection ni au test. B est relancé de zéro, puis C à la
+     suite.

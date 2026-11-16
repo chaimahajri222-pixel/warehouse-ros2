@@ -69,6 +69,7 @@ ROUTE6_FEATURE_NAMES = (
     'dist_but_voisin_longueurs', 'dist_but_ici', 'robots_au_voisin', 'robots_vers_voisin',
     'demi_tour', 'attente', 'choix_heuristique', 'densite_robots', 'attente_file_cumulee',
     'vitesse')
+ROUTE6_FAIL_PENALTY_S = 300.0  # ecart 6 : echec ou tache non finie (au lieu de 0)
 RES_HORIZON = 4              # segments prevus par robot pour les reservations
 PATH_LOOKAHEAD = 3           # segments regardes sur le chemin depuis le voisin
 
@@ -244,7 +245,7 @@ class BenchmarkV6(BenchmarkV4):
             if r.wait >= self.timeout:
                 r.task.failed, r.task.done = True, self.t
                 self._route_close(r, terminal=True)
-                self._route6_close(r, terminal=True)
+                self._route6_close(r, terminal=True, penalty_s=ROUTE6_FAIL_PENALTY_S)
                 r.hold_left = 0
                 r.task = None
                 r.need_idle = True
@@ -429,7 +430,8 @@ class BenchmarkV6(BenchmarkV4):
         r.n_decisions += 1
         if r.n_decisions > 20 * self.n_nodes or r.n_moves > 3 * self.n_nodes:
             self.route6_fallbacks += 1
-            self._route6_close(r, terminal=True)
+            # Ecart 6 : la transition en cours reste ouverte jusqu'a l'arrivee
+            # (le reste du trajet en repli est compte, il n'est plus gratuit).
             return self._cong_next_hop(r, goal)
         cands, feats = self.route6_candidates(r, goal)
         if self.epsilon > 0 and self.rng_explore.random() < self.epsilon:
@@ -446,11 +448,11 @@ class BenchmarkV6(BenchmarkV4):
             return HOLD
         return c
 
-    def _route6_close(self, r, terminal):
+    def _route6_close(self, r, terminal, penalty_s=0.0):
         pend = getattr(r, 'route6_pending', None)
         if pend is not None and self.on_route6_transition is not None:
             f0, t0 = pend
-            self.on_route6_transition(f0, -(self.t - t0) / REWARD_NORM_S,
+            self.on_route6_transition(f0, -(self.t - t0 + penalty_s) / REWARD_NORM_S,
                                       np.zeros((0, N_ROUTE6_FEATURES), dtype=np.float32),
                                       terminal)
         r.route6_pending = None
@@ -682,8 +684,8 @@ class BenchmarkV6(BenchmarkV4):
                             f0, rew if rew is not None else 0.0,
                             np.zeros((0, N_IDLE6_FEATURES), dtype=np.float32), True)
                     r.idle6_pending = None
-        for r in self.robots:
-            self._route6_close(r, terminal=True)
+        for r in self.robots:          # tache non finie a la fin de l'episode : penalite
+            self._route6_close(r, terminal=True, penalty_s=ROUTE6_FAIL_PENALTY_S)
         return out
 
     def metrics(self):
