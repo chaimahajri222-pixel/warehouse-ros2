@@ -1,0 +1,37 @@
+[2026-11-16 23:35:02] debut /home/chchch/warehouse_ws/mesures/a_3robots_hybrid_reprise (modes=hybrid args=), 4960 Mo libres, 45 C
+robots=3 duree=900s modes=[hybrid] modele=/home/chchch/warehouse_ws/install/warehouse_marl/share/warehouse_marl/models/drl3_best.pt args=[] sortie=/home/chchch/warehouse_ws/mesures/a_3robots_hybrid_reprise
+[hybrid] demarrage 23:35:21, 4908 Mo libres, domaine 83
+[1]   Terminated              ros2 launch warehouse_marl warehouse_full.launch.py robot_count:="$ROBOTS" headless:=true rviz:=false dashboard:=false drl_mode:="$mode" "${EXTRA[@]}" "$@" > "$OUT/launch_$mode.log" 2>&1
+[2]-  Terminated              ros2 run warehouse_marl task_metrics_logger --ros-args -p output:="$OUT/taches_$mode.csv" -p mode_label:="$mode" > "$OUT/logger_$mode.log" 2>&1
+[3]+  Terminated              ros2 run warehouse_marl rfid_metrics_logger --ros-args -p output:="$OUT/rfid_$mode.csv" > "$OUT/rfid_logger_$mode.log" 2>&1
+[hybrid] fin 23:51:09
+  hybrid       vues   25  terminees   16  echouees   6  en cours   3  temps moyen 12.98 s [7.04 ; 20.79]  median 9.23 s
+Synthese : /home/chchch/warehouse_ws/mesures/a_3robots_hybrid_reprise/synthese_taches.csv
+[{'mode': 'hybrid', 'taches_vues': 25, 'terminees': 16, 'echouees': 6, 'en_cours_a_la_fin': 3, 'temps_moyen_s': 12.98, 'ic95_bas_s': 7.04, 'ic95_haut_s': 20.79, 'temps_median_s': 9.23, 'robots': 'robot1,robot2,robot3'}]
+[ros2run]: Process exited with failure 1
+[2026-11-16 23:51:20] fin /home/chchch/warehouse_ws/mesures/a_3robots_hybrid_reprise, 4954 Mo libres, 56 C
+[2026-11-16 23:51:20] debut /home/chchch/warehouse_ws/mesures/b_idle_stay (modes=heuristic args=idle_mode:=stay), 4953 Mo libres, 58 C
+robots=3 duree=900s modes=[heuristic] modele=/home/chchch/warehouse_ws/install/warehouse_marl/share/warehouse_marl/models/drl3_best.pt args=[idle_mode:=stay] sortie=/home/chchch/warehouse_ws/mesures/b_idle_stay
+[heuristic] demarrage 23:51:35, 4886 Mo libres, domaine 83
+[1]   Terminated              ros2 launch warehouse_marl warehouse_full.launch.py robot_count:="$ROBOTS" headless:=true rviz:=false dashboard:=false drl_mode:="$mode" "${EXTRA[@]}" "$@" > "$OUT/launch_$mode.log" 2>&1
+[2]-  Terminated              ros2 run warehouse_marl task_metrics_logger --ros-args -p output:="$OUT/taches_$mode.csv" -p mode_label:="$mode" > "$OUT/logger_$mode.log" 2>&1
+[3]+  Terminated              ros2 run warehouse_marl rfid_metrics_logger --ros-args -p output:="$OUT/rfid_$mode.csv" > "$OUT/rfid_logger_$mode.log" 2>&1
+[heuristic] fin 00:07:23
+  heuristic    vues   13  terminees    3  echouees   7  en cours   3  temps moyen 16.91 s [14.5 ; 19.65]  median 16.59 s
+Synthese : /home/chchch/warehouse_ws/mesures/b_idle_stay/synthese_taches.csv
+[{'mode': 'heuristic', 'taches_vues': 13, 'terminees': 3, 'echouees': 7, 'en_cours_a_la_fin': 3, 'temps_moyen_s': 16.91, 'ic95_bas_s': 14.5, 'ic95_haut_s': 19.65, 'temps_median_s': 16.59, 'robots': 'robot2,robot3'}]
+[ros2run]: Process exited with failure 1
+[2026-11-17 00:07:36] fin /home/chchch/warehouse_ws/mesures/b_idle_stay, 5035 Mo libres, 53 C
+[2026-11-17 00:07:36] debut /home/chchch/warehouse_ws/mesures/b_idle_drl (modes=heuristic args=idle_mode:=drl), 5033 Mo libres, 54 C
+robots=3 duree=900s modes=[heuristic] modele=/home/chchch/warehouse_ws/install/warehouse_marl/share/warehouse_marl/models/drl3_best.pt args=[idle_mode:=drl] sortie=/home/chchch/warehouse_ws/mesures/b_idle_drl
+[heuristic] demarrage 00:07:51, 4947 Mo libres, domaine 83
+[1]   Terminated              ros2 launch warehouse_marl warehouse_full.launch.py robot_count:="$ROBOTS" headless:=true rviz:=false dashboard:=false drl_mode:="$mode" "${EXTRA[@]}" "$@" > "$OUT/launch_$mode.log" 2>&1
+[2]-  Terminated              ros2 run warehouse_marl task_metrics_logger --ros-args -p output:="$OUT/taches_$mode.csv" -p mode_label:="$mode" > "$OUT/logger_$mode.log" 2>&1
+[3]+  Terminated              ros2 run warehouse_marl rfid_metrics_logger --ros-args -p output:="$OUT/rfid_$mode.csv" > "$OUT/rfid_logger_$mode.log" 2>&1
+[heuristic] fin 00:23:40
+  heuristic    vues    2  terminees    1  echouees   1  en cours   0  temps moyen 10.96 s [nan ; nan]  median 10.96 s
+Synthese : /home/chchch/warehouse_ws/mesures/b_idle_drl/synthese_taches.csv
+[{'mode': 'heuristic', 'taches_vues': 2, 'terminees': 1, 'echouees': 1, 'en_cours_a_la_fin': 0, 'temps_moyen_s': 10.96, 'ic95_bas_s': nan, 'ic95_haut_s': nan, 'temps_median_s': 10.96, 'robots': 'robot3'}]
+[ros2run]: Process exited with failure 1
+[2026-11-17 00:23:50] fin /home/chchch/warehouse_ws/mesures/b_idle_drl, 4966 Mo libres, 55 C
+[2026-11-17 00:23:50] reprise terminee

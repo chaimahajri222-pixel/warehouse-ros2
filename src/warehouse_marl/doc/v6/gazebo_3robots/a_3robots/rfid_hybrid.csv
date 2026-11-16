@@ -1,0 +1,1 @@
+stamp,rfid_error_rate,wms_error_rate,items_in_stock,drift_events,scans,reads,pick_tasks,pick_errors,scan_tasks,mean_uncertainty,rfid_missed,rfid_phantom,rfid_wrong_shelf

@@ -1,0 +1,55 @@
+wall_time,ros_time,mode,task_id,robot_id,target_node,state,elapsed_sec,retries,nav_status,detail
+1794869667.196,20.252,heuristic,task_b0203dce,robot2,shelf_2_1,queued,2.2119999999999997,0,,
+1794869667.251,20.268,heuristic,task_b0203dce,robot2,shelf_2_1,navigating,2.2280000000000015,0,,
+1794869688.926,25.0,heuristic,task_8e45fc26,robot3,shelf_2_0,queued,2.1239999999999988,0,,
+1794869688.988,25.008,heuristic,task_8e45fc26,robot3,shelf_2_0,navigating,2.131999999999998,0,,
+1794869758.719,38.996,heuristic,task_b0203dce,robot2,shelf_2_1,retrying,20.956000000000003,1,6,retry 1/1
+1794869758.81,39.016,heuristic,task_b0203dce,robot2,shelf_2_1,navigating,20.976,1,,
+1794869760.903,39.468,heuristic,task_8e45fc26,robot3,shelf_2_0,succeeded,16.592000000000002,0,4,
+1794869772.679,41.756,heuristic,task_bc0f50b4,robot3,shelf_2_0,queued,13.992,0,,
+1794869772.746,41.772,heuristic,task_bc0f50b4,robot3,shelf_2_0,navigating,14.008,0,,
+1794869775.446,42.264,heuristic,task_bc0f50b4,robot3,shelf_2_0,succeeded,14.500000000000004,0,4,
+1794869787.934,44.5,heuristic,task_c64c7b9a,robot3,shelf_2_0,queued,19.624,0,,
+1794869787.996,44.512,heuristic,task_c64c7b9a,robot3,shelf_2_0,navigating,19.636,0,,
+1794869788.104,44.524,heuristic,task_c64c7b9a,robot3,shelf_2_0,succeeded,19.648,0,4,
+1794869799.39,46.5,heuristic,task_f897eb7e,robot3,shelf_1_0,queued,4.100000000000001,0,,
+1794869799.454,46.516,heuristic,task_f897eb7e,robot3,shelf_1_0,navigating,4.116,0,,
+1794869916.809,66.592,heuristic,task_b0203dce,robot2,shelf_2_1,failed,48.552,1,6,
+1794869928.082,69.0,heuristic,task_10bdb426,robot1,shelf_2_1,queued,8.996000000000002,0,,
+1794869928.151,69.004,heuristic,task_10bdb426,robot1,shelf_2_1,navigating,9.000000000000007,0,,
+1794869993.964,81.94,heuristic,task_f897eb7e,robot3,shelf_1_0,retrying,39.54,1,6,retry 1/1
+1794869994.286,82.008,heuristic,task_f897eb7e,robot3,shelf_1_0,navigating,39.608,1,,
+1794870047.618,92.252,heuristic,task_dd9064dd,robot2,shelf_3_1,queued,2.2239999999999895,0,,
+1794870047.686,92.264,heuristic,task_dd9064dd,robot2,shelf_3_1,navigating,2.23599999999999,0,,
+1794870078.841,98.092,heuristic,task_dd9064dd,robot2,shelf_3_1,retrying,8.063999999999993,1,6,retry 1/1
+1794870079.763,98.272,heuristic,task_dd9064dd,robot2,shelf_3_1,navigating,8.244,1,,
+1794870095.292,101.244,heuristic,task_f897eb7e,robot3,shelf_1_0,failed,58.844,1,6,
+1794870106.37,103.752,heuristic,task_13e126c3,robot3,shelf_1_0,queued,56.532,0,,
+1794870106.411,103.752,heuristic,task_13e126c3,robot3,shelf_1_0,navigating,56.532,0,,
+1794870108.102,104.112,heuristic,task_dd9064dd,robot2,shelf_3_1,failed,14.083999999999989,1,6,
+1794870119.585,106.5,heuristic,task_38db2885,robot2,shelf_3_1,queued,2.2560000000000002,0,,
+1794870119.638,106.504,heuristic,task_38db2885,robot2,shelf_3_1,navigating,2.260000000000005,0,,
+1794870136.917,109.768,heuristic,task_13e126c3,robot3,shelf_1_0,retrying,62.548,1,6,retry 1/1
+1794870138.088,110.012,heuristic,task_13e126c3,robot3,shelf_1_0,navigating,62.792,1,,
+1794870149.809,112.308,heuristic,task_38db2885,robot2,shelf_3_1,retrying,8.064000000000007,1,6,retry 1/1
+1794870150.71,112.508,heuristic,task_38db2885,robot2,shelf_3_1,navigating,8.263999999999996,1,,
+1794870169.128,116.076,heuristic,task_13e126c3,robot3,shelf_1_0,failed,68.856,1,6,
+1794870180.892,118.364,heuristic,task_38db2885,robot2,shelf_3_1,failed,14.120000000000005,1,6,
+1794870182.738,118.752,heuristic,task_e85b034e,robot3,shelf_4_0,queued,2.2439999999999998,0,,
+1794870182.815,118.764,heuristic,task_e85b034e,robot3,shelf_4_0,navigating,2.2560000000000002,0,,
+1794870196.051,121.256,heuristic,task_ab4f0907,robot2,shelf_3_0,queued,2.1880000000000024,0,,
+1794870196.124,121.268,heuristic,task_ab4f0907,robot2,shelf_3_0,navigating,2.200000000000003,0,,
+1794870230.087,127.16,heuristic,task_ab4f0907,robot2,shelf_3_0,retrying,8.091999999999999,1,6,retry 1/1
+1794870230.556,127.264,heuristic,task_ab4f0907,robot2,shelf_3_0,navigating,8.195999999999998,1,,
+1794870263.388,133.144,heuristic,task_ab4f0907,robot2,shelf_3_0,failed,14.076000000000008,1,6,
+1794870275.853,135.504,heuristic,task_777619f2,robot2,shelf_1_1,queued,15.495999999999995,0,,
+1794870275.959,135.52,heuristic,task_777619f2,robot2,shelf_1_1,navigating,15.512000000000015,0,,
+1794870311.293,141.376,heuristic,task_777619f2,robot2,shelf_1_1,retrying,21.36800000000001,1,6,retry 1/1
+1794870311.95,141.504,heuristic,task_777619f2,robot2,shelf_1_1,navigating,21.495999999999995,1,,
+1794870346.753,147.28,heuristic,task_777619f2,robot2,shelf_1_1,failed,27.272000000000006,1,6,
+1794870360.602,150.252,heuristic,task_702020d7,robot2,shelf_3_0,queued,2.2840000000000202,0,,
+1794870360.675,150.26,heuristic,task_702020d7,robot2,shelf_3_0,navigating,2.2920000000000016,0,,
+1794870391.047,156.128,heuristic,task_702020d7,robot2,shelf_3_0,retrying,8.159999999999997,1,6,retry 1/1
+1794870391.684,156.268,heuristic,task_702020d7,robot2,shelf_3_0,navigating,8.300000000000011,1,,
+1794870412.755,160.4,heuristic,task_e85b034e,robot3,shelf_4_0,retrying,43.89200000000001,1,6,retry 1/1
+1794870413.22,160.512,heuristic,task_e85b034e,robot3,shelf_4_0,navigating,44.004000000000005,1,,

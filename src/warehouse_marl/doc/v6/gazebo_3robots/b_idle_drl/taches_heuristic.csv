@@ -1,0 +1,9 @@
+wall_time,ros_time,mode,task_id,robot_id,target_node,state,elapsed_sec,retries,nav_status,detail
+1794870823.705,62.256,heuristic,task_58dd921b,robot3,shelf_2_1,queued,2.2520000000000024,0,,
+1794870824.74,62.5,heuristic,task_58dd921b,robot3,shelf_2_1,navigating,2.496000000000002,0,,
+1794870865.468,70.964,heuristic,task_58dd921b,robot3,shelf_2_1,succeeded,10.96,0,4,
+1794871009.871,107.252,heuristic,task_a4536b1b,robot3,shelf_2_2,queued,2.2519999999999953,0,,
+1794871009.922,107.276,heuristic,task_a4536b1b,robot3,shelf_2_2,navigating,2.2759999999999962,0,,
+1794871035.647,113.204,heuristic,task_a4536b1b,robot3,shelf_2_2,retrying,8.203999999999994,1,6,retry 1/1
+1794871035.876,113.26,heuristic,task_a4536b1b,robot3,shelf_2_2,navigating,8.260000000000005,1,,
+1794871060.8,119.16,heuristic,task_a4536b1b,robot3,shelf_2_2,failed,14.159999999999997,1,6,

@@ -1,0 +1,13 @@
+[2026-11-16 23:01:11] debut, 4791 Mo libres, 45 C
+robots=3 duree=900s modes=[heuristic hybrid] modele=/home/chchch/warehouse_ws/install/warehouse_marl/share/warehouse_marl/models/drl3_best.pt args=[] sortie=/home/chchch/warehouse_ws/mesures/a_3robots
+[heuristic] demarrage 23:01:23, 4696 Mo libres, domaine 83
+[1]   Terminated              ros2 launch warehouse_marl warehouse_full.launch.py robot_count:="$ROBOTS" headless:=true rviz:=false dashboard:=false drl_mode:="$mode" "${EXTRA[@]}" "$@" > "$OUT/launch_$mode.log" 2>&1
+[heuristic] fin 23:17:05
+[hybrid] demarrage 23:17:09, 3471 Mo libres, domaine 83
+[4]   Terminated              ros2 launch warehouse_marl warehouse_full.launch.py robot_count:="$ROBOTS" headless:=true rviz:=false dashboard:=false drl_mode:="$mode" "${EXTRA[@]}" "$@" > "$OUT/launch_$mode.log" 2>&1
+[hybrid] fin 23:32:44
+  heuristic    vues   24  terminees   19  echouees   3  en cours   2  temps moyen 14.26 s [8.58 ; 20.69]  median 12.19 s
+Synthese : /home/chchch/warehouse_ws/mesures/a_3robots/synthese_taches.csv
+[{'mode': 'heuristic', 'taches_vues': 24, 'terminees': 19, 'echouees': 3, 'en_cours_a_la_fin': 2, 'temps_moyen_s': 14.26, 'ic95_bas_s': 8.58, 'ic95_haut_s': 20.69, 'temps_median_s': 12.19, 'robots': 'robot1,robot2,robot3'}]
+[ros2run]: Process exited with failure 1
+[2026-11-16 23:33:09] fin, 50 C

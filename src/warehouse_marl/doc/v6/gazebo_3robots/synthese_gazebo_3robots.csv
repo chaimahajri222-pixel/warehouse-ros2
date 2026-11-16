@@ -1,0 +1,6 @@
+dossier,mode,execution,etat,taches_emises,taches_vues,reussies,echouees,en_cours_fin,temps_moyen_s,ic95_bas,ic95_haut,mediane_s,memoire_libre_min_mo,charge_max,temperature_max_c
+a_3robots,heuristic,heuristic (consensus seul),valide,28,24,19,3,2,14.26,8.58,20.69,12.19,1270,109.42,74
+a_3robots,hybrid,"hybrid, 1re execution","INVALIDE : processus Nav2 restants, carte jamais recue",0,0,0,0,0,,,,,635,147.23,74
+a_3robots_hybrid_reprise,hybrid,"hybrid (consensus + DRL v3), reprise",valide,27,25,16,6,3,12.98,7.04,20.79,9.23,1130,111.14,72
+b_idle_stay,heuristic,idle_mode:=stay,valide (robot2 : 5 abandons Nav2),16,13,3,7,3,16.91,14.5,19.65,16.59,1401,117.27,72
+b_idle_drl,heuristic,idle_mode:=drl (modele v4),"valide mais 8 taches emises, 2 executees (carte incomplete)",8,2,1,1,0,10.96,nan,nan,10.96,1244,103.78,70

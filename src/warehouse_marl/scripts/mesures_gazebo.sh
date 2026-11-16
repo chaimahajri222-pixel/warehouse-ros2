@@ -38,13 +38,30 @@ fi
 mkdir -p "$OUT"
 echo "robots=$ROBOTS duree=${DUREE}s modes=[$MODES] modele=$MODELE args=[${LAUNCH_ARGS:-}] sortie=$OUT"
 
+pids_du_domaine() {   # processus ROS / Gazebo de CE domaine (jamais ce script ni ses parents)
+  local pid dom
+  for pid in $(pgrep -f '/opt/ros/|warehouse_ws/install|gz sim|ruby .*gz'); do
+    [ "$pid" = "$$" ] && continue
+    [ "$pid" = "$PPID" ] && continue
+    dom=$(tr '\0' '\n' < /proc/$pid/environ 2>/dev/null | sed -n 's/^ROS_DOMAIN_ID=//p')
+    [ "$dom" = "$ROS_DOMAIN_ID" ] && echo "$pid"
+  done
+}
+
 nettoyage() {   # uniquement les processus de CE domaine
   bash "$KILL_SIM" -y >/dev/null 2>&1 || true
-  for pid in $(pgrep -f 'warehouse_marl/lib/warehouse_marl/'); do
-    dom=$(tr '\0' '\n' < /proc/$pid/environ 2>/dev/null | sed -n 's/^ROS_DOMAIN_ID=//p')
-    [ "$dom" = "$ROS_DOMAIN_ID" ] && kill -TERM "$pid" 2>/dev/null
-  done
-  sleep 3
+  # kill_rosnav_sim.sh ne reconnait que le motif rosnav_bot : les noeuds Nav2
+  # (controller_server, amcl, ...) lances avec des parametres temporaires lui
+  # echappent et survivent au mode suivant (constate le 16/11/2026 : la 2e
+  # execution ne recevait plus la carte). On arrete donc tout le domaine.
+  local p
+  p=$(pids_du_domaine)
+  [ -n "$p" ] && kill -TERM $p 2>/dev/null
+  sleep 8
+  p=$(pids_du_domaine)
+  [ -n "$p" ] && kill -KILL $p 2>/dev/null
+  sleep 2
+  fastdds shm clean >/dev/null 2>&1 || true   # verrous DDS orphelins seulement
 }
 
 run_mode() {

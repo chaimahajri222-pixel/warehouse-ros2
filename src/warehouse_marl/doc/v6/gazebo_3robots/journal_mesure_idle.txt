@@ -1,0 +1,11 @@
+[2026-11-16 23:23:55] debut idle_mode:=stay, 841 Mo libres, 59 C
+robots=3 duree=900s modes=[heuristic] modele=/home/chchch/warehouse_ws/install/warehouse_marl/share/warehouse_marl/models/drl3_best.pt args=[idle_mode:=stay] sortie=/home/chchch/warehouse_ws/mesures/b_idle_stay
+[heuristic] NON LANCE : 956 Mo libres < 3000 Mo.
+Aucun CSV de taches : rien a synthetiser.
+[2026-11-16 23:24:25] fin idle_mode:=stay, 58 C
+[2026-11-16 23:24:25] debut idle_mode:=drl, 929 Mo libres, 58 C
+robots=3 duree=900s modes=[heuristic] modele=/home/chchch/warehouse_ws/install/warehouse_marl/share/warehouse_marl/models/drl3_best.pt args=[idle_mode:=drl] sortie=/home/chchch/warehouse_ws/mesures/b_idle_drl
+[heuristic] NON LANCE : 949 Mo libres < 3000 Mo.
+Aucun CSV de taches : rien a synthetiser.
+[2026-11-16 23:24:56] fin idle_mode:=drl, 57 C
+[2026-11-16 23:24:56] experience b terminee
