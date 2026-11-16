@@ -1,0 +1,5 @@
+modele,cible,n,decisions_sans_valeur,spearman_q_observe,biais_moyen_q_moins_observe,q_moyen,observe_moyen
+petit,recompense,737,0,0.1723,-0.42972,-0.57119,-0.14147
+petit,retour_escompte,737,0,0.2225,0.05906,-0.57119,-0.63025
+grand,recompense,700,240,0.6267,-0.3467,-0.44548,-0.09878
+grand,retour_escompte,700,240,0.5591,-0.27522,-0.44548,-0.17027

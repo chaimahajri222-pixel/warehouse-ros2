@@ -1,0 +1,5 @@
+modele,grandeur,n,moyenne,mediane,ecart_type,p05,p95,min,max,part_positive_pct,abs_moyen_prior_choisi
+petit,ecart_correction_choisi_moins_couverture,737,0.0494,0.0,0.0751,-0.0,0.23327,-0.0,0.36376,49.53,
+grand,ecart_correction_choisi_moins_couverture,940,0.01715,0.01505,0.01707,0.0,0.03871,-0.0,0.13667,89.47,
+petit,correction_au_noeud_choisi,737,-0.45507,-0.46664,0.09805,-0.63799,-0.29485,-0.75718,-0.0405,0.0,0.11612
+grand,correction_au_noeud_choisi,940,-0.37273,-0.34562,0.0648,-0.51663,-0.32031,-0.52963,-0.1767,0.0,0.06297
