@@ -290,7 +290,7 @@ def main(argv=None):
     from warehouse_marl.drl.alloc6 import N_ALLOC6_FEATURES
     nf = {'idle6': N_IDLE6_FEATURES, 'route6': N_ROUTE6_FEATURES,
           'alloc6': N_ALLOC6_FEATURES}[kind]
-    gamma = {'idle6': 0.9, 'route6': 1.0, 'alloc6': 0.95}[kind]
+    gamma = {'idle6': 0.9, 'route6': 1.0, 'alloc6': 0.99}[kind]   # alloc6 : ecart 7
     val_sc = val_scenarios(kind, args.taille)
     ref = reference(kind, val_sc, args.out_dir)
     budget = args.budget_min * 60.0
@@ -302,7 +302,7 @@ def main(argv=None):
     agent.meta = {'train_seed': seed, 'version': 'v6',
                   'reward': {'idle6': '-approche / (diametre / vitesse moyenne)',
                              'route6': '-duree / 60 s',
-                             'alloc6': '-(attente des taches ouvertes + service) / 60 s'}[kind],
+                             'alloc6': '-(taches non finies x duree) / 60 s (ecart 7)'}[kind],
                   'train_every': args.train_every, 'taille': args.taille,
                   'idle6_sans_tache': args.idle6_sans_tache,
                   'idle6_recompense': args.idle6_recompense}

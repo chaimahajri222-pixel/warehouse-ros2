@@ -12,7 +12,10 @@ import glob
 import os
 import shutil
 
-KINDS = (('idle6', 'A', 'drl_idle6'), ('route6', 'B', 'drl_route6'), ('alloc6', 'C', 'drl_alloc6'))
+# (dossier d'entrainement, type de modele, phase) ; ecart 3 : A = petit + grand
+TRAININGS = (('idle6_petit', 'idle6', 'A, modele petit (15 et 40 racks)'),
+             ('idle6_grand', 'idle6', 'A, modele grand (150 racks)'),
+             ('route6', 'route6', 'B'), ('alloc6', 'alloc6', 'C'))
 
 
 def read(path):
@@ -26,32 +29,41 @@ def ref(fname, i):
 
 def copy_all(args, out):
     os.makedirs(out, exist_ok=True)
-    for kind, _, _ in KINDS:
-        d = os.path.join(args.drl_dir, kind)
+    for name, kind, _ in TRAININGS:
+        d = os.path.join(args.drl_dir, name)
         if not os.path.isdir(d):
             continue
-        dst = os.path.join(out, f'entrainement_{kind}')
+        dst = os.path.join(out, f'entrainement_{name}')
         os.makedirs(dst, exist_ok=True)
         for pat in ('*.csv', '*.png', 'fini_seed*.txt', f'selected_{kind}.pt'):
             for f in glob.glob(os.path.join(d, pat)):
                 shutil.copy(f, dst)
-        j = os.path.join(args.drl_dir, f'journal_{kind}.txt')
+        j = os.path.join(args.drl_dir, f'journal_{name}.txt')
         if os.path.isfile(j):
             shutil.copy(j, dst)
+    # lancements interrompus (ecarts 3 a 6) : journaux de validation seulement
+    for d in sorted(glob.glob(os.path.join(args.drl_dir, '*_interrompu_*'))):
+        dst = os.path.join(out, 'lancements_interrompus', os.path.basename(d))
+        os.makedirs(dst, exist_ok=True)
+        for pat in ('val_log_seed*.csv', 'val_ref.csv', 'journal_*.txt'):
+            for f in glob.glob(os.path.join(d, pat)):
+                shutil.copy(f, dst)
+    for f in glob.glob(os.path.join(args.drl_dir, 'journal_chaine*.txt')):
+        shutil.copy(f, out)
     for pat in ('*.csv', '*.png', '*.txt'):
         for f in glob.glob(os.path.join(args.test_dir, pat)):
             shutil.copy(f, out)
     shutil.copy(args.protocol, out)
 
 
-def section_selection(L, out, kind):
-    d = os.path.join(out, f'entrainement_{kind}')
+def section_selection(L, out, name, kind):
+    d = os.path.join(out, f'entrainement_{name}')
     path = os.path.join(d, f'selection_{kind}.csv')
     if not os.path.isfile(path):
-        L.append(f'*Pas de selection pour {kind} (entrainement non fait).*\n')
+        L.append(f'*Pas de selection pour {name} (entrainement non fait).*\n')
         return
     rows = read(path)
-    fname = f'entrainement_{kind}/selection_{kind}.csv'
+    fname = f'entrainement_{name}/selection_{kind}.csv'
     L.append('| graine | instant (min) | episode | ecart relatif de validation | '
              'temps de validation (s) | reprises | retenu | source |')
     L.append('|---|---|---|---|---|---|---|---|')
@@ -66,11 +78,11 @@ def section_selection(L, out, kind):
         if os.path.isfile(tl):
             t = read(tl)
             L.append(f"- Graine {s} : {len(t)} episodes d'entrainement en {t[-1]['temps_min']} min "
-                     f"({ref(f'entrainement_{kind}/train_log_seed{s}.csv', len(t) - 1)}).")
+                     f"({ref(f'entrainement_{name}/train_log_seed{s}.csv', len(t) - 1)}).")
     vr = os.path.join(d, 'val_ref.csv')
     if os.path.isfile(vr):
         L.append(f'- Heuristiques concurrentes sur les scenarios de validation : '
-                 f'`entrainement_{kind}/val_ref.csv` ({len(read(vr))} scenarios).')
+                 f'`entrainement_{name}/val_ref.csv` ({len(read(vr))} scenarios).')
     L.append('')
 
 
@@ -175,9 +187,11 @@ def main():
          'Protocole : `PROTOCOLE_V6.md` (copie dans ce dossier). Graines de test v6 : '
          '2 000 003 + 1 013 k, k = 0..19. Victoire = p de Holm < 0,05 et ecart moyen < 0.', '']
     L += ['## 1. Selection des modeles (validation uniquement)', '']
-    for kind, ph, drl in KINDS:
-        L += [f'### Phase {ph} : {drl}', '']
-        section_selection(L, out, kind)
+    for name, kind, label in TRAININGS:
+        L += [f'### Phase {label} : drl_{kind}', '']
+        section_selection(L, out, name, kind)
+    L += ['Lancements interrompus (ecarts 3 a 6 de `PROTOCOLE_V6.md`, ni selection ni test) : '
+          'journaux de validation dans `lancements_interrompus/`.', '']
     L += ['## 2. Phase A : drl_idle6 contre la meilleure des 3 heuristiques d attente v4 '
           'et contre la couverture (famille A, 28 tests, Holm ; ecart 2)', '']
     section_principal(L, out, 'idle6')

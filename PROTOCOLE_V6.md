@@ -530,3 +530,32 @@ Les 4 conditions dataset (vagues de test), sans capacité de segment. Méthodes 
      Ses fichiers sont dans `~/warehouse_ws/drl_v6/route6_interrompu_1650/` et ne
      servent ni à la sélection ni au test. B est relancé de zéro, puis C à la
      suite.
+7. **Récompense de `drl_alloc6` : l'attente était toujours « moins chère »**
+   (16/11/2026, 20 h 25). Cet écart est décidé **avant tout essai de test de la
+   phase C**. Les tests A et B sont déjà faits et ne sont pas concernés.
+   - **Constat.** Le premier lancement C (19 h 59) donne une validation `nan`
+     à t = 10 min (645 s de validation au lieu de 8). Aucune tâche n'est finie.
+   - **Diagnostic.** Il est fait avec une graine d'exploration (900 003 001), sur
+     60 tâches train_fit. Le point de contrôle de t = 10 min choisit « attendre
+     un pas » 3 387 fois et ne finit aucune tâche, quand `greedy_pair` les finit
+     toutes en 21,9 s de moyenne.
+   - **Cause.** La récompense de §3.3, reprise du v3, compte d'un coup tout le
+     temps de service de la tâche attribuée, alors qu'attendre ne coûte que
+     l'attente des tâches en file jusqu'à la décision suivante. Les décisions
+     ont lieu tous les 0,25 s et γ = 0,95, donc les coûts reportés sont presque
+     effacés par l'escompte. Attendre paraît donc toujours moins cher.
+   - **Correction.**
+     - **Récompense au fil de l'eau :** −(somme, sur les pas entre deux
+       décisions, du nombre de tâches arrivées non finies × dt) / 60, plus
+       120 s par tâche non finie à la fin de l'épisode. La somme sur un épisode
+       vaut −Σ(fin − création)/60 : avec une politique aléatoire, on mesure
+       −31,99 contre −31,85.
+     - **γ = 0,99,** car les décisions sont très rapprochées.
+     - **Garde-fou :** au plus 10 attentes consécutives (10 s) par robot.
+       Au-delà, l'action d'attente n'est plus proposée à ce robot.
+     - L'équivalence f_θ = 0 → `greedy_pair` est inchangée (testée).
+   - **Inchangés :** les entrées, la validation (12 scénarios), la règle de
+     sélection (instant 0 inclus) et le budget (3 × 45 min).
+   - **Lancement interrompu.** Le lancement de 19 h 59 a été arrêté vers
+     20 h 20. Ses fichiers sont dans `~/warehouse_ws/drl_v6/alloc6_interrompu_2022/`
+     et ne servent ni à la sélection ni au test.

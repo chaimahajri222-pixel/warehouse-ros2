@@ -341,7 +341,7 @@ def figure_ecarts(prin, step, out_dir):
                         f"(vs {r['concurrent']})" for r in reversed(prin)], fontsize=7)
     ax.set_xlabel('Ecart de temps de traitement moyen, DRL - concurrent (s)\n'
                   '< 0 : DRL plus rapide ; gris : non significatif (Holm, alpha = 0,05)')
-    ax.set_title(f'v6, etape {step} : ecart apparie et IC 95 % bootstrap '
+    ax.set_title(f'v6, etape {step} : ecart apparie et IC 95 % bootstrap\n'
                  f'({N_TEST6} graines de test v6)', fontsize=10)
     fig.tight_layout()
     path = os.path.join(out_dir, f'fig_{step}_ecarts_v6.png')

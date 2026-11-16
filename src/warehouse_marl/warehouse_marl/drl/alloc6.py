@@ -20,11 +20,12 @@ caracteristiques d'anticipation, dont une PREVISION DE LA DEMANDE PAR ZONE
 (zone = rayon 0,15 x diametre autour d'un noeud) apprise sur la partie
 ENTRAINEMENT (train_fit) du decoupage chronologique 70/30 de Footwear.
 
-Recompense (comme env_v3) de la decision k :
-  -( attente cumulee des taches ouvertes jusqu'a la decision suivante
-     + temps de service (attribution -> fin) de la tache attribuee, ou 0 pour
-       une attente ; +120 s si la tache echoue ou n'est pas finie ) / 60.
-La somme des recompenses d'un episode vaut -(somme des temps de traitement)/60.
+Recompense (ecart 7 de PROTOCOLE_V6.md) de la decision k :
+  -( somme, sur les pas de temps entre k et k+1, du nombre de taches arrivees
+     non finies x dt ) / 60 ; a la fin, +120 s par tache non finie.
+La somme des recompenses d'un episode vaut -(somme des temps de traitement)/60,
+sans cout concentre sur l'attribution. gamma = 0,99. Au plus 10 attentes
+consecutives (10 s) par robot.
 """
 
 from __future__ import annotations
@@ -41,6 +42,7 @@ HOLD_S = 1.0
 HOLD_MARGIN = 0.05            # fraction du diametre ajoutee au cout de l'attente
 REWARD_NORM_S = 60.0
 FAILURE_PENALTY_S = 120.0
+MAX_CONSEC_HOLDS = 10         # ecart 7 : au plus 10 attentes consecutives (10 s) par robot
 N_EXTRA = 9
 N_ALLOC6_FEATURES = N_FEATURES_V3 + N_EXTRA
 EXTRA_NAMES = ('est_attente', 'prevision_zone_robot', 'prevision_zone_cible',
@@ -81,7 +83,8 @@ class AllocBenchmark(BenchmarkV6):
         if not self.alloc6:
             return super().allocate()
         if self._last6 is not None:
-            self._last6['wait'] += len(self.open) * self.dt
+            # ecart 7 : cout au fil de l'eau = taches arrivees non finies x dt
+            self._last6['wait'] += sum(1 for k in self.tasks if k.done is None) * self.dt
         while True:
             free = [r for r in self.robots if self.idle(r)
                     and self.hold_until.get(r.rid, -1.0) <= self.t + 1e-9]
@@ -138,6 +141,8 @@ class AllocBenchmark(BenchmarkV6):
             acts.append((r, k))
         n = max(len(self.robots), 1)
         for r in free:
+            if self.consec.get(r.rid, 0) >= MAX_CONSEC_HOLDS:   # ecart 7 : garde-fou
+                continue
             x = [0.0] * N_FEATURES_V3
             x[0] = -(best[r.rid] + HOLD_MARGIN * diam) / diam
             x[3] = r.speed / max(self.mean_speed, 1e-6)
@@ -148,51 +153,26 @@ class AllocBenchmark(BenchmarkV6):
             acts.append((r, None))
         return acts, np.asarray(feats, dtype=np.float32)
 
-    # ----- transitions (comme env_v3) ----------------------------------- #
+    # ----- transitions (ecart 7 : cout au fil de l'eau) ------------------ #
+    # Recompense de la decision k : -(somme sur les pas entre k et k+1 du
+    # nombre de taches arrivees non finies x dt) / 60. La somme sur l'episode
+    # vaut -(somme des temps de traitement) / 60 : aucun cout n'est concentre
+    # sur l'attribution (ce qui rendait l'attente toujours "moins chere").
     def _record(self, feats, j):
-        if self._last6 is not None:
-            self._last6['next'] = feats
-        rec = {'feat': feats[j], 'task': None, 'wait': 0.0, 'next': None, 'terminal': False}
-        if self.cb6 is not None:
-            self._pending6.append(rec)
-        self._last6 = rec
-        self._flush(False)
-
-    def _service(self, rec, over):
-        k = rec['task']
-        if k is None:
-            return 0.0
-        if k.done is None:
-            return (self.t - k.assigned + FAILURE_PENALTY_S) if over else None
-        return k.done - k.assigned + (FAILURE_PENALTY_S if k.failed else 0.0)
-
-    def _flush(self, over):
-        if self.cb6 is None:
-            return
-        keep = []
-        for rec in self._pending6:
-            if rec['next'] is None and not over:
-                keep.append(rec)
-                continue
-            s = self._service(rec, over)
-            if s is None:
-                keep.append(rec)
-                continue
-            nxt = rec['next'] if rec['next'] is not None else \
-                np.zeros((0, N_ALLOC6_FEATURES), dtype=np.float32)
-            self.cb6(rec['feat'], -(rec['wait'] + s) / REWARD_NORM_S, nxt,
-                     rec['next'] is None)
-        self._pending6 = keep
-
-    def end_tick(self):
-        fin = super().end_tick()
-        if self.cb6 is not None and self._pending6 and int(self.t / self.dt) % 20 == 0:
-            self._flush(False)
-        return fin
+        if self._last6 is not None and self.cb6 is not None:
+            self.cb6(self._last6['feat'], -self._last6['wait'] / REWARD_NORM_S, feats, False)
+        self._last6 = {'feat': feats[j], 'task': None, 'wait': 0.0}
 
     def run(self):
         out = super().run()
-        self._flush(True)
+        if self._last6 is not None and self.cb6 is not None:
+            # taches non finies a la fin : penalite par tache
+            left = sum(1 for k in self.tasks if k.done is None) + \
+                (len(self.arrivals) - len(self.tasks))
+            self.cb6(self._last6['feat'],
+                     -(self._last6['wait'] + left * FAILURE_PENALTY_S) / REWARD_NORM_S,
+                     np.zeros((0, N_ALLOC6_FEATURES), dtype=np.float32), True)
+            self._last6 = None
         return out
 
     def metrics(self):
