@@ -19,7 +19,8 @@ for s in $SEEDS; do
   for essai in 1 2 3 4; do
     echo "[$(date '+%F %T')] $KIND graine $s, lancement $essai"
     PYTHONPATH="$SRC" "$PY" -u -m warehouse_marl.drl.train_v6 --kind "$KIND" --seed "$s" \
-      --budget-min "$BUDGET" --threads 2 --train-every "$TRAIN_EVERY" --out-dir "$OUT"
+      --budget-min "$BUDGET" --threads 2 --train-every "$TRAIN_EVERY" --taille "${TAILLE:-tous}" \
+      --out-dir "$OUT"
     rc=$?
     echo "[$(date '+%F %T')] $KIND graine $s, code de sortie $rc"
     [ -f "$OUT/fini_seed$s.txt" ] && break

@@ -25,8 +25,26 @@ def read(path):
         return list(csv.DictReader(f))
 
 
+COMPETITORS = {'idle6': ('rester_sur_place', 'retour_au_depot', 'centre_de_demande',
+                         'couverture'),
+               'route6': ('dijkstra_statique', 'dijkstra_dynamique', 'dijkstra_congestion'),
+               'alloc6': ('greedy_pair', 'greedy_time')}
+
+
+def criterion(r, ref_rows, kind):
+    """Ecart relatif moyen recalcule depuis les colonnes sc<i> du journal de
+    validation et val_ref.csv (concurrents de COMPETITORS, couverture comprise
+    pour idle6 : ecart 2 de PROTOCOLE_V6.md)."""
+    gaps = []
+    for i, x in enumerate(ref_rows):
+        best = min(float(x[h]) for h in COMPETITORS[kind])
+        gaps.append((float(r[f'sc{i}']) - best) / best)
+    return statistics.mean(gaps)
+
+
 def select(kind, d):
     rows = []
+    ref_rows = read(os.path.join(d, 'val_ref.csv'))
     for path in sorted(glob.glob(os.path.join(d, 'val_log_seed*.csv'))):
         for line, r in enumerate(read(path), start=2):
             seed = int(r['graine'])
@@ -34,7 +52,7 @@ def select(kind, d):
             ckpt = os.path.join(d, f'ckpt_seed{seed}_t{int(round(tmin))}.pt')
             rows.append({'kind': kind, 'graine': seed, 'episode': int(r['episode']),
                          'temps_min': tmin,
-                         'val_ecart_rel_moy': float(r['val_ecart_rel_moy']),
+                         'val_ecart_rel_moy': criterion(r, ref_rows, kind),
                          'val_temps_traitement_moy_s': float(r['val_temps_traitement_moy_s']),
                          'reprises': r.get('reprises', '0'),
                          'fichier_val': os.path.basename(path), 'ligne_val': line,

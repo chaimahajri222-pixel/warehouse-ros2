@@ -356,3 +356,74 @@ Les 4 conditions dataset (vagues de test), sans capacité de segment. Méthodes 
      pour ne pas réutiliser celles de A et de B.
    - L'équivalence f_θ = 0 → `greedy_pair` est vérifiée par
      `test/test_v6.py::test_untrained_alloc6_equals_greedy_pair`.
+2. **La couverture devient un concurrent de la phase A** (16/11/2026, 09 h 50, à la
+   demande de l'utilisatrice). Cet écart est décidé **avant tout essai sur les
+   graines de test v6**. Aucune simulation de test n'a été lancée, ni pour une
+   heuristique ni pour un DRL.
+   - **Raison :** `couverture` est l'heuristique de départ de `drl_idle6`
+     (f_θ = 0). Une victoire du DRL ne doit pas venir seulement de ce terme a
+     priori ; elle doit être mesurée contre lui.
+   - **Famille A (remplace §7) :** 28 tests au lieu de 14. Pour chacune des 14
+     (condition, allocation), on fait deux tests de Wilcoxon :
+     - `drl_idle6` contre la meilleure des 3 heuristiques v4, choisie comme avant ;
+     - `drl_idle6` contre `couverture`.
+
+     La correction de Holm porte sur les 28 tests.
+   - Une (condition, allocation) n'est une **victoire** que si **les deux** tests
+     sont des victoires (p de Holm < 0,05 et écart < 0).
+   - On rapporte aussi le décompte de la comparaison prévue au départ (meilleure des
+     3), mais la conclusion porte sur la règle à deux tests.
+   - **Sélection (remplace §5 pour A) :** la référence de chaque scénario de
+     validation devient la meilleure des **4** heuristiques, couverture comprise.
+     Le critère (écart relatif moyen) est recalculé par `selection_v6.py` à partir
+     des colonnes par scénario du journal de validation et de `val_ref.csv`.
+   - `couverture` n'est plus descriptive. `drl_idle` v4 reste descriptif (famille
+     secondaire).
+3. **Arrêt de l'entraînement A et deux modèles : petit et grand** (16/11/2026,
+   09 h 48, à la demande de l'utilisatrice). Cet écart est décidé **avant tout
+   essai de test**.
+   - **Constat, sur la validation seulement.** On mesure, par taille de flotte,
+     l'écart moyen à la meilleure des 3 heuristiques v4 sur les scénarios de
+     validation (graine 0) :
+
+     | Instant | 3 robots | 6 robots | 20 robots |
+     |---|---|---|---|
+     | t = 0 | −0,2 % | −8,4 % | −15,2 % |
+     | t = 10 min | −2,0 % | −6,6 % | **+13,0 %** |
+     | t = 20 min | +0,6 % | −9,2 % | **+13,6 %** |
+
+     La dégradation à 20 robots se répète sur deux points de suite. C'est la même
+     pathologie qu'en v4.
+   - **Décision.** On ne va pas au bout du lancement : la graine 0 est arrêtée à
+     t ≈ 21 min. Ses fichiers sont conservés dans
+     `~/warehouse_ws/drl_v6/idle6_interrompu_0951/` et ne servent **ni** à la
+     sélection **ni** au test. On relance avec **deux modèles dédiés** (option
+     « modèle dédié au grand entrepôt » de la phase A) :
+     - **petit** : 15 racks / 3 r. (ρ = 0,7 et 0,9) et 40 racks / 6 r., avec
+       échantillonnage uniforme parmi ces 3 configurations. Validation : 18
+       scénarios (les mêmes que dans le plan initial, sans ceux à 150 racks).
+     - **grand** : 150 racks / 20 r. seulement. Validation : 12 fenêtres
+       train_val, `greedy_pair`, graines de validation v6 d'indice 100 à 111.
+   - **Pourquoi pas un échantillonnage équilibré.** Les entrées sont
+     indépendantes de la taille, si bien que 3 et 20 robots se ressemblent dans les
+     entrées alors qu'ils demandent des corrections opposées. Un réseau unique
+     reçoit donc des cibles contradictoires. Passer de 1 épisode sur 4 à 1 sur 3
+     pour les 20 robots ne lève pas ce conflit.
+   - **Au test,** `drl_idle6` utilise le modèle petit si la flotte a moins de
+     10 robots (dataset 15 et 40 racks, Zipf à 6 robots) et le modèle grand sinon
+     (150 racks / 20 r.). Le modèle utilisé est noté dans la colonne `modele` de
+     `essais_idle6.csv`.
+   - **Sélection :** elle se fait séparément pour chaque modèle, avec la règle du
+     §5 et l'écart 2 (couverture dans la référence). L'instant 0 est candidat ;
+     s'il est retenu, le DRL est la couverture pour cette taille, et on le
+     rapporte.
+   - **Budgets,** toujours au plus 3 graines et 2 h par graine, un seul
+     entraînement à la fois. Ils sont revus pour tenir le temps total ; tous sont
+     fixés avant les entraînements concernés :
+
+     | Entraînement | Budget par graine |
+     |---|---|
+     | A petit | 40 min |
+     | A grand | 60 min |
+     | B | 60 min (au lieu de 90) |
+     | C | 45 min (au lieu de 60) |

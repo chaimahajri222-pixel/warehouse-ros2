@@ -40,7 +40,10 @@ STEPS = {
     'idle6': dict(
         phase='A', drl='drl_idle6',
         competitors=('rester_sur_place', 'retour_au_depot', 'centre_de_demande'),
-        descriptive=('couverture', 'drl_idle'), compare='best',
+        # ecart 2 (PROTOCOLE_V6.md) : la couverture est un concurrent a part entiere,
+        # testee separement ; victoire = victoire contre la meilleure des 3 ET contre elle
+        extra_competitors=('couverture',),
+        descriptive=('drl_idle',), compare='best',
         allocations=('greedy_pair', 'greedy_time'),
         experiments=[('dataset', DATASET), ('zipf', ZIPF)],
         secondary=('approche_moy_s', 'taches_echouees', 'attente_attribution_moy_s')),
@@ -67,7 +70,10 @@ def _init_worker(step, model_path):
     from warehouse_marl.drl.v4_dqn import load_v4_model
     if model_path:
         kind = {'idle6': 'idle6', 'route6': 'route6', 'alloc6': 'alloc6'}[step]
-        _AGENTS['drl'] = load_v4_model(model_path, kind)
+        paths = model_path.split(',')
+        _AGENTS['drl'] = load_v4_model(paths[0], kind)
+        # ecart 3 : idle6 = "petit.pt,grand.pt" ; le grand sert si R >= 10
+        _AGENTS['drl_grand'] = load_v4_model(paths[1], kind) if len(paths) > 1 else _AGENTS['drl']
     if step == 'idle6' and os.path.isfile(V4_IDLE_MODEL):
         _AGENTS['drl_idle'] = load_v4_model(V4_IDLE_MODEL, 'idle')
 
@@ -92,7 +98,7 @@ def run_one(job):
     sc = scenario(step, cfg, alloc, k)
     agent = None
     if method == spec['drl']:
-        agent = _AGENTS['drl']
+        agent = _AGENTS['drl_grand'] if cfg['robots'] >= 10 else _AGENTS['drl']
     elif method == 'drl_idle':
         agent = _AGENTS.get('drl_idle')
     t0 = time.perf_counter()
@@ -180,6 +186,9 @@ def principal(rows, step):
             row = _row(step, exp, cond, alloc, by_m, drl, best, 'meilleur concurrent')
             row.update({f'moyenne_{m}': round(means[m], 3) for m in comp})
             out.append(row)
+            for m in spec.get('extra_competitors', ()):
+                if m in by_m:
+                    out.append(_row(step, exp, cond, alloc, by_m, drl, m, 'concurrent ajoute'))
         else:
             for m in comp:
                 out.append(_row(step, exp, cond, alloc, by_m, drl, m, 'chaque concurrent'))
@@ -191,7 +200,8 @@ def secondaire(rows, step):
     drl = spec['drl']
     out = []
     # famille 1 : contre chaque concurrent ; familles 2.. : contre chaque methode descriptive
-    families = [('contre chaque concurrent', spec['competitors'])] + \
+    families = [('contre chaque concurrent',
+                 tuple(spec['competitors']) + tuple(spec.get('extra_competitors', ())))] + \
         [(f'contre {d}', (d,)) for d in spec['descriptive']]
     for name, advs in families:
         fam = []
@@ -207,7 +217,7 @@ def secondaire(rows, step):
         for (exp, cond, alloc), by_m in _groups(rows).items():
             if drl not in by_m:
                 continue
-            for adv in spec['competitors']:
+            for adv in tuple(spec['competitors']) + tuple(spec.get('extra_competitors', ())):
                 seeds, a, b = _compare(by_m, drl, adv, metric)
                 if not a or any(math.isnan(x) for x in a + b):
                     continue
@@ -229,7 +239,7 @@ def descriptive(rows, step):
     spec = STEPS[step]
     metrics = (PRIMARY,) + spec['secondary'] + ('ms_par_decision_route',
                                                 'ms_par_decision_attente', 'replis_route6',
-                                                'attentes_choisies')
+                                                'attentes_choisies', 'attentes_allocation')
     out = []
     for (exp, cond, alloc), by_m in _groups(rows).items():
         for m, by_s in by_m.items():
@@ -258,7 +268,8 @@ def figures(rows, step, out_dir):
     plt.rcParams.update({'axes.grid': True, 'grid.alpha': 0.3, 'axes.spines.top': False,
                          'axes.spines.right': False})
     spec = STEPS[step]
-    methods = list(spec['competitors']) + list(spec['descriptive']) + [spec['drl']]
+    methods = (list(spec['competitors']) + list(spec.get('extra_competitors', ()))
+                   + list(spec['descriptive']) + [spec['drl']])
     methods = [m for m in methods if any(r['methode'] == m for r in rows)]
     colors = dict(zip(methods, PALETTE[-len(methods):] if len(methods) < 6 else PALETTE))
     colors[spec['drl']] = '#c44e52'
@@ -354,7 +365,8 @@ def main(argv=None):
     spec = STEPS[step]
     path = os.path.join(args.out_dir, f'essais_{step}.csv')
     if not args.stats_only:
-        methods = list(spec['competitors']) + list(spec['descriptive']) + [spec['drl']]
+        methods = (list(spec['competitors']) + list(spec.get('extra_competitors', ()))
+                   + list(spec['descriptive']) + [spec['drl']])
         jobs = [(step, exp, cfg, alloc, m, k) for exp, cfgs in spec['experiments']
                 for cfg in cfgs for alloc in spec['allocations'] for m in methods
                 for k in range(N_TEST6)]
@@ -368,7 +380,9 @@ def main(argv=None):
             _init_worker(step, args.model)
             rows = [run_one(j) for j in jobs]
         for r in rows:
-            r['modele'] = (os.path.basename(args.model) if r['methode'] == spec['drl'] else
+            mp_ = [os.path.basename(x) for x in args.model.split(',')]
+            mdl = mp_[-1] if (len(mp_) > 1 and float(r['robots']) >= 10) else mp_[0]
+            r['modele'] = (mdl if r['methode'] == spec['drl'] else
                            ('selected_idle.pt (v4)' if r['methode'] == 'drl_idle' else ''))
         write_csv(path, rows)
         print(f'{path} ({time.time() - t0:.0f} s)', flush=True)

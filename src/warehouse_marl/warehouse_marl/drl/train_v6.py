@@ -55,7 +55,10 @@ assert not set(TEST6_SEEDS) & (TEST_SEEDS_V4 | set(VAL_SEEDS_V4))
 IDLE_HEURISTICS = ('rester_sur_place', 'retour_au_depot', 'centre_de_demande')
 ROUTE_HEURISTICS = ('dijkstra_statique', 'dijkstra_dynamique', 'dijkstra_congestion')
 ALLOC_HEURISTICS = ('greedy_pair', 'greedy_time')
-HEURISTICS = {'idle6': IDLE_HEURISTICS, 'route6': ROUTE_HEURISTICS, 'alloc6': ALLOC_HEURISTICS}
+# Ecart 2 (PROTOCOLE_V6.md) : la couverture est aussi un concurrent de la phase A,
+# donc aussi dans la reference de validation (critere de selection).
+HEURISTICS = {'idle6': IDLE_HEURISTICS + ('couverture',), 'route6': ROUTE_HEURISTICS,
+              'alloc6': ALLOC_HEURISTICS}
 
 # conditions du banc de routage avec congestion (phase B)
 ROUTE6_TRAIN_FLEETS = [(10, (10, 8)), (20, (10, 8)), (20, (15, 10))]
@@ -129,13 +132,30 @@ def make_sim6(sc, mode, agent=None, epsilon=0.0, cb=None, explore_seed=None, pha
                        explore_seed=explore_seed, **kw)
 
 
-def val_scenarios(kind):
+def idle6_configs(taille):
+    """Ecart 3 (PROTOCOLE_V6.md) : modele 'petit' (15 et 40 racks, 3 et 6 robots)
+    et modele 'grand' (150 racks, 20 robots) ; 'tous' = plan initial."""
+    if taille == 'petit':
+        return [c for c in DATASET_CONFIGS if c['robots'] < 10]
+    if taille == 'grand':
+        return [c for c in DATASET_CONFIGS if c['robots'] >= 10]
+    return list(DATASET_CONFIGS)
+
+
+def val_scenarios(kind, taille='tous'):
     ds = dataset()
     out, i = [], 0
+    if kind == 'idle6' and taille == 'grand':
+        # 12 fenetres train_val, greedy_pair (vitesses egales) ; graines 100+
+        for s in range(12):
+            out.append(dict(idle6_configs('grand')[0], phase='A', tasks=150, alloc='greedy_pair',
+                            seed=VAL6_SEEDS[100 + s], split='train_val',
+                            start=ds.evenly_spaced_start('train_val', 150, s, 12)))
+        return out
     if kind == 'idle6':
         # vitesses egales : greedy_time == greedy_pair, donc greedy_pair seul
         # (6 fenetres) ; vitesses variables : les 2 allocations (3 fenetres)
-        for cfg in DATASET_CONFIGS:
+        for cfg in idle6_configs(taille):
             allocs = (('greedy_pair', 'greedy_time') if cfg.get('speeds') else ('greedy_pair',))
             nwin = 6 // len(allocs)
             for alloc in allocs:
@@ -165,7 +185,7 @@ def val_scenarios(kind):
     return out
 
 
-def train_scenario(kind, sim_seed, rng):
+def train_scenario(kind, sim_seed, rng, taille='tous'):
     ds = dataset()
     starts = ds.window_starts('train_fit', 100)
     if kind == 'alloc6':
@@ -173,7 +193,7 @@ def train_scenario(kind, sim_seed, rng):
         return dict(cfg, phase='C', tasks=100, alloc='-', seed=sim_seed, split='train_fit',
                     start=rng.choice(starts))
     if kind == 'idle6':
-        cfg = rng.choice(DATASET_CONFIGS)
+        cfg = rng.choice(idle6_configs(taille))
         return dict(cfg, phase='A', tasks=100, alloc=rng.choice(['greedy_pair', 'greedy_time']),
                     seed=sim_seed, split='train_fit', start=rng.choice(starts))
     R, dims = rng.choice(ROUTE6_TRAIN_FLEETS)
@@ -200,7 +220,7 @@ def reference(kind, scenarios, out_dir):
     if os.path.isfile(path):
         with open(path, newline='') as f:
             rows = list(csv.DictReader(f))
-        if len(rows) == len(scenarios):
+        if len(rows) == len(scenarios) and all(h in rows[0] for h in heur):
             return [min(float(r[h]) for h in heur) for r in rows]
     rows = []
     for i, sc in enumerate(scenarios):
@@ -251,6 +271,8 @@ def main(argv=None):
     p.add_argument('--train-every', type=int, default=1,
                    help='une mise a jour du reseau toutes les N transitions')
     p.add_argument('--threads', type=int, default=2)
+    p.add_argument('--taille', choices=['tous', 'petit', 'grand'], default='tous',
+                   help='idle6 : modele petit (15/40 racks) ou grand (150 racks), ecart 3')
     p.add_argument('--out-dir', required=True)
     args = p.parse_args(argv)
     torch.set_num_threads(args.threads)
@@ -264,7 +286,7 @@ def main(argv=None):
     nf = {'idle6': N_IDLE6_FEATURES, 'route6': N_ROUTE6_FEATURES,
           'alloc6': N_ALLOC6_FEATURES}[kind]
     gamma = {'idle6': 0.9, 'route6': 1.0, 'alloc6': 0.95}[kind]
-    val_sc = val_scenarios(kind)
+    val_sc = val_scenarios(kind, args.taille)
     ref = reference(kind, val_sc, args.out_dir)
     budget = args.budget_min * 60.0
     state_path = os.path.join(args.out_dir, f'etat_seed{seed}.pt')
@@ -276,7 +298,7 @@ def main(argv=None):
                   'reward': {'idle6': '-approche / (diametre / vitesse moyenne)',
                              'route6': '-duree / 60 s',
                              'alloc6': '-(attente des taches ouvertes + service) / 60 s'}[kind],
-                  'train_every': args.train_every}
+                  'train_every': args.train_every, 'taille': args.taille}
     stream = SeedStream(seed)
     ep, consumed, best, next_val, n_resume = 0, 0.0, (float('inf'), None), 0.0, 0
     if os.path.isfile(state_path):
@@ -367,7 +389,7 @@ def main(argv=None):
         frac = min(1.0, elapsed() / (0.6 * budget))
         eps = 0.3 - 0.28 * frac
         sim_seed, rng = stream.next()
-        sc = train_scenario(kind, sim_seed, rng)
+        sc = train_scenario(kind, sim_seed, rng, args.taille)
         stats.update(loss=[], corr=[], n=0)
         sim = make_sim6(sc, drl_mode(kind), agent, epsilon=eps, cb=cb, explore_seed=sim_seed)
         sim.horizon = min(sim.horizon, sim.arrivals[-1].created + 1800.0)
