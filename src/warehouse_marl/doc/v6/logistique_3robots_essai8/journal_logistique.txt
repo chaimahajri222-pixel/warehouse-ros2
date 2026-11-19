@@ -1,0 +1,47 @@
+[INFO] [logistics_node-67]: process started with pid [125928]
+[logistics_node-67] [INFO] [1795097866.350169015] [logistics_node]: Logistique par roles : robot1=stock, robot2=ship, robot3=flex ; production ['station_A', 'station_B'], delivery ['delivery_1', 'delivery_2'].
+[logistics_node-67] [INFO] [1795097963.920749419] [logistics_node]: Commande expe_7c149e (expedition) ; file expedition = 1.
+[logistics_node-67] [INFO] [1795097963.941733411] [logistics_node]: robot2 (ship) : expe_7c149e expedition shelf_2_2 -> delivery_1 (stock du rack 7, allee 2).
+[logistics_node-67] [INFO] [1795097988.466793140] [logistics_node]: Commande stoc_354637 (stockage) ; file stockage = 1.
+[logistics_node-67] [INFO] [1795097988.493850933] [logistics_node]: robot1 (stock) : stoc_354637 stockage station_A -> shelf_3_0 (stock du rack 2, allee 3).
+[logistics_node-67] [INFO] [1795097996.514707568] [logistics_node]: Commande stoc_64fd84 (stockage) ; file stockage = 1.
+[logistics_node-67] [INFO] [1795097996.527688522] [logistics_node]: robot3 (polyvalent) -> stockage : file stockage 1 / expedition 0
+[logistics_node-67] [INFO] [1795097996.555547587] [logistics_node]: robot3 (flex) : stoc_64fd84 stockage station_B -> shelf_0_2 (stock du rack 2, allee 0).
+[logistics_node-67] [INFO] [1795097999.071170820] [logistics_node]: Commande stoc_249e08 (stockage) ; file stockage = 1.
+[logistics_node-67] [INFO] [1795098008.492840316] [logistics_node]: Commande expe_c4d661 (expedition) ; file expedition = 1.
+[logistics_node-67] [INFO] [1795098047.996594612] [logistics_node]: Commande expe_416580 (expedition) ; file expedition = 2.
+[logistics_node-67] [INFO] [1795098064.303700768] [logistics_node]: Commande stoc_10d7a1 (stockage) ; file stockage = 2.
+[logistics_node-67] [INFO] [1795098074.941717506] [logistics_node]: Commande stoc_2d4380 (stockage) ; file stockage = 3.
+[logistics_node-67] [INFO] [1795098105.466375468] [logistics_node]: Commande stoc_1c4594 (stockage) ; file stockage = 4.
+[logistics_node-67] [INFO] [1795098126.657205340] [logistics_node]: robot2 a fini expe_7c149e (expedition) : rack shelf_2_2 stock 6.
+[logistics_node-67] [INFO] [1795098127.686783900] [logistics_node]: robot2 (ship) : expe_c4d661 expedition shelf_1_0 -> delivery_1 (stock du rack 7, allee 1).
+[logistics_node-67] [INFO] [1795098252.661632911] [logistics_node]: robot1 a fini stoc_354637 (stockage) : rack shelf_3_0 stock 3.
+[logistics_node-67] [INFO] [1795098254.739352930] [logistics_node]: robot1 (stock) : stoc_249e08 stockage station_A -> shelf_4_1 (stock du rack 2, allee 3).
+[logistics_node-67] [INFO] [1795098303.927764223] [logistics_node]: Commande expe_21bce7 (expedition) ; file expedition = 2.
+[logistics_node-67] [INFO] [1795098404.380149290] [logistics_node]: robot2 a fini expe_c4d661 (expedition) : rack shelf_1_0 stock 6.
+[logistics_node-67] [INFO] [1795098406.477764986] [logistics_node]: robot2 (ship) : expe_416580 expedition shelf_1_0 -> delivery_1 (stock du rack 6, allee 1).
+[logistics_node-67] [INFO] [1795098408.794265526] [logistics_node]: Commande stoc_bb417d (stockage) ; file stockage = 4.
+[logistics_node-67] [INFO] [1795098447.958595107] [logistics_node]: Commande expe_6df6e7 (expedition) ; file expedition = 2.
+[logistics_node-67] [INFO] [1795098497.392721996] [logistics_node]: Commande stoc_341f04 (stockage) ; file stockage = 5.
+[logistics_node-67] [INFO] [1795098547.280335871] [logistics_node]: Commande stoc_21b232 (stockage) ; file stockage = 6.
+[logistics_node-67] [INFO] [1795098631.324525117] [logistics_node]: robot1 a fini stoc_249e08 (stockage) : rack shelf_4_1 stock 3.
+[logistics_node-67] [INFO] [1795098631.947033623] [logistics_node]: robot1 (stock) : stoc_10d7a1 stockage station_A -> shelf_3_0 (stock du rack 3, allee 3).
+[logistics_node-67] [INFO] [1795098639.915861306] [logistics_node]: Commande stoc_30e9cf (stockage) ; file stockage = 6.
+[logistics_node-67] [INFO] [1795098684.435631177] [logistics_node]: Commande expe_133e44 (expedition) ; file expedition = 3.
+[logistics_node-67] [INFO] [1795098782.034624964] [logistics_node]: robot3 a fini stoc_64fd84 (stockage) : rack shelf_0_2 stock 3.
+[logistics_node-67] [INFO] [1795098783.670303840] [logistics_node]: robot3 (polyvalent) -> stockage : file stockage 6 / expedition 3
+[logistics_node-67] [INFO] [1795098783.692251674] [logistics_node]: robot3 (flex) : stoc_2d4380 stockage station_B -> shelf_0_1 (stock du rack 2, allee 0).
+[logistics_node-67] [INFO] [1795098784.837193349] [logistics_node]: robot2 a fini expe_416580 (expedition) : rack shelf_1_0 stock 5.
+[logistics_node-67] [INFO] [1795098785.616232301] [logistics_node]: robot2 (ship) : expe_21bce7 expedition shelf_2_2 -> delivery_1 (stock du rack 6, allee 2).
+[logistics_node-67] [INFO] [1795098832.655872150] [logistics_node]: Commande expe_674780 (expedition) ; file expedition = 3.
+[logistics_node-67] [INFO] [1795098839.948355154] [logistics_node]: Commande stoc_b3d76f (stockage) ; file stockage = 6.
+[logistics_node-67] [INFO] [1795098907.378845936] [logistics_node]: Commande expe_e2807e (expedition) ; file expedition = 4.
+[logistics_node-67] [INFO] [1795098991.331337171] [logistics_node]: robot1 a fini stoc_10d7a1 (stockage) : rack shelf_3_0 stock 4.
+[logistics_node-67] [INFO] [1795098991.646142852] [logistics_node]: robot1 (stock) : stoc_1c4594 stockage station_A -> shelf_1_2 (stock du rack 3, allee 1).
+[logistics_node-67] [INFO] [1795099088.559646986] [logistics_node]: robot2 a fini expe_21bce7 (expedition) : rack shelf_2_2 stock 5.
+[logistics_node-67] [INFO] [1795099089.245023306] [logistics_node]: robot2 (ship) : expe_6df6e7 expedition shelf_3_1 -> delivery_1 (stock du rack 7, allee 3).
+[logistics_node-67] [INFO] [1795099102.313080783] [logistics_node]: Commande expe_fcb872 (expedition) ; file expedition = 4.
+[logistics_node-67] [INFO] [1795099180.316785128] [logistics_node]: Commande stoc_ef9e31 (stockage) ; file stockage = 6.
+[logistics_node-67] [INFO] [1795099206.308710920] [logistics_node]: Commande expe_ba471b (expedition) ; file expedition = 5.
+[INFO] [logistics_node-67]: sending signal 'SIGINT' to process[logistics_node-67]
+[INFO] [logistics_node-67]: process has finished cleanly [pid 125928]

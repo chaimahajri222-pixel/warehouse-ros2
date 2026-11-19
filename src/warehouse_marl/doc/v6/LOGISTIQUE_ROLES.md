@@ -87,6 +87,9 @@ si une expedition echoue apres le chargement, le colis est remis sur son rack.
 | 5 (15 min) | + suivi des colis (tableau de bord) | 6 (1 / 4 / 1) | 0 | 0 |
 | 6 (20 min) | + sol sans rebord | 1 (0 / 1 / 0) : controleur de R1 jamais active (demarrage Nav2 sature) | 6 | 0 |
 | 7 (25 min) | + reservation du passage au dernier moment, demarrage echelonne 25 s, pause apres 2 echecs | **12 (3 / 6 / 3)** | 0 | 0 |
+| 8 (25 min, repetition de 7, meme code) | identique a 7 | 8 (3 / 4 / 1), 3 en cours a la fin | 0 | 0 |
+
+Essai 8 : premiere mission terminee a 7 min (demarrage de Nav2 de robot2 relance par le watchdog, charge jusqu'a 106) ; ecart minimal entre robots 0,38 m ; erreur de localisation mediane 0,082 m, 95e centile 0,21 m. Deux essais identiques donnent 12 et 8 missions : le debit varie beaucoup d'un essai a l'autre sur cette machine.
 
 Lecture :
 
