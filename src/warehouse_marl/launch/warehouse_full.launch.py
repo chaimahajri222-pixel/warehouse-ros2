@@ -60,6 +60,15 @@ def launch_setup(context, *args, **kwargs):
     model_path = LaunchConfiguration('model_path').perform(context)
     map_origin_x = LaunchConfiguration('map_origin_x').perform(context)
     map_origin_y = LaunchConfiguration('map_origin_y').perform(context)
+    cameras = _truthy(LaunchConfiguration('camera_localization').perform(context))
+    # Ecart de demarrage entre robots : 25 s en mode logistique (sur un PC de
+    # 4 coeurs, configurer un Nav2 prend ~70 s ; a 6 s d'ecart les trois se
+    # chevauchaient et un controleur restait inactif 13 min), 6 s sinon.
+    stagger_arg = LaunchConfiguration('robot_start_stagger').perform(context).strip()
+    logistics = LaunchConfiguration('mission_mode').perform(context).strip() == 'logistics'
+    stagger = float(stagger_arg) if stagger_arg not in ('', 'auto') else (
+        25.0 if logistics else _ROBOT_START_STAGGER)
+    map_file = LaunchConfiguration('map').perform(context).strip()
 
     if robot_count < 1:
         raise ValueError('robot_count must be >= 1')
@@ -81,12 +90,36 @@ def launch_setup(context, *args, **kwargs):
             'fleet_mgmt': 'false',
             'headless': headless,
             'rviz': rviz,
+            'map': map_file,
+            'robot_start_stagger': str(stagger),
+            'fleet_pose_topic': '/camera_localization/poses' if cameras else '',
         }.items())
 
     actions = [
         LogInfo(msg=f'[warehouse_full] robots = {robot_names}'),
         simulation,
     ]
+    if cameras:
+        # Localisation externe par cameras (Yumbla et al., IEEE Access 2025) :
+        # corrige l'AMCL des robots et fournit leurs poses a fleet_obstacles.
+        # Le robot SLAM (explore) definit lui-meme la carte : pas corrige.
+        if _truthy(explore):
+            skip = robot_names if slam_mode == 'multi' else robot_names[:1]
+        else:
+            skip = ['']
+        actions.append(Node(
+            package='warehouse_marl',
+            executable='camera_localization_node',
+            name='camera_localization',
+            output='screen',
+            parameters=[{
+                'use_sim_time': True,
+                'robot_names': robot_names,
+                'world_name': 'warehouse',
+                'spawn_x': float(map_origin_x),
+                'spawn_y': float(map_origin_y),
+                'skip_correction': skip,
+            }]))
     if _truthy(LaunchConfiguration('dashboard').perform(context)):
         actions.append(Node(
             package='warehouse_marl',
@@ -97,6 +130,8 @@ def launch_setup(context, *args, **kwargs):
                 'use_sim_time': True,
                 'robot_names': robot_names,
                 'port': int(LaunchConfiguration('dashboard_port').perform(context)),
+                'with_delivery':
+                    LaunchConfiguration('mission_mode').perform(context).strip() == 'logistics',
                 'map_origin_x': float(LaunchConfiguration('map_origin_x').perform(context)),
                 'map_origin_y': float(LaunchConfiguration('map_origin_y').perform(context)),
             }]))
@@ -118,7 +153,7 @@ def launch_setup(context, *args, **kwargs):
         else:
             map_topic = '/map'
         fusion_start = max(
-            20.0, _AMCL_START_DELAY + (robot_count - 1) * _ROBOT_START_STAGGER + 12.0)
+            20.0, _AMCL_START_DELAY + (robot_count - 1) * stagger + 12.0)
         marl_delay = fusion_start + 10.0
 
         coordination = IncludeLaunchDescription(
@@ -140,6 +175,8 @@ def launch_setup(context, *args, **kwargs):
                 'idle_mode': LaunchConfiguration('idle_mode').perform(context),
                 'idle_model': LaunchConfiguration('idle_model').perform(context),
                 'msg_loss': LaunchConfiguration('msg_loss').perform(context),
+                'mission_mode': LaunchConfiguration('mission_mode').perform(context),
+                'roles': LaunchConfiguration('roles').perform(context),
             }.items())
 
         actions += [
@@ -214,6 +251,27 @@ def generate_launch_description():
             'dashboard', default_value='true',
             description='Tableau de bord web (http://localhost:<dashboard_port>)'),
         DeclareLaunchArgument('dashboard_port', default_value='8080'),
+        DeclareLaunchArgument(
+            'mission_mode', default_value='auction',
+            description="'auction' : taches + encheres (DRL selon drl_mode) ; 'logistics' : "
+                        "stockage production->rack et expedition rack->delivery repartis "
+                        "par roles, sans DRL (a utiliser avec explore:=false)"),
+        DeclareLaunchArgument(
+            'robot_start_stagger', default_value='auto',
+            description="Secondes entre le demarrage de deux robots (auto : 25 en mode "
+                        "logistique, 6 sinon)"),
+        DeclareLaunchArgument(
+            'roles', default_value='stock,ship,flex',
+            description='mission_mode logistics : role de chaque robot (stock, ship, flex)'),
+        DeclareLaunchArgument(
+            'camera_localization', default_value='false',
+            description='true: cameras au plafond simulees (camera_localization_node) '
+                        'qui corrigent l AMCL des robots et fournissent les poses a '
+                        'fleet_obstacles ; a utiliser avec explore:=false'),
+        DeclareLaunchArgument(
+            'map', default_value='',
+            description='Carte .yaml pour explore:=false (vide = carte sauvegardee, '
+                        'sinon generee depuis le monde SDF)'),
         DeclareLaunchArgument(
             'map_origin_x', default_value='-1.5',
             description='x Gazebo du spawn de robot1 (origine de la carte)'),

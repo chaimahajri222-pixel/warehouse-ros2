@@ -119,7 +119,9 @@ docking_server:
 
 controller_server:
   ros__parameters:
-    controller_frequency: 20.0
+    # 10 Hz (was 20): with 3 robots on a 4-core PC the 20 Hz loop only ran at
+    # 10-12 Hz ("Control loop missed its desired rate") and starved Gazebo.
+    controller_frequency: 10.0
     costmap_update_timeout: 0.30
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
@@ -140,9 +142,11 @@ controller_server:
       yaw_goal_tolerance: 0.25
     FollowPath:
       plugin: "nav2_mppi_controller::MPPIController"
-      time_steps: 56
-      model_dt: 0.05
-      batch_size: 2000
+      # Same 2.8 s horizon as before (56 x 0.05 s), about 8x less work per
+      # second: model_dt = controller period, 1000 sampled trajectories.
+      time_steps: 28
+      model_dt: 0.1
+      batch_size: 1000
       ax_max: 3.0
       ax_min: -3.0
       ay_max: 3.0
@@ -271,13 +275,16 @@ local_costmap:
         unknown_threshold: 15
         mark_threshold: 0
         combination_method: 1
-        # Relative topics auto-namespace under /robotN/
+        # Absolute topics (/ROBOT_NS/...): in Jazzy a relative topic resolves
+        # under the costmap node's namespace (/robotN/local_costmap/scan), where
+        # nothing publishes, so the costmaps silently received no sensor data at
+        # all (no laser, no other robots) until 2026-11-18.
         observation_sources: scan points depth fleet
         fleet:
           # Other robots' footprints (warehouse_marl fleet_obstacles_node): the
           # lidars pass over the robot bodies, so robots are otherwise invisible
           # to each other. Range is measured from the cloud's frame (map) origin.
-          topic: fleet_obstacles
+          topic: /ROBOT_NS/fleet_obstacles
           clearing: False
           marking: True
           data_type: "PointCloud2"
@@ -286,7 +293,7 @@ local_costmap:
           min_obstacle_height: 0.0
           max_obstacle_height: 2.0
         scan:
-          topic: scan
+          topic: /ROBOT_NS/scan
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -296,7 +303,7 @@ local_costmap:
           obstacle_max_range: 2.5
           obstacle_min_range: 0.0
         points:
-          topic: points
+          topic: /ROBOT_NS/points
           clearing: True
           marking: True
           data_type: "PointCloud2"
@@ -307,7 +314,7 @@ local_costmap:
           min_obstacle_height: 0.05
           max_obstacle_height: 2.0
         depth:
-          topic: camera/depth/points
+          topic: /ROBOT_NS/camera/depth/points
           clearing: True
           marking: True
           data_type: "PointCloud2"
@@ -357,7 +364,7 @@ global_costmap:
           # Other robots' footprints (warehouse_marl fleet_obstacles_node): the
           # lidars pass over the robot bodies, so robots are otherwise invisible
           # to each other. Range is measured from the cloud's frame (map) origin.
-          topic: fleet_obstacles
+          topic: /ROBOT_NS/fleet_obstacles
           clearing: False
           marking: True
           data_type: "PointCloud2"
@@ -366,7 +373,7 @@ global_costmap:
           min_obstacle_height: 0.0
           max_obstacle_height: 2.0
         scan:
-          topic: scan
+          topic: /ROBOT_NS/scan
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -376,7 +383,7 @@ global_costmap:
           obstacle_max_range: 2.5
           obstacle_min_range: 0.0
         points:
-          topic: points
+          topic: /ROBOT_NS/points
           clearing: True
           marking: True
           data_type: "PointCloud2"
@@ -387,7 +394,7 @@ global_costmap:
           min_obstacle_height: 0.05
           max_obstacle_height: 2.0
         depth:
-          topic: camera/depth/points
+          topic: /ROBOT_NS/camera/depth/points
           clearing: True
           marking: True
           data_type: "PointCloud2"
@@ -505,13 +512,26 @@ collision_monitor:
       min_points: 6
       visualize: False
       enabled: True
-    # Laser only. The fleet cloud (other robots) is in the costmaps; as a
-    # stop source here it deadlocked robots that met (missions 71 -> 11 ok)
-    # and spread one robot's localization error to the others.
-    observation_sources: ["scan"]
+    # Laser + fleet_priority. The full fleet cloud (all other robots) is in
+    # the costmaps only: as a source here it deadlocked robots that met (both
+    # stopped, missions 71 -> 11 ok). fleet_priority (fleet_obstacles.py)
+    # holds only the robots with priority over this one (robot1 > robot2 >
+    # robot3 ...), in this robot's base_link: this robot never drives into
+    # them, they keep moving and steer around it, so no mutual wait.
+    observation_sources: ["scan", "fleet_priority"]
     scan:
       type: "scan"
       topic: "scan"
       min_height: 0.15
       max_height: 2.0
+      enabled: True
+    fleet_priority:
+      type: "pointcloud"
+      topic: "fleet_priority_obstacles"
+      min_height: 0.05
+      max_height: 2.0
+      use_global_height: False
+      # Python node at 10 Hz on a loaded machine: tolerate some lag. If the
+      # cloud stops for longer, the collision_monitor stops the robot.
+      source_timeout: 3.0
       enabled: True

@@ -10,7 +10,7 @@ from collections import deque
 import math
 from dataclasses import dataclass
 import json
-from typing import Deque, Dict, Optional
+from typing import Deque, Dict, List, Optional
 
 import rclpy
 from action_msgs.msg import GoalStatus, GoalStatusArray
@@ -36,6 +36,18 @@ class Mission:
     target_node: str
     created_at: Optional[float] = None
     retries: int = 0
+    # Mission en plusieurs etapes (mission_mode logistics) : legs = [prise,
+    # depose] ; leg = etape en cours ; ready_at = fin du chargement.
+    legs: Optional[List[str]] = None
+    leg: int = 0
+    ready_at: float = 0.0
+    stuck: bool = False
+    paused_passage: bool = False
+
+    @property
+    def goal_node(self) -> str:
+        """Noeud vise par l'etape en cours (la cible finale sinon)."""
+        return self.legs[self.leg] if self.legs else self.target_node
 
 
 class MissionExecutorNode(Node):
@@ -74,6 +86,29 @@ class MissionExecutorNode(Node):
         # qu'une mission arrive pour ce robot (il reste attribuable).
         self.declare_parameter('idle_mode', 'stay')
         self.declare_parameter('idle_model', '')
+        # mission_mode logistics : points delivery dans le graphe, et duree de
+        # chargement / dechargement simulee a chaque point de prise (s simulees).
+        self.declare_parameter('with_delivery', False)
+        self.declare_parameter('handling_time_sec', 3.0)
+        # Passage unique entre la zone ouest (production) et les racks : le mur
+        # de separation (x = -3 dans le monde) n'a qu'une ouverture, ou deux
+        # robots en sens inverse se bloquent. crossing_mutex : un seul robot
+        # a la fois peut avoir une etape qui traverse ce mur.
+        self.declare_parameter('crossing_mutex', False)
+        self.declare_parameter('separator_x_world', -3.0)
+        # Reservation au dernier moment (avec poses cameras) : le robot part
+        # sans reserver et ne demande le passage qu'a passage_approach_m du
+        # centre de l'ouverture ; s'il est pris, il s'arrete la et attend.
+        # 0 = reservation des le depart de l'etape.
+        self.declare_parameter('passage_approach_m', 3.0)
+        self.declare_parameter('passage_y_world', 0.0)
+        # Robot bloque : avec une source de poses externe (cameras), une etape
+        # est annulee si le robot n'a pas bouge de stuck_distance m pendant
+        # stuck_timeout_sec s (temps simule). Sa propre odometrie ne suffit pas :
+        # roues qui patinent = l'odometrie avance, le robot non. 0 = desactive.
+        self.declare_parameter('external_pose_topic', '')
+        self.declare_parameter('stuck_timeout_sec', 0.0)
+        self.declare_parameter('stuck_distance', 0.3)
 
         self.robot_names = list(self.get_parameter('robot_names').value)
         self.max_retries = int(self.get_parameter('max_retries').value)
@@ -82,7 +117,25 @@ class MissionExecutorNode(Node):
         self.graph = build_demo_warehouse(
             float(self.get_parameter('map_origin_x').value),
             float(self.get_parameter('map_origin_y').value),
+            bool(self.get_parameter('with_delivery').value),
         )
+        self.handling_time = float(self.get_parameter('handling_time_sec').value)
+        self.crossing_mutex = bool(self.get_parameter('crossing_mutex').value)
+        self._separator_x = (float(self.get_parameter('separator_x_world').value)
+                             - float(self.get_parameter('map_origin_x').value))
+        self._crossing_holder: Optional[str] = None
+        self._crossing_wait_log: Dict[str, float] = {}
+        self.passage_approach = float(self.get_parameter('passage_approach_m').value)
+        self._passage_y = (float(self.get_parameter('passage_y_world').value)
+                           - float(self.get_parameter('map_origin_y').value))
+        self._cam: Dict[str, tuple] = {}          # robot -> (x, y, temps) vus par les cameras
+        self.stuck_timeout = float(self.get_parameter('stuck_timeout_sec').value)
+        self.stuck_distance = float(self.get_parameter('stuck_distance').value)
+        self._goal_handles: Dict[str, object] = {}
+        self._progress: Dict[str, tuple] = {}     # robot -> (x, y, t) du dernier mouvement net
+        ext_topic = str(self.get_parameter('external_pose_topic').value).strip()
+        if ext_topic and (self.stuck_timeout > 0 or self.crossing_mutex):
+            self.create_subscription(String, ext_topic, self._on_external_poses, 10)
 
         self.route_mode = str(self.get_parameter('route_mode').value)
         if self.route_mode not in ('direct', 'dijkstra', 'drl'):
@@ -295,11 +348,16 @@ class MissionExecutorNode(Node):
 
     def _queue_mission(self, task_id: str, robot_id: str, target_node: str):
         metadata = self._task_metadata.get(task_id, {})
+        pickup = metadata.get('pickup_node')
+        if pickup is not None and pickup not in self.graph.G:
+            self.get_logger().error(f'{task_id}: point de prise inconnu {pickup!r}, ignore.')
+            pickup = None
         mission = Mission(
             task_id=task_id,
             robot_id=robot_id,
             target_node=target_node,
             created_at=metadata.get('created_at'),
+            legs=[pickup, target_node] if pickup else None,
         )
         self._claimed_tasks.add(task_id)
         self._queues[robot_id].append(mission)
@@ -383,6 +441,105 @@ class MissionExecutorNode(Node):
             self.get_logger().info(f'{robot_id}: trajet vers {park} interrompu (statut {status}).')
         self._publish_mission_state()
 
+    def _crosses(self, start: str, goal: str) -> bool:
+        """Vrai si l'etape start -> goal traverse le mur de separation."""
+        G = self.graph.G
+        if start not in G or goal not in G:
+            return False
+        return (G.nodes[start]['x'] < self._separator_x) != (G.nodes[goal]['x'] < self._separator_x)
+
+    def _cam_fresh(self, robot_id: str):
+        c = self._cam.get(robot_id)
+        return c if c is not None and self._now() - c[2] < 2.0 else None
+
+    def _crosses_now(self, robot_id: str, goal: str) -> bool:
+        """Traversee du mur, depuis la position camera si elle est connue."""
+        c = self._cam_fresh(robot_id)
+        if c is None or goal not in self.graph.G:
+            return self._crosses(self._robot_node[robot_id], goal)
+        return (c[0] < self._separator_x) != (self.graph.G.nodes[goal]['x'] < self._separator_x)
+
+    def _near_passage(self, robot_id: str) -> bool:
+        c = self._cam_fresh(robot_id)
+        return c is not None and math.hypot(
+            c[0] - self._separator_x, c[1] - self._passage_y) < self.passage_approach
+
+    def _lazy_passage(self, robot_id: str) -> bool:
+        return self.passage_approach > 0 and self._cam_fresh(robot_id) is not None
+
+    def _maybe_release_crossing(self, robot_id: str, x: float):
+        """Libere le passage des que son detenteur a franchi le mur (1,5 m au-dela,
+        cote destination), sans attendre la fin de son etape."""
+        mission = self._active.get(robot_id)
+        if self._crossing_holder != robot_id or mission is None:
+            return
+        if mission.goal_node not in self.graph.G:
+            return
+        goal = self.graph.G.nodes[mission.goal_node]
+        west = goal['x'] < self._separator_x
+        if (west and x < self._separator_x - 1.5) or (not west and x > self._separator_x + 1.5):
+            self._release_crossing(robot_id)
+
+    def _release_crossing(self, robot_id: str):
+        if self._crossing_holder == robot_id:
+            self._crossing_holder = None
+            self.get_logger().info(f'{robot_id} libere le passage du mur de separation.')
+
+    def _on_external_poses(self, msg: String):
+        """Detection de robot bloque a partir des poses vues par les cameras."""
+        try:
+            robots = json.loads(msg.data).get('robots', {})
+        except ValueError:
+            return
+        now = self._now()
+        for robot_id, p in robots.items():
+            if robot_id not in self._active:
+                continue
+            self._cam[robot_id] = (float(p['x']), float(p['y']), now)
+            try:
+                self._maybe_release_crossing(robot_id, float(p['x']))
+                self._passage_on_approach(robot_id)
+            except Exception as exc:          # jamais d'arret de l'executeur pour cela
+                self.get_logger().error(f'passage du mur ({robot_id}) : {exc}')
+            handle = self._goal_handles.get(robot_id)
+            if self._active[robot_id] is None or handle is None:
+                self._progress.pop(robot_id, None)
+                continue
+            x, y = float(p['x']), float(p['y'])
+            ref = self._progress.get(robot_id)
+            if ref is None or math.hypot(x - ref[0], y - ref[1]) >= self.stuck_distance:
+                self._progress[robot_id] = (x, y, now)
+                continue
+            if self.stuck_timeout > 0 and now - ref[2] >= self.stuck_timeout:
+                mission = self._active[robot_id]
+                self.get_logger().warn(
+                    f'{robot_id} bloque depuis {now - ref[2]:.0f} s pres de ({x:.1f}, {y:.1f}) '
+                    f'(cameras) : annule l etape vers {mission.goal_node}.')
+                self._progress.pop(robot_id, None)
+                self._goal_handles.pop(robot_id, None)
+                mission.stuck = True
+                handle.cancel_goal_async()
+
+    def _passage_on_approach(self, robot_id: str):
+        """Robot en route vers le passage : il le reserve s'il est libre, sinon
+        il s'arrete ici (etape annulee puis renvoyee quand le passage se libere)."""
+        mission = self._active.get(robot_id)
+        handle = self._goal_handles.get(robot_id)
+        if (not self.crossing_mutex or mission is None or handle is None
+                or not self._lazy_passage(robot_id) or self._crossing_holder == robot_id
+                or not self._crosses_now(robot_id, mission.goal_node)
+                or not self._near_passage(robot_id)):
+            return
+        if self._crossing_holder is None:
+            self._crossing_holder = robot_id
+            self.get_logger().info(f'{robot_id} arrive au passage du mur et le reserve.')
+            return
+        self.get_logger().info(
+            f'{robot_id} s arrete avant le passage : {self._crossing_holder} traverse.')
+        mission.paused_passage = True
+        self._goal_handles.pop(robot_id, None)
+        handle.cancel_goal_async()
+
     def _dispatch(self):
         self._resolve_claims()
         if self.idle_mode != 'stay':
@@ -393,6 +550,22 @@ class MissionExecutorNode(Node):
         for robot_id in self.robot_names:
             if self._active[robot_id] is not None or not self._queues[robot_id]:
                 continue
+            if self._queues[robot_id][0].ready_at > self._now():
+                continue                        # chargement en cours au point de prise
+            head_goal = self._queues[robot_id][0].goal_node
+            if self.crossing_mutex and self._crosses_now(robot_id, head_goal) and not (
+                    self._lazy_passage(robot_id) and not self._near_passage(robot_id)):
+                if self._crossing_holder not in (None, robot_id):
+                    now = self._now()
+                    if now - self._crossing_wait_log.get(robot_id, -1e9) >= 30.0:
+                        self._crossing_wait_log[robot_id] = now
+                        self.get_logger().info(
+                            f'{robot_id} attend : {self._crossing_holder} traverse le '
+                            f'passage du mur de separation.')
+                    continue
+                if self._crossing_holder != robot_id:
+                    self._crossing_holder = robot_id
+                    self.get_logger().info(f'{robot_id} reserve le passage du mur de separation.')
             if self._park_handle[robot_id] is not None:
                 # Mission arrivee pendant le trajet d'attente : on l'annule et
                 # on attend la fin de l'annulation avant d'envoyer la mission.
@@ -427,17 +600,18 @@ class MissionExecutorNode(Node):
 
             mission = self._queues[robot_id].popleft()
             self._active[robot_id] = mission
-            node = self.graph.G.nodes[mission.target_node]
+            goal_node = mission.goal_node
+            node = self.graph.G.nodes[goal_node]
             if self.route_mode != 'direct':
-                route = self._plan(robot_id, mission.target_node)
-                if len(route) < 2 and route != [mission.target_node]:
+                route = self._plan(robot_id, goal_node)
+                if len(route) < 2 and route != [goal_node]:
                     self.get_logger().warn(
                         f'{mission.task_id}: aucune route de '
-                        f'{self._robot_node[robot_id]} a {mission.target_node}.')
+                        f'{self._robot_node[robot_id]} a {goal_node}.')
                     self._finish_or_retry(mission, GoalStatus.STATUS_ABORTED)
                     continue
-                if route == [mission.target_node]:
-                    route = [mission.target_node, mission.target_node]
+                if route == [goal_node]:
+                    route = [goal_node, goal_node]
                 self.route_pub.publish(String(data=json.dumps({
                     'task_id': mission.task_id, 'robot_id': robot_id,
                     'route_mode': self.route_mode, 'route': route})))
@@ -463,22 +637,27 @@ class MissionExecutorNode(Node):
         try:
             handle = future.result()
         except Exception as exc:
+            self._release_crossing(mission.robot_id)
             self.get_logger().error(
                 f'{mission.task_id}: erreur envoi Nav2: {exc}')
             self._finish_or_retry(mission, GoalStatus.STATUS_UNKNOWN)
             return
 
         if not handle.accepted:
+            self._release_crossing(mission.robot_id)
             self.get_logger().warn(
                 f'{mission.task_id}: objectif refuse par {mission.robot_id}.')
             self._finish(mission, 'rejected', GoalStatus.STATUS_UNKNOWN)
             return
 
-        self._emit_status(mission, 'navigating')
-        node = self.graph.G.nodes[mission.target_node]
+        step = (f' etape {mission.leg + 1}/{len(mission.legs)}' if mission.legs else '')
+        self._emit_status(mission, 'navigating', detail=step.strip())
+        node = self.graph.G.nodes[mission.goal_node]
         self.get_logger().info(
-            f'{mission.robot_id} execute {mission.task_id} -> '
+            f'{mission.robot_id} execute {mission.task_id}{step} -> {mission.goal_node} '
             f'({node["x"]:.2f}, {node["y"]:.2f}).')
+        self._goal_handles[mission.robot_id] = handle
+        self._progress.pop(mission.robot_id, None)
         result = handle.get_result_async()
         result.add_done_callback(
             lambda response, item=mission: self._on_result(response, item))
@@ -490,7 +669,37 @@ class MissionExecutorNode(Node):
             self.get_logger().error(
                 f'{mission.task_id}: resultat Nav2 indisponible: {exc}')
             status = GoalStatus.STATUS_UNKNOWN
+        self._release_crossing(mission.robot_id)
+        self._goal_handles.pop(mission.robot_id, None)
+        if mission.paused_passage and status == GoalStatus.STATUS_CANCELED:
+            # Arret volontaire avant le passage : l'etape reprendra telle quelle.
+            mission.paused_passage = False
+            self._active[mission.robot_id] = None
+            self._queues[mission.robot_id].appendleft(mission)
+            self._emit_status(mission, 'waiting_passage', detail='attend le passage du mur')
+            return
+        if getattr(mission, 'stuck', False) and status == GoalStatus.STATUS_CANCELED:
+            # Annulee par la detection de blocage : traitee comme un echec Nav2
+            # (nouvel essai, puis abandon), pas comme une annulation volontaire.
+            mission.stuck = False
+            status = GoalStatus.STATUS_ABORTED
 
+        if status == GoalStatus.STATUS_SUCCEEDED and mission.legs \
+                and mission.leg < len(mission.legs) - 1:
+            # Point de prise atteint : chargement, puis etape suivante.
+            reached = mission.goal_node
+            self._robot_node[mission.robot_id] = reached
+            self.failures.record_success(reached)
+            mission.leg += 1
+            mission.ready_at = self._now() + self.handling_time
+            self._active[mission.robot_id] = None
+            self._queues[mission.robot_id].appendleft(mission)
+            self._emit_status(mission, 'picked_up', nav_status=status,
+                              detail=f'charge a {reached}')
+            self.get_logger().info(
+                f'{mission.robot_id} charge a {reached} ({mission.task_id}), '
+                f'part vers {mission.goal_node}.')
+            return
         if status == GoalStatus.STATUS_SUCCEEDED:
             self.get_logger().info(
                 f'{mission.robot_id} a termine {mission.task_id}.')
@@ -507,20 +716,20 @@ class MissionExecutorNode(Node):
         d'acces dans le graphe dynamique (graph_publisher_node)."""
         if self.block_after <= 0 or self.block_duration <= 0:
             return
-        if not self.failures.record_failure(mission.target_node, self._now()):
+        if not self.failures.record_failure(mission.goal_node, self._now()):
             return
-        edge = access_edge(self.graph, mission.target_node)
+        edge = access_edge(self.graph, mission.goal_node)
         if edge is None:
             return
         msg = String()
         msg.data = block_message(
             edge[0], edge[1], self.block_duration, 'mission_executor',
-            f'{self.block_after} echecs Nav2 vers {mission.target_node}')
+            f'{self.block_after} echecs Nav2 vers {mission.goal_node}')
         self.block_pub.publish(msg)
         self.get_logger().warn(
             f'Arete d acces {edge[0]} <-> {edge[1]} annoncee bloquee '
             f'{self.block_duration:.0f} s ({self.block_after} echecs vers '
-            f'{mission.target_node}).')
+            f'{mission.goal_node}).')
 
     def _finish_or_retry(self, mission: Mission, nav_status: int):
         if mission.retries < self.max_retries:
@@ -542,6 +751,7 @@ class MissionExecutorNode(Node):
         self._finish(mission, state, nav_status)
 
     def _finish(self, mission: Mission, state: str, nav_status: int):
+        self._release_crossing(mission.robot_id)
         self._emit_status(mission, state, nav_status=nav_status)
         self._active[mission.robot_id] = None
         self._need_idle[mission.robot_id] = True     # decision d'attente si la file est vide

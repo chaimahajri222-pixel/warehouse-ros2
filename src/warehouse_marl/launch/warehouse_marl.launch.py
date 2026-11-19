@@ -63,6 +63,10 @@ def launch_setup(context, *args, **kwargs):
     use_rfid_inventory = LaunchConfiguration('use_rfid_inventory').perform(context).lower() == 'true'
     rfid_drift_period = float(LaunchConfiguration('rfid_drift_period').perform(context))
     demand_skew = float(LaunchConfiguration('demand_skew').perform(context))
+    mission_mode = LaunchConfiguration('mission_mode').perform(context).strip()
+    if mission_mode not in ('auction', 'logistics'):
+        raise ValueError("mission_mode must be 'auction' or 'logistics'")
+    logistics = mission_mode == 'logistics'
     if drl_mode not in ('heuristic', 'hybrid', 'direct'):
         raise ValueError('drl_mode must be heuristic, hybrid, or direct')
     fallback = []
@@ -105,6 +109,32 @@ def launch_setup(context, *args, **kwargs):
         output='screen',
         parameters=[common],
     ))
+
+    if logistics:
+        # Flux par roles (stockage / expedition / polyvalent), sans DRL :
+        # remplace task_generator + encheres + allocateur DRL.
+        roles = [r.strip() for r in LaunchConfiguration('roles').perform(context).split(',')
+                 if r.strip()]
+        nodes.append(Node(
+            package='warehouse_marl',
+            executable='logistics_node',
+            name='logistics_node',
+            output='screen',
+            parameters=[{**common, 'robot_names': robot_names, 'roles': roles}],
+        ))
+        nodes.append(Node(
+            package='warehouse_marl',
+            executable='mission_executor_node',
+            name='mission_executor_node',
+            output='screen',
+            parameters=[{**common, 'robot_names': robot_names,
+                         'route_mode': route_mode, 'route_model': route_model,
+                         'idle_mode': idle_mode, 'idle_model': idle_model,
+                         'with_delivery': True, 'crossing_mutex': True,
+                         'external_pose_topic': '/camera_localization/poses',
+                         'stuck_timeout_sec': 60.0}],
+        ))
+        return fallback + nodes
 
     nodes.append(Node(
         package='warehouse_marl',
@@ -222,6 +252,17 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'map_topic', default_value='/map_fused',
             description="Carte fusionnee pour les cibles accessibles; /map sert de repli"
+        ),
+        DeclareLaunchArgument(
+            'mission_mode', default_value='auction',
+            description="'auction' : taches + encheres (et DRL selon drl_mode) ; "
+                        "'logistics' : stockage production->rack, expedition "
+                        "rack->delivery, repartis par roles (sans DRL)"
+        ),
+        DeclareLaunchArgument(
+            'roles', default_value='stock,ship,flex',
+            description="mission_mode logistics : role de chaque robot dans l'ordre "
+                        "(stock, ship ou flex) ; robots en plus = flex"
         ),
         OpaqueFunction(function=launch_setup),
     ])

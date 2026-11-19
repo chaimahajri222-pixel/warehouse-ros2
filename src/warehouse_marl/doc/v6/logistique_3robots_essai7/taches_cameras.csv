@@ -1,0 +1,89 @@
+wall_time,ros_time,mode,task_id,robot_id,target_node,state,elapsed_sec,retries,nav_status,detail
+1795092473.406,35.5,cameras,expe_00ad0b,robot2,delivery_1,queued,0.5,0,,
+1795092473.465,35.52,cameras,expe_00ad0b,robot2,delivery_1,navigating,0.5200000000000031,0,,etape 1/2
+1795092493.134,41.504,cameras,stoc_09bfe1,robot1,shelf_3_0,queued,0.5039999999999978,0,,
+1795092493.249,41.536,cameras,stoc_09bfe1,robot1,shelf_3_0,navigating,0.5360000000000014,0,,etape 1/2
+1795092498.635,43.032,cameras,stoc_c05b34,robot3,shelf_0_2,queued,0.5319999999999965,0,,
+1795092498.787,43.048,cameras,stoc_c05b34,robot3,shelf_0_2,navigating,0.5480000000000018,0,,etape 1/2
+1795092517.75,47.864,cameras,stoc_c05b34,robot3,shelf_0_2,waiting_passage,5.363999999999997,0,,attend le passage du mur
+1795092526.556,50.3,cameras,stoc_c05b34,robot3,shelf_0_2,navigating,7.799999999999997,0,,etape 1/2
+1795092541.075,53.884,cameras,expe_00ad0b,robot2,delivery_1,picked_up,18.884,0,4,charge a shelf_2_2
+1795092552.788,57.0,cameras,expe_00ad0b,robot2,delivery_1,navigating,22.0,0,,etape 2/2
+1795092559.065,58.6,cameras,stoc_09bfe1,robot1,shelf_3_0,picked_up,17.6,0,4,charge a station_A
+1795092571.626,61.788,cameras,stoc_09bfe1,robot1,shelf_3_0,navigating,20.787999999999997,0,,etape 2/2
+1795092590.584,66.304,cameras,stoc_c05b34,robot3,shelf_0_2,picked_up,23.804000000000002,0,4,charge a station_B
+1795092602.754,69.516,cameras,stoc_c05b34,robot3,shelf_0_2,navigating,27.016000000000005,0,,etape 2/2
+1795092626.001,75.064,cameras,stoc_c05b34,robot3,shelf_0_2,waiting_passage,32.56399999999999,0,,attend le passage du mur
+1795092630.288,76.26,cameras,stoc_c05b34,robot3,shelf_0_2,navigating,33.760000000000005,0,,etape 2/2
+1795092740.39,104.828,cameras,expe_00ad0b,robot2,delivery_1,succeeded,69.828,0,4,
+1795092742.98,105.508,cameras,expe_c79b78,robot2,delivery_1,queued,60.507999999999996,0,,
+1795092743.059,105.528,cameras,expe_c79b78,robot2,delivery_1,navigating,60.528000000000006,0,,etape 1/2
+1795092875.515,138.384,cameras,expe_c79b78,robot2,delivery_1,picked_up,93.38399999999999,0,4,charge a shelf_1_0
+1795092878.288,139.064,cameras,stoc_09bfe1,robot1,shelf_3_0,succeeded,98.064,0,4,
+1795092882.649,140.252,cameras,stoc_a76762,robot1,shelf_4_1,queued,97.24000000000001,0,,
+1795092882.753,140.268,cameras,stoc_a76762,robot1,shelf_4_1,navigating,97.256,0,,etape 1/2
+1795092887.531,141.512,cameras,expe_c79b78,robot2,delivery_1,navigating,96.512,0,,etape 2/2
+1795092966.343,161.084,cameras,stoc_c05b34,robot3,shelf_0_2,succeeded,118.584,0,4,
+1795092970.633,162.252,cameras,stoc_70fca8,robot3,shelf_0_1,queued,106.75200000000001,0,,
+1795092970.707,162.276,cameras,stoc_70fca8,robot3,shelf_0_1,navigating,106.77600000000001,0,,etape 1/2
+1795093000.043,169.096,cameras,expe_c79b78,robot2,delivery_1,succeeded,124.096,0,4,
+1795093003.39,170.004,cameras,expe_54f8cc,robot2,delivery_1,queued,117.50399999999999,0,,
+1795093003.541,170.044,cameras,expe_54f8cc,robot2,delivery_1,navigating,117.54400000000001,0,,etape 1/2
+1795093021.524,174.62,cameras,stoc_a76762,robot1,shelf_4_1,picked_up,131.608,0,4,charge a station_A
+1795093034.079,177.768,cameras,stoc_a76762,robot1,shelf_4_1,navigating,134.756,0,,etape 2/2
+1795093052.665,182.9,cameras,expe_54f8cc,robot2,delivery_1,picked_up,130.4,0,4,charge a shelf_2_2
+1795093063.475,186.008,cameras,expe_54f8cc,robot2,delivery_1,navigating,133.508,0,,etape 2/2
+1795093101.173,196.32,cameras,expe_54f8cc,robot2,delivery_1,succeeded,143.82,0,4,
+1795093101.44,196.416,cameras,stoc_70fca8,robot3,shelf_0_1,waiting_passage,140.916,0,,attend le passage du mur
+1795093103.271,197.0,cameras,expe_2de7f2,robot2,delivery_1,queued,92.5,0,,
+1795093103.303,197.008,cameras,expe_2de7f2,robot2,delivery_1,navigating,92.50800000000001,0,,etape 1/2
+1795093115.424,200.512,cameras,stoc_70fca8,robot3,shelf_0_1,navigating,145.012,0,,etape 1/2
+1795093151.9,210.824,cameras,stoc_a76762,robot1,shelf_4_1,succeeded,167.812,0,4,
+1795093154.163,211.5,cameras,stoc_5feed4,robot1,shelf_3_0,queued,153.5,0,,
+1795093154.19,211.508,cameras,stoc_5feed4,robot1,shelf_3_0,navigating,153.508,0,,etape 1/2
+1795093181.894,219.236,cameras,stoc_70fca8,robot3,shelf_0_1,picked_up,163.736,0,4,charge a station_B
+1795093191.503,222.252,cameras,stoc_70fca8,robot3,shelf_0_1,navigating,166.752,0,,etape 2/2
+1795093210.11,227.564,cameras,expe_2de7f2,robot2,delivery_1,picked_up,123.064,0,4,charge a shelf_1_0
+1795093214.86,229.008,cameras,stoc_5feed4,robot1,shelf_3_0,waiting_passage,171.008,0,,attend le passage du mur
+1795093220.223,230.764,cameras,expe_2de7f2,robot2,delivery_1,navigating,126.26400000000001,0,,etape 2/2
+1795093277.921,247.012,cameras,stoc_5feed4,robot1,shelf_3_0,navigating,189.012,0,,etape 1/2
+1795093298.399,252.38,cameras,expe_2de7f2,robot2,delivery_1,succeeded,147.88,0,4,
+1795093301.458,253.252,cameras,expe_8c2680,robot2,delivery_1,queued,107.75200000000001,0,,
+1795093301.479,253.256,cameras,expe_8c2680,robot2,delivery_1,navigating,107.756,0,,etape 1/2
+1795093325.562,259.876,cameras,stoc_70fca8,robot3,shelf_0_1,succeeded,204.37599999999998,0,4,
+1795093327.586,260.5,cameras,stoc_3a3ed2,robot3,shelf_2_0,queued,196.0,0,,
+1795093327.63,260.508,cameras,stoc_3a3ed2,robot3,shelf_2_0,navigating,196.00799999999998,0,,etape 1/2
+1795093348.711,266.32,cameras,stoc_5feed4,robot1,shelf_3_0,picked_up,208.32,0,4,charge a station_A
+1795093359.821,269.524,cameras,stoc_5feed4,robot1,shelf_3_0,navigating,211.524,0,,etape 2/2
+1795093390.176,277.708,cameras,expe_8c2680,robot2,delivery_1,picked_up,132.20800000000003,0,4,charge a shelf_1_0
+1795093401.004,280.76,cameras,expe_8c2680,robot2,delivery_1,navigating,135.26,0,,etape 2/2
+1795093402.82,281.216,cameras,stoc_3a3ed2,robot3,shelf_2_0,waiting_passage,216.716,0,,attend le passage du mur
+1795093441.606,292.52,cameras,stoc_3a3ed2,robot3,shelf_2_0,navigating,228.01999999999998,0,,etape 1/2
+1795093453.01,295.604,cameras,stoc_5feed4,robot1,shelf_3_0,succeeded,237.60399999999998,0,4,
+1795093456.202,296.508,cameras,stoc_ef2ae0,robot1,shelf_0_2,queued,171.50799999999998,0,,
+1795093456.265,296.524,cameras,stoc_ef2ae0,robot1,shelf_0_2,navigating,171.524,0,,etape 1/2
+1795093478.274,302.296,cameras,expe_8c2680,robot2,delivery_1,succeeded,156.796,0,4,
+1795093481.566,303.26,cameras,expe_bddc59,robot2,delivery_1,queued,153.26,0,,
+1795093481.638,303.276,cameras,expe_bddc59,robot2,delivery_1,navigating,153.276,0,,etape 1/2
+1795093515.545,311.084,cameras,stoc_3a3ed2,robot3,shelf_2_0,picked_up,246.584,0,4,charge a station_B
+1795093527.422,314.264,cameras,stoc_3a3ed2,robot3,shelf_2_0,navigating,249.764,0,,etape 2/2
+1795093569.727,325.268,cameras,stoc_ef2ae0,robot1,shelf_0_2,picked_up,200.26799999999997,0,4,charge a station_A
+1795093571.351,325.748,cameras,expe_bddc59,robot2,delivery_1,picked_up,175.748,0,4,charge a shelf_3_2
+1795093580.566,328.5,cameras,stoc_ef2ae0,robot1,shelf_0_2,navigating,203.5,0,,etape 2/2
+1795093581.518,328.756,cameras,expe_bddc59,robot2,delivery_1,navigating,178.75599999999997,0,,etape 2/2
+1795093610.546,336.24,cameras,stoc_3a3ed2,robot3,shelf_2_0,succeeded,271.74,0,4,
+1795093614.29,337.264,cameras,stoc_a04312,robot3,shelf_2_1,queued,205.264,0,,
+1795093614.309,337.268,cameras,stoc_a04312,robot3,shelf_2_1,navigating,205.26799999999997,0,,etape 1/2
+1795093617.057,338.024,cameras,stoc_a04312,robot3,shelf_2_1,waiting_passage,206.024,0,,attend le passage du mur
+1795093619.494,338.764,cameras,stoc_a04312,robot3,shelf_2_1,navigating,206.764,0,,etape 1/2
+1795093619.698,338.812,cameras,stoc_a04312,robot3,shelf_2_1,waiting_passage,206.812,0,,attend le passage du mur
+1795093625.066,340.26,cameras,stoc_a04312,robot3,shelf_2_1,navigating,208.26,0,,etape 1/2
+1795093625.684,340.42,cameras,stoc_a04312,robot3,shelf_2_1,waiting_passage,208.42000000000002,0,,attend le passage du mur
+1795093632.475,342.252,cameras,stoc_a04312,robot3,shelf_2_1,navigating,210.252,0,,etape 1/2
+1795093633.201,342.424,cameras,stoc_a04312,robot3,shelf_2_1,waiting_passage,210.42399999999998,0,,attend le passage du mur
+1795093635.293,343.016,cameras,stoc_a04312,robot3,shelf_2_1,navigating,211.01600000000002,0,,etape 1/2
+1795093662.747,350.304,cameras,expe_bddc59,robot2,delivery_1,succeeded,200.30399999999997,0,4,
+1795093666.24,351.252,cameras,expe_d6ff09,robot2,delivery_1,queued,161.752,0,,
+1795093666.278,351.264,cameras,expe_d6ff09,robot2,delivery_1,navigating,161.764,0,,etape 1/2
+1795093707.803,361.028,cameras,stoc_a04312,robot3,shelf_2_1,picked_up,229.02800000000002,0,4,charge a station_B
+1795093720.33,364.276,cameras,stoc_a04312,robot3,shelf_2_1,navigating,232.276,0,,etape 2/2

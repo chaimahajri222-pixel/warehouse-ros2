@@ -256,6 +256,7 @@ class WarehouseGraph:
 def build_demo_warehouse(
     map_origin_x: float = 0.0,
     map_origin_y: float = 0.0,
+    with_delivery: bool = False,
 ) -> WarehouseGraph:
     """Build the logical graph for ``rosnav_bot/worlds/warehouse.world``.
 
@@ -264,6 +265,10 @@ def build_demo_warehouse(
     SLAM map origin (normally robot1's spawn).  Subtracting it here keeps every
     graph consumer in Nav2's ``map`` frame while preserving the same edge
     lengths for offline training, where the default origin is sufficient.
+
+    ``with_delivery`` adds the two delivery points of the loading dock (yellow
+    zone, world x = 10.5) used by mission_mode logistics.  Off by default: the
+    DRL models were trained on the graph without them.
     """
     g = WarehouseGraph()
 
@@ -316,5 +321,17 @@ def build_demo_warehouse(
     g.add_edge("station_A", "charging_dock")
     g.add_edge("station_B", "charging_dock")
     g.add_edge("charging_dock", "shelf_2_0")
+
+    if with_delivery:
+        # Loading dock (expedition) : 1.1 m of clearance at y = +/-1.5, the
+        # same as the rack service points; pallets stand at y = +/-3.
+        for nid, wy in (("delivery_1", 1.5), ("delivery_2", -1.5)):
+            x, y = map_xy(10.5, wy)
+            g.add_node(WarehouseNode(node_id=nid, x=x, y=y, node_type="delivery",
+                                     capacity=1, rfid_tag=f"RFID-{nid.upper()}"))
+        g.add_edge("delivery_1", "shelf_1_2")
+        g.add_edge("delivery_1", "shelf_2_2")
+        g.add_edge("delivery_2", "shelf_2_2")
+        g.add_edge("delivery_2", "shelf_3_2")
 
     return g

@@ -1,0 +1,30 @@
+wall_time,ros_time,mode,task_id,robot_id,target_node,state,elapsed_sec,retries,nav_status,detail
+1795082177.369,30.252,cameras,expe_792f80,robot2,delivery_1,queued,0.7519999999999953,0,,
+1795082177.402,30.26,cameras,expe_792f80,robot2,delivery_1,navigating,0.759999999999998,0,,etape 1/2
+1795082198.674,36.004,cameras,stoc_1a33d6,robot1,shelf_3_0,queued,0.5039999999999978,0,,
+1795082198.703,36.012,cameras,stoc_1a33d6,robot1,shelf_3_0,navigating,0.5120000000000005,0,,etape 1/2
+1795082206.431,37.752,cameras,stoc_8dd65c,robot3,shelf_0_2,queued,0.7520000000000024,0,,
+1795082258.715,48.768,cameras,expe_792f80,robot2,delivery_1,picked_up,19.267999999999997,0,4,charge a shelf_2_2
+1795082272.466,52.008,cameras,expe_792f80,robot2,delivery_1,navigating,22.508,0,,etape 2/2
+1795082283.933,54.488,cameras,stoc_1a33d6,robot1,shelf_3_0,picked_up,18.988,0,4,charge a station_A
+1795082284.005,54.508,cameras,stoc_8dd65c,robot3,shelf_0_2,navigating,17.508000000000003,0,,etape 1/2
+1795082383.681,76.128,cameras,stoc_8dd65c,robot3,shelf_0_2,picked_up,39.128,0,4,charge a station_B
+1795082384.222,76.256,cameras,stoc_1a33d6,robot1,shelf_3_0,navigating,40.756,0,,etape 2/2
+1795082513.299,103.656,cameras,stoc_1a33d6,robot1,shelf_3_0,succeeded,68.156,0,4,
+1795082513.699,103.756,cameras,stoc_8dd65c,robot3,shelf_0_2,navigating,66.756,0,,etape 2/2
+1795082518.287,104.752,cameras,stoc_8b3080,robot1,shelf_4_1,queued,67.252,0,,
+1795082540.641,109.592,cameras,expe_792f80,robot2,delivery_1,succeeded,80.092,0,4,
+1795082544.596,110.504,cameras,expe_d88a18,robot2,delivery_1,queued,71.004,0,,
+1795082544.63,110.508,cameras,expe_d88a18,robot2,delivery_1,navigating,71.008,0,,etape 1/2
+1795082657.141,135.328,cameras,expe_d88a18,robot2,delivery_1,picked_up,95.828,0,4,charge a shelf_1_0
+1795082670.663,138.52,cameras,expe_d88a18,robot2,delivery_1,navigating,99.02000000000001,0,,etape 2/2
+1795082780.266,162.58,cameras,expe_d88a18,robot2,delivery_1,succeeded,123.08000000000001,0,4,
+1795082785.344,163.752,cameras,expe_01b6e4,robot2,delivery_1,queued,116.75200000000001,0,,
+1795082785.386,163.76,cameras,expe_01b6e4,robot2,delivery_1,navigating,116.75999999999999,0,,etape 1/2
+1795082845.782,176.556,cameras,expe_01b6e4,robot2,delivery_1,picked_up,129.556,0,4,charge a shelf_2_2
+1795082859.812,179.752,cameras,expe_01b6e4,robot2,delivery_1,navigating,132.752,0,,etape 2/2
+1795082873.392,182.648,cameras,stoc_8dd65c,robot3,shelf_0_2,succeeded,145.648,0,4,
+1795082873.888,182.764,cameras,stoc_8b3080,robot1,shelf_4_1,navigating,145.264,0,,etape 1/2
+1795082878.525,183.756,cameras,stoc_b9e1a4,robot3,shelf_0_1,queued,133.756,0,,
+1795083894.908,237.172,cameras,expe_01b6e4,robot2,delivery_1,retrying,190.172,1,6,retry 1/1
+1795083895.962,238.712,cameras,expe_01b6e4,robot2,delivery_1,navigating,191.712,1,,etape 2/2

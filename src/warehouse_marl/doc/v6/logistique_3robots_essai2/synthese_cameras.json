@@ -1,0 +1,92 @@
+{
+  "label": "cameras",
+  "duree_mesuree_s": 1440.5,
+  "A_localisation_erreur_m": {
+    "robot1": {
+      "n": 1585,
+      "moyenne": 0.373,
+      "mediane": 0.105,
+      "p95": 1.366,
+      "max": 1.608
+    },
+    "robot2": {
+      "n": 1571,
+      "moyenne": 0.094,
+      "mediane": 0.076,
+      "p95": 0.215,
+      "max": 1.235
+    },
+    "robot3": {
+      "n": 1580,
+      "moyenne": 0.453,
+      "mediane": 0.174,
+      "p95": 1.381,
+      "max": 1.642
+    }
+  },
+  "A_localisation_erreur_m_flotte": {
+    "n": 4736,
+    "moyenne": 0.307,
+    "mediane": 0.101,
+    "p95": 1.288,
+    "max": 1.642
+  },
+  "A_localisation_erreur_lacet_deg": {
+    "robot1": {
+      "n": 1585,
+      "moyenne": 1.181,
+      "mediane": 0.793,
+      "p95": 3.684,
+      "max": 10.946
+    },
+    "robot2": {
+      "n": 1571,
+      "moyenne": 1.659,
+      "mediane": 1.39,
+      "p95": 4.236,
+      "max": 9.419
+    },
+    "robot3": {
+      "n": 1580,
+      "moyenne": 1.332,
+      "mediane": 1.02,
+      "p95": 3.617,
+      "max": 6.064
+    }
+  },
+  "B_ecart_min_m": {
+    "robot1-robot2": 0.399,
+    "robot1-robot3": 0.708,
+    "robot2-robot3": 0.367
+  },
+  "B_contacts": 0,
+  "B_contacts_par_paire": {
+    "robot1-robot2": 0,
+    "robot1-robot3": 0,
+    "robot2-robot3": 0
+  },
+  "B_quasi_contacts_moins_15cm": 0,
+  "C_taches_creees": 13,
+  "C_taches_reussies": 10,
+  "C_taches_echouees": 0,
+  "C_taches_annulees": 0,
+  "C_taches_non_terminees": 3,
+  "C_reussies_par_robot": {
+    "robot1": 2,
+    "robot2": 7,
+    "robot3": 1
+  },
+  "corrections_cameras": 81,
+  "corrections_par_motif": {
+    "initialisation": 3,
+    "derive": 68,
+    "fin": 10
+  },
+  "ecart_corrige_m": {
+    "n": 78,
+    "moyenne": 1.029,
+    "mediane": 1.234,
+    "p95": 1.337,
+    "max": 1.362
+  }
+}

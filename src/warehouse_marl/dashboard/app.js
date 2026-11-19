@@ -20,6 +20,12 @@ const FRESH_TAG_SEC = 3;        // tag "lu a l'instant"
 
 let STATIC = null;
 let STATE = null;
+// Mouvements de colis deja vus (id -> heure murale de premiere apparition) :
+// sert a animer les +1 / -1 sur le plan pendant FLOAT_SEC secondes.
+const SEEN_MOVES = new Map();
+let MOVES_PRIMED = false;
+const FLOAT_SEC = 6;
+const KIND_COLOR = { stockage: '#4ade80', expedition: '#facc15' };
 let view = 'overview';
 let selected = null;
 const layers = { tags: true, beams: true, trails: true, graph: false };
@@ -31,6 +37,16 @@ function setHTML(el, html) { if (el && el.__html !== html) { el.innerHTML = html
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 // Racks are labelled E<row>-<col> (etagere) so they never look like robots (R1..Rn).
 const rackLabel = (s) => (s ? s.replace('shelf_', 'E').replace('_', '-') : '—');
+// Libelles des points logistiques (production a l'ouest, quai de chargement a l'est).
+const nodeLabel = (n) => (!n ? '—' : n.startsWith('shelf_') ? rackLabel(n)
+  : n.startsWith('station_') ? `PROD-${n.slice(8)}` : n.startsWith('delivery_') ? `QUAI-${n.slice(9)}` : n);
+const TYPE_INFO = {
+  stockage: ['b-stock', 'stockage'], expedition: ['b-ship', 'expedition'],
+  rfid_scan: ['b-scan', 'scan RFID'], pick: ['b-pick', 'picking'],
+};
+const ROLE_LABEL = { stock: 'stockage', ship: 'expedition', flex: 'polyvalent' };
+const typeBadge = (t, extra = '') => { const [c, l] = TYPE_INFO[t] || TYPE_INFO.pick; return `<span class="badge ${c}">${l}${extra}</span>`; };
+const route = (t) => (t.pickup ? `${nodeLabel(t.pickup)} → ${nodeLabel(t.target)}` : nodeLabel(t.target));
 const robotColor = (r) => ROBOT_COLORS[STATIC.robots.indexOf(r) % ROBOT_COLORS.length];
 function fmtClock(sec) {
   if (sec == null) return '—';
@@ -143,11 +159,52 @@ function renderMap(compact) {
     }
   }
 
+  // Points logistiques : salle de production (ouest) et quai de chargement (est)
+  if (STATE.logistics) {
+    for (const [n, d] of Object.entries(STATIC.nodes)) {
+      if (!['station', 'delivery'].includes(d.type) || n === 'charging_dock') continue;
+      const c = d.type === 'delivery' ? '#facc15' : '#4ade80';
+      p.push(`<rect x="${X(d.x) - 7}" y="${Y(d.y) - 7}" width="14" height="14" rx="3" fill="${c}" fill-opacity=".25" stroke="${c}"/>`);
+      p.push(`<text class="map-label" x="${X(d.x) + 10}" y="${Y(d.y) + 4}">${nodeLabel(n)}</text>`);
+    }
+  }
+
+  // Stock de chaque rack (jauge + nombre), compteurs PROD / QUAI, +1 / -1 animes
+  const L = STATE.logistics;
+  if (L && L.stock) {
+    const cap = L.capacity || 10;
+    for (const [shelf, f] of Object.entries(STATIC.faces)) {
+      const n = L.stock[shelf]; if (n == null) continue;
+      const w = (f.x1 - f.x0) * S, frac = Math.max(0, Math.min(1, n / cap));
+      const col = frac < 0.25 ? '#f87171' : frac > 0.75 ? '#4ade80' : '#facc15';
+      p.push(`<rect x="${X(f.x0)}" y="${Y(f.y) + 6}" width="${w}" height="5" rx="2" fill="rgba(255,255,255,.12)"/>`);
+      p.push(`<rect x="${X(f.x0)}" y="${Y(f.y) + 6}" width="${(w * frac).toFixed(1)}" height="5" rx="2" fill="${col}"/>`);
+      p.push(`<text class="stock-label" x="${X(f.x1) + 3}" y="${Y(f.y) + 11}">${n}</text>`);
+    }
+    for (const [place, c] of Object.entries(L.place_count || {})) {
+      const d = STATIC.nodes[place]; if (!d) continue;
+      const txt = place.startsWith('station_') ? `${c} sortis` : `${c} livres`;
+      p.push(`<text class="stock-label" x="${X(d.x) - 7}" y="${Y(d.y) + 20}">${txt}</text>`);
+    }
+    const now = Date.now() / 1000;
+    for (const m of L.moves || []) {
+      const t0 = SEEN_MOVES.get(m.id); if (t0 == null) continue;
+      const age = now - t0; if (age > FLOAT_SEC) continue;
+      let xy = null;
+      const f = STATIC.faces[m.place];
+      if (f) xy = [(f.x0 + f.x1) / 2, f.y];
+      else if (STATIC.nodes[m.place]) xy = [STATIC.nodes[m.place].x, STATIC.nodes[m.place].y];
+      if (!xy) continue;
+      const up = m.delta > 0;
+      p.push(`<text class="float-delta" x="${X(xy[0])}" y="${Y(xy[1]) - 10 - age * 7}" fill="${up ? '#4ade80' : '#fb923c'}" opacity="${(1 - age / FLOAT_SEC).toFixed(2)}">${up ? '+1' : '−1'}</text>`);
+    }
+  }
+
   // Cibles des missions en cours
   for (const t of STATE.tasks) {
     if (['succeeded', 'failed', 'rejected', 'canceled'].includes(t.state)) continue;
     const n = STATIC.nodes[t.target]; if (!n) continue;
-    const c = t.type === 'rfid_scan' ? '#818cf8' : '#7c8cff';
+    const c = t.type === 'rfid_scan' ? '#818cf8' : t.type === 'stockage' ? '#4ade80' : t.type === 'expedition' ? '#facc15' : '#7c8cff';
     p.push(`<circle cx="${X(n.x)}" cy="${Y(n.y)}" r="7" fill="none" stroke="${c}" stroke-width="1.6" stroke-dasharray="${t.state === 'auction' ? '2 3' : ''}"/>`);
   }
 
@@ -165,14 +222,25 @@ function renderMap(compact) {
       }
     }
     if (d.task) {
-      const n = STATIC.nodes[d.task.target];
+      // Avant le chargement, la ligne pointe vers le point de prise.
+      const goal = d.task.pickup && !d.task.loaded ? d.task.pickup : d.task.target;
+      const n = STATIC.nodes[goal];
       if (n) p.push(`<line x1="${X(d.x)}" y1="${Y(d.y)}" x2="${X(n.x)}" y2="${Y(n.y)}" stroke="${c}" stroke-opacity=".5" stroke-dasharray="5 4"/>`);
     }
     const pts = FOOTPRINT.map(([fx, fy]) => `${(fx * S).toFixed(1)},${(-fy * S).toFixed(1)}`).join(' ');
+    const busy = STATE.logistics?.busy?.[r];
+    const carrying = busy ? busy.loaded : d.task?.loaded;
+    const kind = busy ? busy.kind : d.task?.type;
+    // Colis porte : carton (carre colore, contour blanc, ruban) pose sur le robot.
+    const h = 0.3 * S;
+    const box = carrying ? `<rect x="${-h}" y="${-h}" width="${2 * h}" height="${2 * h}" rx="3"
+        fill="${KIND_COLOR[kind] || '#ffb27a'}" stroke="#fff" stroke-width="2"/>
+      <line x1="${-h}" y1="0" x2="${h}" y2="0" stroke="#5b3a12" stroke-width="2"/>
+      <line x1="0" y1="${-h}" x2="0" y2="${h}" stroke="#5b3a12" stroke-width="2"/>` : '';
     p.push(`<g transform="translate(${X(d.x)},${Y(d.y)}) rotate(${deg(d.yaw)})">
       <polygon points="${pts}" fill="${c}" fill-opacity="${d.online ? .85 : .25}" stroke="#fff" stroke-opacity=".7"/>
-      <polygon points="${0.46 * S},0 ${0.2 * S},${0.12 * S} ${0.2 * S},${-0.12 * S}" fill="#111111"/></g>`);
-    p.push(`<text class="robot-label" x="${X(d.x) + 12}" y="${Y(d.y) - 10}">${r.replace('robot', 'R')}</text>`);
+      <polygon points="${0.46 * S},0 ${0.2 * S},${0.12 * S} ${0.2 * S},${-0.12 * S}" fill="#111111"/>${box}</g>`);
+    p.push(`<text class="robot-label" x="${X(d.x) + 12}" y="${Y(d.y) - 10}">${r.replace('robot', 'R')}${carrying ? ' 📦' : ''}</text>`);
   }
   p.push('</svg>');
   return p.join('');
@@ -197,17 +265,30 @@ function rfidKpis() {
 function renderOverview() {
   const c = STATE.task_counts;
   const online = Object.values(STATE.robots).filter((r) => r.online).length;
-  setHTML($('kpis'), [
+  const T = STATE.logistics?.totals;
+  setHTML($('kpis'), (T ? [
+    kpi('Sortis de production', T.produits, 'colis pris en PROD-A / PROD-B'),
+    kpi('Entres en stock', `+${T.entres_stock}`, 'colis poses sur les racks', 'good'),
+    kpi('Sortis du stock', `−${T.sortis_stock}`, 'colis retires des racks', 'warn'),
+    kpi('Livres au quai', T.livres, 'colis expedies', 'good'),
+    kpi('En transit', T.en_transit, 'colis portes par les robots'),
+    kpi('Stock total', T.stock_total, `${Object.keys(STATE.logistics.stock).length} racks`),
+  ] : [
     kpi('Robots en ligne', `${online}/${STATIC.robots.length}`, 'flotte', online === STATIC.robots.length ? 'good' : 'warn'),
     kpi('Missions reussies', c.succeeded, `${c.failed} echouees · ${c.open} ouvertes`, 'good'),
     ...rfidKpis(),
-  ].join(''));
+  ]).join(''));
   setHTML($('ov-map'), renderMap(true));
   $('ov-map-meta').textContent = `${STATIC.world} · ${Object.keys(STATIC.faces).length} racks RFID`;
   setHTML($('ov-chart'), renderChart());
   setHTML($('ov-fleet'), renderFleet());
   $('fleet-meta').textContent = `${online} en ligne`;
   setHTML($('ov-activity'), renderFeed(STATE.activity.slice(0, 18)));
+  $('ov-logistics-card').hidden = !STATE.logistics;
+  if (STATE.logistics) {
+    setHTML($('ov-logistics'), renderLogistics());
+    $('logi-meta').textContent = STATE.logistics.peak ? `pic : ${STATE.logistics.peak}` : '';
+  }
 }
 
 function renderChart() {
@@ -231,11 +312,45 @@ function renderFleet() {
   return STATIC.robots.map((r) => {
     const d = STATE.robots[r] || {};
     const status = !d.online ? '<span class="badge b-fail">hors ligne</span>'
-      : d.task ? `<span class="badge ${d.task.type === 'rfid_scan' ? 'b-scan' : 'b-pick'}">${d.task.type === 'rfid_scan' ? 'scan' : 'picking'} ${rackLabel(d.task.target)}</span>`
+      : d.task ? typeBadge(d.task.type, d.task.pickup
+          ? (d.task.loaded ? ` 📦 2/2 livre → ${nodeLabel(d.task.target)}` : ` 1/2 va chercher → ${nodeLabel(d.task.pickup)}`)
+          : ` ${route(d.task)}`)
         : d.nav_busy ? '<span class="badge b-run">exploration</span>' : '<span class="badge b-idle">libre</span>';
     const pos = d.x == null ? 'position inconnue' : `(${d.x.toFixed(1)}, ${d.y.toFixed(1)}) · ${d.reads?.length || 0} tags lus`;
     return `<div class="robot-card"><span class="dot" style="background:${robotColor(r)}"></span><div><strong>${r}</strong><small>${pos}</small></div>${status}</div>`;
   }).join('');
+}
+
+function renderLogistics() {
+  const L = STATE.logistics;
+  const max = Math.max(6, L.queues.stockage, L.queues.expedition);
+  const q = (t, c) => `<div class="logi-q${L.peak === t ? ' peak' : ''}"><small>File ${t}${L.peak === t ? ' · pic de charge' : ''}</small>
+    <strong>${L.queues[t]}</strong> <small style="display:inline">en attente · ${L.created[t]} creees · ${L.failed[t]} echouees</small>
+    <div class="logi-bar"><i style="width:${(100 * L.queues[t] / max).toFixed(0)}%;background:${c}"></i></div></div>`;
+  const robots = STATIC.robots.map((r) => {
+    const b = L.busy[r]; const d = L.done[r] || { stockage: 0, expedition: 0 };
+    const now = !b ? '<span class="badge b-idle">libre</span>'
+      : typeBadge(b.kind, b.loaded ? ` 📦 2/2 livre → ${nodeLabel(b.drop)}` : ` 1/2 va chercher → ${nodeLabel(b.pickup)}`);
+    return `<div class="logi-robot"><span class="dot" style="background:${robotColor(r)}"></span>
+      <span><strong>${r}</strong> <small>${ROLE_LABEL[L.roles[r]] || L.roles[r]} · ${d.stockage} stockage, ${d.expedition} expedition</small></span>${now}</div>`;
+  }).join('');
+  const flex = Object.values(L.flex_choices).some((v) => v) ? `Polyvalent : ${L.flex_choices.stockage} stockage, ${L.flex_choices.expedition} expedition` : '';
+  const cap = L.capacity || 10;
+  const shelves = Object.keys(L.stock || {}).sort();
+  const recent = new Set((L.moves || []).filter((m) => SEEN_MOVES.has(m.id) && Date.now() / 1000 - SEEN_MOVES.get(m.id) < FLOAT_SEC).map((m) => m.place));
+  const grid = shelves.map((sh) => {
+    const n = L.stock[sh], frac = n / cap;
+    const col = frac < 0.25 ? '#f87171' : frac > 0.75 ? '#4ade80' : '#facc15';
+    return `<div class="rack-cell${recent.has(sh) ? ' flash' : ''}"><small>${rackLabel(sh)}</small><strong>${n}</strong>
+      <div class="logi-bar"><i style="width:${(100 * frac).toFixed(0)}%;background:${col}"></i></div></div>`;
+  }).join('');
+  const moves = (L.moves || []).slice(-6).reverse().map((m) =>
+    `<li><span style="color:${m.delta > 0 ? '#4ade80' : '#fb923c'}">${m.delta > 0 ? '+1' : '−1'}</span> ${esc(m.text)}</li>`).join('');
+  return `<div class="logi-queues">${q('stockage', '#4ade80')}${q('expedition', '#facc15')}</div>
+    <div class="logi-robots">${robots}</div>
+    <div class="rack-grid">${grid}</div>
+    <ul class="moves">${moves || '<li class="muted">Aucun mouvement de colis pour le moment</li>'}</ul>
+    <div class="logi-event">${esc(L.last_event || flex || 'Le robot polyvalent prend la file la plus chargee.')}</div>`;
 }
 
 function renderFeed(events) {
@@ -279,8 +394,8 @@ function renderMissions() {
   const rows = STATE.tasks.map((t) => {
     const st = t.state === 'succeeded' ? 'b-ok' : ['failed', 'rejected', 'canceled'].includes(t.state) ? 'b-fail' : t.state === 'auction' ? 'b-idle' : 'b-run';
     const claims = Object.keys(t.claims || {}).length;
-    return `<tr><td>${esc(t.id.replace('task_', ''))}</td><td><span class="badge ${t.type === 'rfid_scan' ? 'b-scan' : 'b-pick'}">${t.type === 'rfid_scan' ? 'scan RFID' : 'picking'}</span></td>
-      <td>${rackLabel(t.target)}</td><td>${t.robot ? `<span style="color:${robotColor(t.robot)}">${t.robot}</span>` : '—'}</td>
+    return `<tr><td>${esc(t.id.replace('task_', ''))}</td><td>${typeBadge(t.type)}</td>
+      <td>${route(t)}</td><td>${t.robot ? `<span style="color:${robotColor(t.robot)}">${t.robot}</span>` : '—'}</td>
       <td><span class="badge ${st}">${t.state}</span></td><td>${t.elapsed != null ? `${t.elapsed} s` : '—'}</td>
       <td>${claims > 1 ? `<span class="badge b-run">${claims} conflit</span>` : claims ? '1' : '—'}</td></tr>`;
   }).join('');
@@ -352,7 +467,16 @@ function connect() {
   const conn = $('conn');
   es.onopen = () => { conn.className = 'pill pill-on'; conn.lastElementChild.textContent = 'Connecte a ROS 2'; };
   es.onerror = () => { conn.className = 'pill pill-off'; conn.lastElementChild.textContent = 'Deconnecte'; };
-  es.onmessage = (ev) => { STATE = JSON.parse(ev.data); render(); };
+  es.onmessage = (ev) => {
+    STATE = JSON.parse(ev.data);
+    const now = Date.now() / 1000;
+    for (const m of STATE.logistics?.moves || []) {
+      // Au premier etat recu, l'historique n'est pas anime (deja passe).
+      if (!SEEN_MOVES.has(m.id)) SEEN_MOVES.set(m.id, MOVES_PRIMED ? now : 0);
+    }
+    if (STATE.logistics) MOVES_PRIMED = true;
+    render();
+  };
 }
 
 (async function init() {

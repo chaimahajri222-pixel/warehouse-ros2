@@ -44,6 +44,11 @@ setup(
             'task_generator_node = warehouse_marl.task_generator_node:main',
             'mission_executor_node = warehouse_marl.mission_executor_node:main',
             'lifecycle_watchdog_node = warehouse_marl.lifecycle_watchdog_node:main',
+            # Localisation externe par cameras au plafond (Yumbla et al. 2025)
+            'camera_localization_node = warehouse_marl.camera_localization_node:main',
+            'localization_metrics = warehouse_marl.localization_metrics:main',
+            # Flux d'entrepot par roles (stockage / expedition / polyvalent)
+            'logistics_node = warehouse_marl.logistics_node:main',
             # Couche RFID : inventaire probabiliste + evaluation
             'inventory_node = warehouse_marl.inventory_node:main',
             'rfid_metrics_logger = warehouse_marl.rfid_metrics_logger:main',

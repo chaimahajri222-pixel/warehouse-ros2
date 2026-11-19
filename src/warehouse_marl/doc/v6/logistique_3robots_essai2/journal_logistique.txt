@@ -1,0 +1,104 @@
+[logistics_node-67] [INFO]  [logistics_node]: Logistique par roles : robot1=stock, robot2=ship, robot3=flex ; production ['station_A', 'station_B'], delivery ['delivery_1', 'delivery_2'].
+[mission_executor_node-68] [INFO]  [mission_executor_node]: MissionExecutorNode pret pour ['robot1', 'robot2', 'robot3']; cibles Nav2 dans frame map.
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_7f5d80 (expedition) ; file expedition = 1.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 (ship) : expe_7f5d80 expedition shelf_2_2 -> delivery_1 (stock du rack 7, allee 2).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: expe_7f5d80 en file pour robot2 -> delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_7f5d80 etape 1/2 -> shelf_2_2 (8.50, -0.50).
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_8866ae (stockage) ; file stockage = 1.
+[logistics_node-67] [INFO]  [logistics_node]: robot1 (stock) : stoc_8866ae stockage station_A -> shelf_3_0 (stock du rack 2, allee 3).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: stoc_8866ae en file pour robot1 -> shelf_3_0.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 execute stoc_8866ae etape 1/2 -> station_A (-5.50, 5.00).
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_9501f2 (stockage) ; file stockage = 1.
+[logistics_node-67] [INFO]  [logistics_node]: robot3 (polyvalent) -> stockage : file stockage 1 / expedition 0
+[logistics_node-67] [INFO]  [logistics_node]: robot3 (flex) : stoc_9501f2 stockage station_B -> shelf_0_2 (stock du rack 2, allee 0).
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_73785c (stockage) ; file stockage = 1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: stoc_9501f2 en file pour robot3 -> shelf_0_2.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 execute stoc_9501f2 etape 1/2 -> station_B (-5.50, -3.00).
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_cac331 (expedition) ; file expedition = 1.
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_d832cf (expedition) ; file expedition = 2.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 charge a shelf_2_2 (expe_7f5d80), part vers delivery_1.
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_aaa1e9 (stockage) ; file stockage = 2.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_7f5d80 etape 2/2 -> delivery_1 (12.00, 2.50).
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_49eba9 (stockage) ; file stockage = 3.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 charge a station_A (stoc_8866ae), part vers shelf_3_0.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 execute stoc_8866ae etape 2/2 -> shelf_3_0 (1.50, -4.20).
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_b6751c (stockage) ; file stockage = 4.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 a termine expe_7f5d80.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 a fini expe_7f5d80 (expedition) : rack shelf_2_2 stock 6.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 (ship) : expe_cac331 expedition shelf_1_0 -> delivery_1 (stock du rack 7, allee 1).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: expe_cac331 en file pour robot2 -> delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_cac331 etape 1/2 -> shelf_1_0 (1.50, 3.25).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 charge a station_B (stoc_9501f2), part vers shelf_0_2.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 execute stoc_9501f2 etape 2/2 -> shelf_0_2 (8.50, 6.30).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 charge a shelf_1_0 (expe_cac331), part vers delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_cac331 etape 2/2 -> delivery_1 (12.00, 2.50).
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_a5a728 (expedition) ; file expedition = 2.
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_193c16 (stockage) ; file stockage = 5.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 a termine stoc_8866ae.
+[logistics_node-67] [INFO]  [logistics_node]: robot1 a fini stoc_8866ae (stockage) : rack shelf_3_0 stock 3.
+[logistics_node-67] [INFO]  [logistics_node]: robot1 (stock) : stoc_73785c stockage station_A -> shelf_4_1 (stock du rack 2, allee 3).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: stoc_73785c en file pour robot1 -> shelf_4_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 execute stoc_73785c etape 1/2 -> station_A (-5.50, 5.00).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 a termine expe_cac331.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 a fini expe_cac331 (expedition) : rack shelf_1_0 stock 6.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 (ship) : expe_d832cf expedition shelf_1_0 -> delivery_1 (stock du rack 6, allee 1).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: expe_d832cf en file pour robot2 -> delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_d832cf etape 1/2 -> shelf_1_0 (1.50, 3.25).
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_6584d1 (stockage) ; file stockage = 5.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 a termine stoc_9501f2.
+[logistics_node-67] [INFO]  [logistics_node]: robot3 a fini stoc_9501f2 (stockage) : rack shelf_0_2 stock 3.
+[logistics_node-67] [INFO]  [logistics_node]: robot3 (polyvalent) -> stockage : file stockage 5 / expedition 1
+[logistics_node-67] [INFO]  [logistics_node]: robot3 (flex) : stoc_aaa1e9 stockage station_B -> shelf_0_1 (stock du rack 2, allee 0).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: stoc_aaa1e9 en file pour robot3 -> shelf_0_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 execute stoc_aaa1e9 etape 1/2 -> station_B (-5.50, -3.00).
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_b6de53 (stockage) ; file stockage = 5.
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_26942a (expedition) ; file expedition = 2.
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_fc965f (stockage) ; file stockage = 6.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 charge a station_A (stoc_73785c), part vers shelf_4_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 charge a shelf_1_0 (expe_d832cf), part vers delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 execute stoc_73785c etape 2/2 -> shelf_4_1 (5.00, -4.20).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_d832cf etape 2/2 -> delivery_1 (12.00, 2.50).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 a termine expe_d832cf.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 a fini expe_d832cf (expedition) : rack shelf_1_0 stock 5.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 (ship) : expe_a5a728 expedition shelf_2_2 -> delivery_1 (stock du rack 6, allee 2).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: expe_a5a728 en file pour robot2 -> delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_a5a728 etape 1/2 -> shelf_2_2 (8.50, -0.50).
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_d55631 (expedition) ; file expedition = 2.
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_41a044 (expedition) ; file expedition = 3.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 charge a shelf_2_2 (expe_a5a728), part vers delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_a5a728 etape 2/2 -> delivery_1 (12.00, 2.50).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 a termine stoc_73785c.
+[logistics_node-67] [INFO]  [logistics_node]: robot1 a fini stoc_73785c (stockage) : rack shelf_4_1 stock 3.
+[logistics_node-67] [INFO]  [logistics_node]: robot1 (stock) : stoc_49eba9 stockage station_A -> shelf_3_0 (stock du rack 3, allee 3).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: stoc_49eba9 en file pour robot1 -> shelf_3_0.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 execute stoc_49eba9 etape 1/2 -> station_A (-5.50, 5.00).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 a termine expe_a5a728.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 a fini expe_a5a728 (expedition) : rack shelf_2_2 stock 5.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 (ship) : expe_26942a expedition shelf_1_0 -> delivery_1 (stock du rack 5, allee 1).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: expe_26942a en file pour robot2 -> delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_26942a etape 1/2 -> shelf_1_0 (1.50, 3.25).
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_9b71fd (stockage) ; file stockage = 6.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 charge a shelf_1_0 (expe_26942a), part vers delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_26942a etape 2/2 -> delivery_1 (12.00, 2.50).
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_c562b6 (expedition) ; file expedition = 3.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 a termine expe_26942a.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 a fini expe_26942a (expedition) : rack shelf_1_0 stock 4.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 (ship) : expe_d55631 expedition shelf_2_2 -> delivery_1 (stock du rack 5, allee 2).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: expe_d55631 en file pour robot2 -> delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_d55631 etape 1/2 -> shelf_2_2 (8.50, -0.50).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 charge a shelf_2_2 (expe_d55631), part vers delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_d55631 etape 2/2 -> delivery_1 (12.00, 2.50).
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_22d53a (expedition) ; file expedition = 3.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 a termine expe_d55631.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 a fini expe_d55631 (expedition) : rack shelf_2_2 stock 4.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 (ship) : expe_41a044 expedition shelf_1_1 -> delivery_1 (stock du rack 4, allee 1).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: expe_41a044 en file pour robot2 -> delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_41a044 etape 1/2 -> shelf_1_1 (5.00, 3.25).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 charge a shelf_1_1 (expe_41a044), part vers delivery_1.
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_a15659 (expedition) ; file expedition = 3.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_41a044 etape 2/2 -> delivery_1 (12.00, 2.50).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 a termine expe_41a044.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 a fini expe_41a044 (expedition) : rack shelf_1_1 stock 3.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 (ship) : expe_c562b6 expedition shelf_1_0 -> delivery_1 (stock du rack 4, allee 1).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: expe_c562b6 en file pour robot2 -> delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_c562b6 etape 1/2 -> shelf_1_0 (1.50, 3.25).

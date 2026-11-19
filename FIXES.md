@@ -960,6 +960,49 @@ than that rule, and gets scenarios where looking ahead could pay off.
   (every value with file and line) and the derived CSVs. The results are
   in `~/warehouse_ws/resultats_finaux.zip`.
 
+## Costmaps received no sensor data; camera localization (2026-11-18)
+
+- Bug: the costmap observation sources in `nav2_multirobot_params_jazzy.yaml`
+  used relative topics (`scan`, `points`, `camera/depth/points`,
+  `fleet_obstacles`). In Jazzy they resolve under the costmap node
+  (`/robotN/local_costmap/scan`), where nothing publishes: local and global
+  costmaps never got the laser or the other robots, and robots drove into each
+  other. Fixed with absolute `/ROBOT_NS/...` topics. All Gazebo measurements
+  before this date were taken with sensor-less costmaps.
+- New `warehouse_marl/camera_localization_node` (after Yumbla et al., IEEE
+  Access 2025): simulated ceiling cameras (Gazebo pose + 0.025 m / 0.3 deg
+  noise) that reset each robot's AMCL (`initialpose`) at start-up, at every
+  task end and on drift > 0.30 m; also feed `fleet_obstacles`
+  (`external_pose_topic`). Enabled with `camera_localization:=true`
+  (use with `explore:=false map:=...`).
+- New `localization_metrics` (pose error vs Gazebo, robot-robot body gap,
+  tasks), `scripts/mesures_cameras.sh`, `scripts/tableau_cameras.py`.
+- Results (3 robots, 1 x 20 min per mode): 0 robot-robot contacts in both
+  modes; localization error p95 1.68 -> 0.48 m, max 3.13 -> 1.12 m with
+  cameras. Details: `src/warehouse_marl/doc/v6/LOCALISATION_CAMERAS.md`.
+
+## Role-based logistics flow without DRL (2026-11-19)
+
+- `mission_mode:=logistics` (new `logistics_node`): two-step missions,
+  stockage production (station_A/B) -> rack and expedition rack ->
+  delivery_1/2 (loading dock); robot1 = stock, robot2 = ship, robot3 = flex
+  (takes the longest queue). `mission_executor` supports pickup/drop legs,
+  a separator-passage mutex (`crossing_mutex`) and camera-based stuck
+  detection (`stuck_timeout_sec`); racks are assigned in a free aisle.
+- `nav2_multirobot_params_jazzy.yaml`: MPPI 10 Hz, batch 1000, 28 x 0.1 s
+  (was 20 Hz, 2000, 56 x 0.05 s; same horizon): the old loop only reached
+  10-12 Hz with 3 robots on 4 cores and starved Gazebo.
+- Dashboard (logistics mode): parcel drawn on the robot while it carries
+  one, stock gauge and count on every rack with animated +1 / -1, counters at
+  PROD / QUAI, scoreboard (out of production, into stock, out of stock,
+  delivered, in transit, total stock), mission step (1/2 fetch, 2/2 deliver);
+  robot positions from the cameras when available. `logistics_node` tracks
+  each parcel (published in /warehouse/logistics/state: totals, moves).
+- Passage released as soon as its holder is 1.5 m past the wall (camera
+  position), not at the end of its leg.
+- Trials (3 robots, 25 min): 1 -> 10 / 9 / 4 missions after the fixes,
+  0 failures, 0 contacts. Details: `src/warehouse_marl/doc/v6/LOGISTIQUE_ROLES.md`.
+
 ## Known limitations
 
 - With `explore:=false` and no saved map, SLAM initially knows only the area

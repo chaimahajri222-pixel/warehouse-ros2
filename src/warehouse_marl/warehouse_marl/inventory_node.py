@@ -119,6 +119,8 @@ class InventoryNode(Node):
             self.scan_tasks += 1
             self._scan_targets[data.get('task_id')] = data.get('target_node')
             return
+        if task_type in ('stockage', 'expedition'):
+            return          # mission_mode logistics : flux par roles, pas un picking WMS
         target = data.get('target_node')
         if target not in self.faces or not self.truth:
             return

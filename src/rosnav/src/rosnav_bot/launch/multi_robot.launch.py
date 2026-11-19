@@ -773,7 +773,9 @@ def _build_all(context, pkg_share: str):
         name='fleet_obstacles',
         output='screen',
         parameters=[{'use_sim_time': True,
-                     'robot_names': [r['name'] for r in robots]}]))
+                     'robot_names': [r['name'] for r in robots],
+                     'external_pose_topic':
+                         LaunchConfiguration('fleet_pose_topic').perform(context).strip()}]))
 
     # Bridge Gazebo's global TF exactly once. The Gazebo /tf stream already
     # contains all spawned robots, so duplicating this bridge per-robot causes
@@ -1486,6 +1488,11 @@ def generate_launch_description():
             'robots_json', default_value='',
             description='Optional exact robot list JSON, e.g. '
                         '\'[{"name":"robot1","x":-2,"y":-1},{"name":"robot2","x":-0.8,"y":-1}]\''),
+        DeclareLaunchArgument(
+            'fleet_pose_topic', default_value='',
+            description='Optional external robot poses (JSON String, map frame, e.g. '
+                        '/camera_localization/poses) used by fleet_obstacles instead of '
+                        'the robots\' own TF estimates; empty = TF only.'),
         DeclareLaunchArgument(
             'merge_scans', default_value='true',
             description='true = fuse non-SLAM robots\' scans into unknown /map cells '

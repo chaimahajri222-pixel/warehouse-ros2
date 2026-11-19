@@ -78,7 +78,8 @@ def parse_world(path: str):
         x, y, yaw = _pose(model.findtext('pose'))
         geom = None
         for link in model.findall('link'):
-            for col in link.findall('collision'):
+            # Collision d'abord ; sinon le visuel (marquages au sol sans collision).
+            for col in link.findall('collision') or link.findall('visual'):
                 box = col.findtext('geometry/box/size')
                 cyl = col.findtext('geometry/cylinder/radius')
                 if box:
@@ -115,6 +116,8 @@ class DashboardNode(Node):
         self.declare_parameter('map_origin_x', -1.5)
         self.declare_parameter('map_origin_y', -1.0)
         self.declare_parameter('world_file', '')
+        # mission_mode logistics : points delivery dans le graphe + panneau logistique.
+        self.declare_parameter('with_delivery', False)
 
         self.robot_names = list(self.get_parameter('robot_names').value)
         self.ox = float(self.get_parameter('map_origin_x').value)
@@ -127,7 +130,7 @@ class DashboardNode(Node):
                 get_package_share_directory('rosnav_bot'), 'worlds', 'warehouse.world')
         world_name, entities = parse_world(world_file)
         faces = rack_faces(0.0, 0.0)  # repere monde
-        graph = build_demo_warehouse(0.0, 0.0)
+        graph = build_demo_warehouse(0.0, 0.0, bool(self.get_parameter('with_delivery').value))
         self.static = {
             'world': world_name,
             'entities': entities,
@@ -156,6 +159,7 @@ class DashboardNode(Node):
         self.activity = deque(maxlen=60)
         self.scan_requests = {}
         self.exploration = {}
+        self.logistics = None
 
         self._tf = tf2_ros.Buffer()
         self._tf_listener = tf2_ros.TransformListener(self._tf, self)
@@ -168,6 +172,12 @@ class DashboardNode(Node):
         self.create_subscription(String, '/warehouse/consensus/assignments', self._on_claim, 20)
         self.create_subscription(String, '/warehouse/tasks/status', self._on_status, 50)
         self.create_subscription(String, '/exploration/stats', self._on_exploration, 10)
+        self.create_subscription(String, '/warehouse/logistics/state', self._on_logistics, 10)
+        # Poses vues par les cameras (camera_localization:=true) : affichees a
+        # la place de l'estimation AMCL quand elles sont recentes, pour montrer
+        # ou les robots sont vraiment (AMCL derive dans la zone ouest degagee).
+        self.camera_pose = {}
+        self.create_subscription(String, '/camera_localization/poses', self._on_camera_poses, 10)
         status_qos = QoSProfile(depth=1, history=HistoryPolicy.KEEP_LAST,
                                 reliability=ReliabilityPolicy.RELIABLE,
                                 durability=DurabilityPolicy.TRANSIENT_LOCAL)
@@ -195,8 +205,29 @@ class DashboardNode(Node):
         self.activity.appendleft({'t': time.time(), 'kind': kind, 'text': text})
 
     # -- ROS callbacks -----------------------------------------------------
+    def _on_camera_poses(self, msg):
+        try:
+            robots = json.loads(msg.data).get('robots', {})
+        except ValueError:
+            return
+        now = time.time()
+        with self.lock:
+            for r, p in robots.items():
+                if r in self.robots:
+                    self.camera_pose[r] = (float(p['x']), float(p['y']), float(p['yaw']), now)
+
     def _update_poses(self):
         for r in self.robot_names:
+            cam = self.camera_pose.get(r)
+            if cam is not None and time.time() - cam[3] < 2.0:
+                with self.lock:
+                    rob = self.robots[r]
+                    rob['x'] = round(cam[0] + self.ox, 3)
+                    rob['y'] = round(cam[1] + self.oy, 3)
+                    rob['yaw'] = round(cam[2], 3)
+                    rob['last_seen'] = time.time()
+                    rob['source'] = 'cameras'
+                continue
             try:
                 tf = self._tf.lookup_transform('map', f'{r}/base_link', rclpy.time.Time())
             except Exception:
@@ -209,6 +240,7 @@ class DashboardNode(Node):
                 rob['y'] = round(tf.transform.translation.y + self.oy, 3)
                 rob['yaw'] = round(yaw, 3)
                 rob['last_seen'] = time.time()
+                rob['source'] = 'amcl'
 
     def _on_truth(self, msg):
         # Only used to know on which rack each tag physically sits.
@@ -267,6 +299,7 @@ class DashboardNode(Node):
         with self.lock:
             self.tasks[tid] = {'id': tid, 'type': data.get('task_type', 'pick'),
                                'target': data.get('target_node'),
+                               'pickup': data.get('pickup_node'),
                                'priority': data.get('priority'), 'state': 'auction',
                                'robot': None, 'claims': {}, 'created': time.time(),
                                'elapsed': None, 'retries': 0}
@@ -274,7 +307,8 @@ class DashboardNode(Node):
             if len(self.tasks) > 400:
                 keep = set(self.task_order)
                 self.tasks = {k: v for k, v in self.tasks.items() if k in keep}
-            self._event('task', f'Nouvelle tache {data.get("task_type", "pick")} -> {data.get("target_node")}')
+            src = f'{data["pickup_node"]} -> ' if data.get('pickup_node') else '-> '
+            self._event('task', f'Nouvelle tache {data.get("task_type", "pick")} {src}{data.get("target_node")}')
 
     def _on_claim(self, msg):
         data = json.loads(msg.data)
@@ -301,6 +335,9 @@ class DashboardNode(Node):
             if task is None:
                 return
             task['state'] = data.get('state')
+            if task['state'] == 'picked_up':
+                task['loaded'] = True       # mission en deux etapes : charge, en route vers la depose
+                self._event('task', f'{data.get("robot_id")} {data.get("detail", "charge")} ({task["type"]})')
             task['robot'] = data.get('robot_id') or task['robot']
             task['retries'] = data.get('retries', 0)
             if data.get('elapsed_sec') is not None:
@@ -309,6 +346,10 @@ class DashboardNode(Node):
                 verb = 'termine' if task['state'] == 'succeeded' else 'echoue'
                 self._event('done' if task['state'] == 'succeeded' else 'fail',
                             f'{task["robot"]} a {verb} {task["type"]} {task["target"]}')
+
+    def _on_logistics(self, msg):
+        with self.lock:
+            self.logistics = json.loads(msg.data)
 
     def _on_exploration(self, msg):
         with self.lock:
@@ -328,7 +369,9 @@ class DashboardNode(Node):
             for t in self.tasks.values():
                 if t['state'] not in TERMINAL and t['robot'] in robots:
                     robots[t['robot']]['task'] = {'id': t['id'], 'type': t['type'],
-                                                  'target': t['target'], 'state': t['state']}
+                                                  'target': t['target'], 'pickup': t.get('pickup'),
+                                                  'loaded': t.get('loaded', False),
+                                                  'state': t['state']}
             tasks = [self.tasks[t] for t in list(self.task_order)[:80] if t in self.tasks]
             counts = {'open': 0, 'succeeded': 0, 'failed': 0, 'scans_done': 0, 'scans_total': 0}
             for t in self.tasks.values():
@@ -378,6 +421,7 @@ class DashboardNode(Node):
                 'scan_requests': {s: now - t for s, t in self.scan_requests.items() if now - t < 60},
                 'exploration': {k: self.exploration.get(k) for k in
                                 ('explored_pct', 'succeeded_goals', 'failed_goals', 'tf_ready')},
+                'logistics': self.logistics,
             }
 
     def request_scan(self, shelf):

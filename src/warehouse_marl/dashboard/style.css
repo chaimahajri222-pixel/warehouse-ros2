@@ -216,3 +216,31 @@ input[type=checkbox] { accent-color: var(--accent); }
   .nav-item { white-space: nowrap; }
   .main { padding: 12px 16px; }
 }
+
+/* ---------------- Logistique par roles ---------------- */
+.b-stock { color: var(--green); border-color: rgba(74, 222, 128, .35); }
+.b-ship { color: var(--amber); border-color: rgba(250, 204, 21, .4); }
+.logi { display: grid; gap: 10px; }
+.logi-queues { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.logi-q { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; }
+.logi-q.peak { border-color: var(--border-strong); }
+.logi-q small { color: var(--text-sub); display: block; }
+.logi-q strong { font-size: 20px; }
+.logi-bar { height: 6px; border-radius: 3px; background: var(--border); margin-top: 6px; overflow: hidden; }
+.logi-bar i { display: block; height: 100%; }
+.logi-robots { display: grid; gap: 6px; }
+.logi-robot { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; font-size: 12px; }
+.logi-robot .dot { width: 9px; height: 9px; border-radius: 50%; }
+.logi-robot small { color: var(--text-sub); }
+.logi-event { color: var(--text-sub); font-size: 12px; }
+
+/* ---------------- Colis et stock (mode logistique) ---------------- */
+.stock-label { fill: var(--text); font-size: 10px; font-weight: 700; }
+.float-delta { font-size: 15px; font-weight: 800; text-anchor: middle; paint-order: stroke; stroke: #0c0d10; stroke-width: 3px; }
+.rack-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.rack-cell { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 8px; transition: border-color .3s; }
+.rack-cell small { color: var(--text-sub); margin-right: 6px; }
+.rack-cell strong { font-size: 15px; }
+.rack-cell.flash { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.moves { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 12px; color: var(--text-sub); }
+.moves li span { font-weight: 800; margin-right: 4px; }

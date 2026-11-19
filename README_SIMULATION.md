@@ -132,6 +132,10 @@ Paramètres utiles (à ajouter à la commande `ros2 launch`) :
 | `route_mode:=` | `direct` (défaut), `dijkstra`, `drl` | chemin : Nav2 seul, ou route sur le graphe de l'entrepôt |
 | `headless:=true` | | Gazebo sans fenêtre (plus léger) |
 | `rviz:=false` | | sans RViz |
+| `explore:=false map:=<carte.yaml>` | | carte connue, AMCL pour tous les robots (comme Yumbla et al. 2025) |
+| `mission_mode:=logistics` | | missions d'entrepôt par rôles, sans DRL : robot1 stockage (production → rack), robot2 expédition (rack → quai), robot3 polyvalent (file la plus chargée) ; voir `doc/v6/LOGISTIQUE_ROLES.md` |
+| `roles:=stock,ship,flex` | | rôle de chaque robot avec `mission_mode:=logistics` |
+| `camera_localization:=true` | | caméras au plafond simulées qui corrigent la position des robots (avec `explore:=false`) ; voir `doc/v6/LOCALISATION_CAMERAS.md` |
 
 Les modèles DRL sont livrés avec le code (`src/warehouse_marl/models/`) et
 utilisés par défaut : il n'y a aucun chemin de fichier à donner.

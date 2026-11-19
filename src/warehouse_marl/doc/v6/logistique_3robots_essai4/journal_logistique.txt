@@ -1,0 +1,77 @@
+[logistics_node-67] [INFO]  [logistics_node]: Logistique par roles : robot1=stock, robot2=ship, robot3=flex ; production ['station_A', 'station_B'], delivery ['delivery_1', 'delivery_2'].
+[mission_executor_node-68] [INFO]  [mission_executor_node]: MissionExecutorNode pret pour ['robot1', 'robot2', 'robot3']; cibles Nav2 dans frame map.
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_792f80 (expedition) ; file expedition = 1.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 (ship) : expe_792f80 expedition shelf_2_2 -> delivery_1 (stock du rack 7, allee 2).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: expe_792f80 en file pour robot2 -> delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_792f80 etape 1/2 -> shelf_2_2 (8.50, -0.50).
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_1a33d6 (stockage) ; file stockage = 1.
+[logistics_node-67] [INFO]  [logistics_node]: robot1 (stock) : stoc_1a33d6 stockage station_A -> shelf_3_0 (stock du rack 2, allee 3).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: stoc_1a33d6 en file pour robot1 -> shelf_3_0.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 reserve le passage du mur de separation.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 execute stoc_1a33d6 etape 1/2 -> station_A (-5.50, 5.00).
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_8dd65c (stockage) ; file stockage = 1.
+[logistics_node-67] [INFO]  [logistics_node]: robot3 (polyvalent) -> stockage : file stockage 1 / expedition 0
+[logistics_node-67] [INFO]  [logistics_node]: robot3 (flex) : stoc_8dd65c stockage station_B -> shelf_0_2 (stock du rack 2, allee 0).
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_8b3080 (stockage) ; file stockage = 1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: stoc_8dd65c en file pour robot3 -> shelf_0_2.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 attend : robot1 traverse le passage du mur de separation.
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_d88a18 (expedition) ; file expedition = 1.
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_01b6e4 (expedition) ; file expedition = 2.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 charge a shelf_2_2 (expe_792f80), part vers delivery_1.
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_b9e1a4 (stockage) ; file stockage = 2.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_792f80 etape 2/2 -> delivery_1 (12.00, 2.50).
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_2b104b (stockage) ; file stockage = 3.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 libere le passage du mur de separation.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 charge a station_A (stoc_1a33d6), part vers shelf_3_0.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 reserve le passage du mur de separation.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 execute stoc_8dd65c etape 1/2 -> station_B (-5.50, -3.00).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 attend : robot3 traverse le passage du mur de separation.
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_6e640c (stockage) ; file stockage = 4.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 libere le passage du mur de separation.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 charge a station_B (stoc_8dd65c), part vers shelf_0_2.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 reserve le passage du mur de separation.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 execute stoc_1a33d6 etape 2/2 -> shelf_3_0 (1.50, -4.20).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 attend : robot1 traverse le passage du mur de separation.
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_3cbe7b (expedition) ; file expedition = 3.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 libere le passage du mur de separation.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 a termine stoc_1a33d6.
+[logistics_node-67] [INFO]  [logistics_node]: robot1 a fini stoc_1a33d6 (stockage) : rack shelf_3_0 stock 3.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 reserve le passage du mur de separation.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 execute stoc_8dd65c etape 2/2 -> shelf_0_2 (8.50, 6.30).
+[logistics_node-67] [INFO]  [logistics_node]: robot1 (stock) : stoc_8b3080 stockage station_A -> shelf_4_1 (stock du rack 2, allee 3).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: stoc_8b3080 en file pour robot1 -> shelf_4_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 attend : robot3 traverse le passage du mur de separation.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 a termine expe_792f80.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 a fini expe_792f80 (expedition) : rack shelf_2_2 stock 6.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 (ship) : expe_d88a18 expedition shelf_1_0 -> delivery_1 (stock du rack 7, allee 1).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: expe_d88a18 en file pour robot2 -> delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_d88a18 etape 1/2 -> shelf_1_0 (1.50, 3.25).
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_ab4e3a (stockage) ; file stockage = 4.
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_50f514 (stockage) ; file stockage = 5.
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_18f136 (stockage) ; file stockage = 6.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 attend : robot3 traverse le passage du mur de separation.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 charge a shelf_1_0 (expe_d88a18), part vers delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_d88a18 etape 2/2 -> delivery_1 (12.00, 2.50).
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_a6485f (expedition) ; file expedition = 3.
+[logistics_node-67] [INFO]  [logistics_node]: Commande expe_491d0f (expedition) ; file expedition = 4.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 a termine expe_d88a18.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 a fini expe_d88a18 (expedition) : rack shelf_1_0 stock 6.
+[logistics_node-67] [INFO]  [logistics_node]: robot2 (ship) : expe_01b6e4 expedition shelf_2_2 -> delivery_1 (stock du rack 6, allee 2).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: expe_01b6e4 en file pour robot2 -> delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_01b6e4 etape 1/2 -> shelf_2_2 (8.50, -0.50).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 attend : robot3 traverse le passage du mur de separation.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 charge a shelf_2_2 (expe_01b6e4), part vers delivery_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_01b6e4 etape 2/2 -> delivery_1 (12.00, 2.50).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 libere le passage du mur de separation.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 a termine stoc_8dd65c.
+[logistics_node-67] [INFO]  [logistics_node]: robot3 a fini stoc_8dd65c (stockage) : rack shelf_0_2 stock 3.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 reserve le passage du mur de separation.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot1 execute stoc_8b3080 etape 1/2 -> station_A (-5.50, 5.00).
+[logistics_node-67] [INFO]  [logistics_node]: robot3 (polyvalent) -> stockage : file stockage 6 / expedition 3
+[logistics_node-67] [INFO]  [logistics_node]: robot3 (flex) : stoc_b9e1a4 stockage station_B -> shelf_0_1 (stock du rack 2, allee 0).
+[mission_executor_node-68] [INFO]  [mission_executor_node]: stoc_b9e1a4 en file pour robot3 -> shelf_0_1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 attend : robot1 traverse le passage du mur de separation.
+[logistics_node-67] [INFO]  [logistics_node]: Commande stoc_47d082 (stockage) ; file stockage = 6.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot3 attend : robot1 traverse le passage du mur de separation.
+[mission_executor_node-68] [WARN]  [mission_executor_node]: expe_01b6e4 echoue (Nav2=6); nouvel essai 1/1.
+[mission_executor_node-68] [INFO]  [mission_executor_node]: robot2 execute expe_01b6e4 etape 2/2 -> delivery_1 (12.00, 2.50).
