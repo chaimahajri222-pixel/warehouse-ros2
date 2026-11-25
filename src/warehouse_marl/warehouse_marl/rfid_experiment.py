@@ -24,6 +24,7 @@ Moyenne sur plusieurs graines ; ecrit un CSV et une figure.
 
 import argparse
 import csv
+import math
 import random
 import statistics
 
@@ -52,7 +53,11 @@ def run_once(strategy, seed, minutes, robots, drift_per_minute, scans_per_visit,
     t = 0.0
     series = []
     for minute in range(1, minutes + 1):
-        for _ in range(drift_per_minute):
+        # Taux eventuellement fractionnaire : floor(m*r) - floor((m-1)*r)
+        # evenements a la minute m (identique a l'ancien comportement pour un
+        # taux entier).
+        for _ in range(math.floor(minute * drift_per_minute + 1e-9)
+                       - math.floor((minute - 1) * drift_per_minute + 1e-9)):
             world.drift()
         if strategy != 'wms_only':
             for visit in range(robots):
@@ -83,7 +88,7 @@ def offline_main(argv=None):
     parser.add_argument('--minutes', type=int, default=60)
     parser.add_argument('--seeds', type=int, default=10)
     parser.add_argument('--robots', type=int, default=3, help='visites de racks par minute')
-    parser.add_argument('--drift-per-minute', type=int, default=2)
+    parser.add_argument('--drift-per-minute', type=float, default=2)
     parser.add_argument('--scans-per-visit', type=int, default=12)
     parser.add_argument('--demand-skew', type=float, default=1.2,
                         help='exposant Zipf de la demande par rack (0 = uniforme)')
